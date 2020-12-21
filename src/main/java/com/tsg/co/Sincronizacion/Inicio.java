@@ -1,0 +1,697 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.tsg.co.Sincronizacion;
+
+import com.tsg.co.ConexionKiosco.Verificacion;
+import com.tsg.co.Persistencia.ManejoDatos;
+import com.tsg.co.Persistencia.ObtenerDatos;
+import com.tsg.co.controller.ClasesMaterialController;
+import com.tsg.co.controller.InicioFXMLController;
+import com.tsg.co.model.AchivosTot;
+import com.tsg.co.model.Clases;
+import com.tsg.co.model.Entregas;
+import com.tsg.co.model.Estudiante;
+import com.tsg.co.model.MaterialEstudio;
+import com.tsg.co.model.Materias;
+import com.tsg.co.model.Tareas;
+import com.tsg.co.model.Usuario;
+import com.tsg.co.model.Version;
+import com.tsg.model.Kiosko;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
+import java.security.cert.X509Certificate;
+import java.sql.Blob;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.entity.mime.FileBody;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.entity.mime.StringBody;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpResponse;
+
+/**
+ *
+ * @author Ferney
+ */
+public class Inicio implements Runnable {
+
+    private static EntityManager manager;
+    private static EntityManagerFactory enf;
+    private ObtenerDatos obtenerDatos;
+    private ManejoDatos manejoDatos;
+    private Verificacion verificacion;
+    private Estudiante estudianteCliente;
+    private Long TareaRegistro;
+    private Long fin;
+    private double tiempo;
+    private Long inicioTiempo;
+
+    /**
+     *
+     */
+    public Inicio() {
+
+        this.obtenerDatos = new ObtenerDatos(this);
+        this.verificacion = new Verificacion();
+        this.manejoDatos = new ManejoDatos();
+    }
+
+    @Override
+    public void run() {
+        this.inicioTiempo = System.currentTimeMillis();
+
+        try {
+            enf = Persistence.createEntityManagerFactory("tsg");
+            manager = enf.createEntityManager();
+            String GetAddress = getMacAddress();
+
+            System.err.println(GetAddress);
+            obtenerDatos.KioscosListos();
+            List<Kiosko> kioskos = manager.createQuery("FROM Kiosko").getResultList();
+            boolean conectado;
+            boolean saber = false;
+            obtenerDatos.IniciarVersion();
+
+            while (!saber) {
+                for (int i = 0; i < kioskos.size(); i++) {
+                    conectado = verificacion.Verificar(kioskos.get(i).getIP(), Integer.parseInt(kioskos.get(i).getPORT()));
+                    if (conectado == true) {
+                        String ip = kioskos.get(i).getIP() + ":" + kioskos.get(i).getPORT();
+
+                        try {
+
+                            String version = "http://" + ip + "/api/Versiones";
+                            String version1 = this.peticionHttpGet(version);
+                            JSONObject obj1 = new JSONObject(version1);
+                            float versionnube = (float) obj1.getDouble("numero");
+                            Version versionBases = manager.find(Version.class, 1L);
+
+                            float versionactual = (float) versionBases.getNumero();
+                            System.out.println("version actual" + versionactual + "version kisoko" + versionnube);
+                            if (versionactual == versionnube) {
+                                //  System.out.println("la misma");
+                            } else {
+
+                                List<Usuario> usuariosRecorrer = manejoDatos.listarUsuarios();
+
+                                for (Usuario usuarioRecorrer : usuariosRecorrer) {
+                                    //this.estudianteCliente = estudianteRecorrer;
+                                    JSONObject objectUsuarios = new JSONObject();
+                                    objectUsuarios.put("username", usuarioRecorrer.getUsername());
+                                    objectUsuarios.put("password", usuarioRecorrer.getContraseña());
+
+                                    String login = "http://" + ip + "/api/cuentas/login";
+                                    String loginEndPoint = this.peticionHttpPostIniciarSesion(login, objectUsuarios);
+                                    JSONObject jsonResp = new JSONObject(loginEndPoint);
+
+                                    String identificacion = "http://" + ip + "/api/Estudiantes/miidentificacion";
+
+                                    String identificacionEndPoint = this.peticionHttpGetToken(identificacion, jsonResp.getString("token"));
+                                    JSONObject jSONObjectidentificacion = new JSONObject(identificacionEndPoint);
+                                    this.estudianteCliente = this.obtenerDatos.actualizarEstudiante(jSONObjectidentificacion, usuarioRecorrer);
+                                    // usuarioRecorrer.setEstudiante(estudianteCliente);
+                                    // System.out.println(identificacionEndPoint);
+                                    //JSONArray jSONArray = new JSONArray(identificacionEndPoint);
+                                    // JSONObject objTareasforblob = (JSONObject) jSONArray.get(0);
+                                    String materiasEstudianteEndPointUrl = "http://" + ip + "/api/materias/mismaterias";
+                                    String materiasEstudianteEnd = this.peticionHttpGetArray(materiasEstudianteEndPointUrl, jsonResp.getString("token"));
+
+                                    JSONArray jsonArrayMaterias = new JSONArray(materiasEstudianteEnd);
+
+                                    ArrayList<Materias> arrayListMaterias = obtenerDatos.actualizarMaterias(jsonArrayMaterias, this.estudianteCliente);
+
+                                    // JSONObject jSONObjectMaterias = (JSONObject) jsonArrayMaterias.get(jM);
+                                    String endpointTareas = "http://" + ip + "/api/TareaRegistro/misTareasPendientesPorDescargar";
+                                    String tareasEndPointUrl = this.peticionHttpGetArray(endpointTareas, jsonResp.getString("token"));
+                                    if (!tareasEndPointUrl.equals("")) {
+                                        JSONArray jSONArrayTareas = new JSONArray(tareasEndPointUrl);
+                                        for (int jt = 0; jt < jSONArrayTareas.length(); jt++) {
+                                            JSONObject jSONObjectTareasRegistrar = (JSONObject) jSONArrayTareas.get(jt);
+                                            String registroTarea = this.CrearRegistroTarea(ip, jSONObjectTareasRegistrar.getLong("tareaId"), jsonResp.getString("token"));
+
+                                            JSONObject jSONObjectTareasRegistro = new JSONObject(registroTarea);
+                                            this.obtenerDatos.actualizarTareas(jSONObjectTareasRegistrar, ip, estudianteCliente, jSONObjectTareasRegistro.getLong("id"));
+
+                                            obtenerDatos.updateBlobTareas(jSONObjectTareasRegistrar, ip);
+
+                                        }
+                                    }
+
+                                    obtenerDatos.postArchivos(ip);
+
+                                }
+
+                            }
+
+                        } catch (Exception ex) {
+                            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+
+                    }
+                }
+                saber = true;
+            }
+
+        } catch (SocketException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        this.fin = System.currentTimeMillis();
+
+        this.tiempo = (double) ((fin - inicioTiempo) / 1000);
+
+        System.out.println(tiempo + " segundos");
+    }
+
+    public String peticionHttpGetArray(String urlParaVisitar, String token) throws Exception {
+        String cap = "";
+        String bearer = "Bearer ";
+
+        TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+
+// Install the all-trusting trust manager
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (GeneralSecurityException e) {
+        }
+// Now you can access an https URL without having the certificate in the truststore
+        try {
+
+            URL url = new URL(urlParaVisitar);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json; charset=UTF-8");
+            conn.addRequestProperty("Authorization", bearer + token);
+            System.out.println(conn.getResponseCode());
+            if (conn.getResponseCode() == 200) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        (conn.getInputStream())));
+
+                String output;
+
+                while ((output = br.readLine()) != null) {
+
+                    cap = cap.concat(output);
+                }
+
+                conn.disconnect();
+            } else {
+                conn.disconnect();
+                return cap;
+            }
+
+        } catch (MalformedURLException e) {
+        }
+
+        return cap;
+
+    }
+
+    public String peticionHttpGetToken(String urlParaVisitar, String token) throws Exception {
+        String cap = "";
+        String bearer = "Bearer ";
+
+        TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+
+// Install the all-trusting trust manager
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (GeneralSecurityException e) {
+        }
+// Now you can access an https URL without having the certificate in the truststore
+        try {
+
+            URL url = new URL(urlParaVisitar);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json; charset=UTF-8");
+            conn.addRequestProperty("Authorization", bearer + token);
+
+            if (conn.getResponseCode() == 200) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        (conn.getInputStream())));
+
+                String output;
+
+                while ((output = br.readLine()) != null) {
+                    output = output.replace("[", "").replace("]", "");
+                    cap = cap.concat(output);
+                }
+
+                conn.disconnect();
+            } else {
+                conn.disconnect();
+                return cap;
+            }
+
+        } catch (MalformedURLException e) {
+        }
+
+        return cap;
+
+    }
+
+    /**
+     *
+     * @param urlParaVisitar
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    public String peticionHttpGet(String urlParaVisitar) throws Exception {
+        String cap = "";
+
+        TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+
+// Install the all-trusting trust manager
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (GeneralSecurityException e) {
+        }
+// Now you can access an https URL without having the certificate in the truststore
+        try {
+
+            URL url = new URL(urlParaVisitar);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json; charset=UTF-8");
+
+            if (conn.getResponseCode() == 200) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        (conn.getInputStream())));
+
+                String output;
+
+                while ((output = br.readLine()) != null) {
+                    output = output.replace("[", "").replace("]", "");
+                    cap = cap.concat(output);
+                }
+
+                conn.disconnect();
+            } else {
+                conn.disconnect();
+                return cap;
+            }
+
+        } catch (MalformedURLException e) {
+        }
+
+        return cap;
+
+    }
+
+    public static String getMacAddress() throws UnknownHostException,
+            SocketException, Exception {
+        InetAddress ipAddress = InetAddress.getLocalHost();
+        NetworkInterface networkInterface = NetworkInterface
+                .getByInetAddress(ipAddress);
+        byte[] macAddressBytes = networkInterface.getHardwareAddress();
+        StringBuilder macAddressBuilder = new StringBuilder();
+        if (macAddressBytes != null) {
+            for (int macAddressByteIndex = 0; macAddressByteIndex < macAddressBytes.length; macAddressByteIndex++) {
+                String macAddressHexByte = String.format("%02X",
+                        macAddressBytes[macAddressByteIndex]);
+                macAddressBuilder.append(macAddressHexByte);
+
+                if (macAddressByteIndex != macAddressBytes.length - 1) {
+                    macAddressBuilder.append(":");
+                }
+            }
+        }
+        return macAddressBuilder.toString();
+    }
+
+    /**
+     *
+     * @param urlTopost
+     * @param json
+     * @return
+     * @throws Exception
+     */
+    public String peticionHttpPost(String urlTopost, JSONObject json, String token) throws Exception {
+        String bien = "";
+        String bearer = "Bearer ";
+
+        TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+
+// Install the all-trusting trust manager
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (GeneralSecurityException e) {
+        }
+
+        try {
+
+            URL url = new URL(urlTopost);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.addRequestProperty("Authorization", bearer + token);
+            String input = json.toString();
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+            //System.out.println("Output from Server .... \n");
+            while ((output = br.readLine()) != null) {
+                bien = bien.concat(output);
+            }
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+        return bien;
+    }
+
+    public String peticionHttpPostIniciarSesion(String urlTopost, JSONObject json) throws Exception {
+        String bien = "";
+
+        TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+
+// Install the all-trusting trust manager
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (GeneralSecurityException e) {
+        }
+
+        try {
+
+            URL url = new URL(urlTopost);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json");
+            String input = json.toString();
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+            //System.out.println("Output from Server .... \n");
+            while ((output = br.readLine()) != null) {
+                bien = bien.concat(output);
+            }
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+        return bien;
+    }
+
+    /**
+     *
+     * @param URL
+     * @param json
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws IOException No tocar
+     */
+    public boolean sendhttppostwhitfileProbar(String URL, JSONObject json) throws UnsupportedEncodingException, IOException {
+
+        TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+
+// Install the all-trusting trust manager
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (GeneralSecurityException e) {
+        }
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(URL);
+        boolean si = false;
+        FileBody bin = new FileBody(new File(json.getString("file")));
+        MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+        reqEntity.addPart("file", bin);
+        StringBody id = new StringBody(String.valueOf(json.getInt("entrega")), ContentType.DEFAULT_TEXT);
+        reqEntity.addPart("entrega_id", id);
+        reqEntity.addPart("upp", new StringBody(String.valueOf(0), ContentType.DEFAULT_TEXT));
+        reqEntity.addPart("codigo", new StringBody(String.valueOf(json.getInt("codigo")), ContentType.DEFAULT_TEXT));
+        reqEntity.addPart("subida", new StringBody(String.valueOf(json.getInt("subida")), ContentType.DEFAULT_TEXT));
+        HttpEntity entity = reqEntity.build();
+        httppost.setEntity(entity);
+        HttpResponse httpresponse = httpClient.execute(httppost);
+
+        return si;
+    }
+
+    public boolean sendhttppostwhitfile(String URL, JSONObject json) throws UnsupportedEncodingException, IOException {
+
+        TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+
+// Install the all-trusting trust manager
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (GeneralSecurityException e) {
+        }
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        System.out.println(URL);
+        HttpPost httppost = new HttpPost(URL);
+        System.out.println(httppost);
+        boolean si = false;
+
+        FileBody bin = new FileBody(new File(json.getString("File")));
+        MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+        reqEntity.addPart("File", bin);
+        //  StringBody id = new StringBody(String.valueOf(json.getInt("Entrega_id")), ContentType.DEFAULT_TEXT);
+
+        // reqEntity.addPart("Entrega_id", id);
+        //reqEntity.addPart("upp", new StringBody(String.valueOf(json.getInt("Subida_id")), ContentType.DEFAULT_TEXT));
+        reqEntity.addPart("EstudianteId", new StringBody(String.valueOf(json.getInt("EstudianteId")), ContentType.DEFAULT_TEXT));
+        reqEntity.addPart("TareaRegistroId", new StringBody(String.valueOf(json.getInt("TareaRegistroId")), ContentType.DEFAULT_TEXT));
+        HttpEntity entity = reqEntity.build();
+        httppost.setEntity(entity);
+
+        HttpResponse httpresponse = httpClient.execute(httppost);
+        System.out.println(httpresponse.getCode());
+
+        return si;
+    }
+
+    public Long getTareaRegistro() {
+        return TareaRegistro;
+    }
+
+    public void setTareaRegistro(Long TareaRegistro) {
+        this.TareaRegistro = TareaRegistro;
+    }
+
+    public Long getFin() {
+        return fin;
+    }
+
+    public void setFin(Long fin) {
+        this.fin = fin;
+    }
+
+    public double getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(double tiempo) {
+        this.tiempo = tiempo;
+    }
+
+    public String CrearRegistroTarea(String ip, Long tareaid, String token) throws Exception {
+        String crearRegistro = "http://" + ip + "/api/tarearegistro/RegistrarMiTareaDescargada";
+        JSONObject objectCrearRegistro = new JSONObject();
+        objectCrearRegistro.put("tareaId", tareaid);
+        // objectCrearRegistro.put("materiaId", materiaid);
+        // objectCrearRegistro.put("estudianteId", estudianteId);
+        //System.out.println(inicio.peticionHttpPost(urlEntrega, obEntregas));
+        String respuesta = peticionHttpPost(crearRegistro, objectCrearRegistro, token);
+        System.out.println("respuesta " + respuesta);
+        return respuesta;
+
+    }
+
+}

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import com.jfoenix.controls.JFXListView?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image:url(img/Classroom.jpg)" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.TableViewController">
+    <stylesheets>
+        <URL value="@/styles/tableview.css" />
+    </stylesheets>
+    <top>
+        <BorderPane fx:id="panelInfo" prefHeight="140.0" prefWidth="897.0" style="-fx-background-color: #F5C826;" BorderPane.alignment="CENTER">
+            <center>
+                <BorderPane fx:id="panelInfoGrado" prefHeight="195.0" prefWidth="200.0" style="-fx-background-image:url(img/Header.jpg) " BorderPane.alignment="CENTER">
+                    <right>
+                        <Pane fx:id="panelInfoBotones" prefHeight="140.0" prefWidth="174.0" BorderPane.alignment="CENTER">
+                            <children>
+                                <Button fx:id="btnActualizar" layoutX="20.0" layoutY="14.0" onMouseClicked="#sincronizar" prefHeight="25.0" prefWidth="130.0" stylesheets="@../styles/tableview.css" text="ACTUALIZAR" />
+                                <Button fx:id="btnRecargar" layoutX="20.0" layoutY="65.0" prefHeight="25.0" prefWidth="130.0" stylesheets="@../styles/tableview.css" text="RECARGAR" />
+                                <Label fx:id="labelTareasPendientes" layoutX="22.0" layoutY="108.0" prefHeight="20.0" prefWidth="130.0" text="Tareas Pendientes: ">
+                                    <font>
+                                        <Font size="10.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="labelContadortareas" layoutX="112.0" layoutY="112.0" text="0" textFill="#ff3333">
+                                    <font>
+                                        <Font name="System Bold" size="11.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="labelEvaluacionesPendientes" layoutX="16.0" layoutY="121.0" prefHeight="20.0" prefWidth="130.0" text="Evaluaciones Pendientes: ">
+                                    <font>
+                                        <Font size="10.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="labelContadorevaluacion" layoutX="131.0" layoutY="124.0" text="0" textFill="#ff3333">
+                                    <font>
+                                        <Font name="System Bold" size="11.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </Pane>
+                    </right>
+                    <center>
+                         <Pane fx:id="panelPerfilEstudiante" prefHeight="200.0" prefWidth="174.0" BorderPane.alignment="CENTER">
+                            <children>
+                            <Button fx:id="btnPerfil" alignment="CENTER" layoutX="14.0" layoutY="8.0" prefHeight="110.0" prefWidth="110.0" />
+                            </children>
+                            <children>
+                                 <Label fx:id="codigoEstudiante" layoutX="130.0" layoutY="10.0" prefHeight="25.0" prefWidth="140.0" text="">
+                                </Label>
+                                <Label fx:id="nombreEstudiante" layoutX="130.0" layoutY="15.0" prefHeight="65.0" prefWidth="400.0" text="">
+                                </Label>
+                                <Label fx:id="institucionName" layoutX="130.0" layoutY="25.0" prefHeight="115.0" prefWidth="400.0" text="">
+                                </Label>
+                                <Label fx:id="ubicacionInstitucion" layoutX="130.0" layoutY="32.0" prefHeight="150.0" prefWidth="400.0" text="">
+                                </Label>
+                            </children>
+                        </Pane>
+                    </center>
+                    <left>
+                        <AnchorPane fx:id="panelNotificaciones" prefHeight="113.0" prefWidth="80.0" BorderPane.alignment="CENTER">
+                            <children>
+                            <Button fx:id="btnNotificaciones" alignment="CENTER" layoutX="14.0" layoutY="8.0" prefHeight="50.0" prefWidth="50.0" />
+                            <Button fx:id="btnListado" alignment="CENTER" layoutX="14.0" layoutY="70.0" prefHeight="50.0" prefWidth="50.0" />
+                            </children>
+
+                        </AnchorPane>
+                    </left>
+                </BorderPane>
+            </center>
+        </BorderPane>
+    </top>
+    <left>
+        <GridPane prefHeight="470.0" prefWidth="259.0" style="-fx-background-color: rgba(241, 241, 241, 0.2);" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="49.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="182.0" minWidth="10.0" prefWidth="168.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="151.0" minWidth="10.0" prefWidth="43.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="137.0" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="411.0" minHeight="10.0" prefHeight="385.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Pane fx:id="panelLateral" prefHeight="387.0" prefWidth="158.0" stylesheets="@../styles/tableview.css" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                    <children>
+                       <!-- <BorderPane fx:id="imagengrado" style="-fx-background-color: rgba(241, 241, 241, 0.2);" prefHeight="101.0" prefWidth="170.0" />-->
+                       <ImageView fx:id="imagenViewGrado" fitHeight="101.0" fitWidth="167.0">
+                                <image>
+                                    <Image fx:id="imagenGrado" url="@/img/Materias.png" />
+                                </image>
+                       </ImageView>
+                        <BorderPane layoutY="105.0" prefHeight="281.0" prefWidth="167.0">
+                            <center>
+                                <JFXListView fx:id="jlistMaterias" fixedCellSize="60.0" onMouseClicked="#seleccionarTareas" stylesheets="@../styles/tableview.css" BorderPane.alignment="CENTER">
+                                </JFXListView>
+                            </center>
+                        </BorderPane>
+                    </children>
+                </Pane>
+            </children>
+        </GridPane>
+    </left>
+    <center>
+        <BorderPane fx:id="panelPrincipal" layoutY="300.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #F1F1F1;" BorderPane.alignment="CENTER">
+            <effect>
+                <Glow />
+            </effect>
+            <bottom>
+                <GridPane prefHeight="461.0" prefWidth="741.0" style="-fx-background-color: #F1F1F1;" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="683.0" minWidth="10.0" prefWidth="29.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="686.0" minWidth="10.0" prefWidth="686.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="585.0" minWidth="10.0" prefWidth="26.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="147.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="382.0" minHeight="10.0" prefHeight="355.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #F1F1F1;" GridPane.columnIndex="1">
+                            <children>
+                                <GridPane layoutX="1.0" prefHeight="72.0" prefWidth="672.0" style="-fx-background-color: #F1F1F1;">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="337.0" minWidth="10.0" prefWidth="94.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="625.0" minWidth="10.0" prefWidth="284.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="625.0" minWidth="10.0" prefWidth="298.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="19.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="23.0" minHeight="10.0" prefHeight="17.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Button fx:id="btnVerMas" onAction="#actionClases" GridPane.rowIndex="1" />
+                                        <Label fx:id="labelMaterias" prefHeight="37.0" prefWidth="190.0" text="Materias" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            
+                                        </Label>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </Pane>
+                        <Pane prefHeight="358.0" prefWidth="700.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <children>
+                                <TableView fx:id="tablatareass" fixedCellSize="30.0" layoutX="-4.0" onMouseClicked="#tareaSelecionada" prefHeight="357.0" prefWidth="687.0" style="-fx-background-color: white; -fx-border-radius: 20px;" stylesheets="@../styles/tableview.css">
+                                    <columns>
+                                        <TableColumn fx:id="imageColumn" prefWidth="91.0" style="-fx-alignment: CENTER; -fx-background-repeat: no-repeat;  -fx-background-position: 50%;" styleClass="imagen" text="" />
+                                        <TableColumn fx:id="columnTareasPendientes" prefWidth="599.0" style="-fx-alignment: LEFT;" styleClass="tareas" text="Tareas Pendientes" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </Pane>
+                    </children>
+                </GridPane>
+            </bottom>
+        </BorderPane>
+    </center>
+</BorderPane>
