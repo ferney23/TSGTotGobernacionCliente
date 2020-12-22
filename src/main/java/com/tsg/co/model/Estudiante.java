@@ -72,6 +72,9 @@ public class Estudiante implements Serializable {
     @OneToOne
     @JoinColumn(name = "FK_USUARIO", updatable = true, nullable = true)
     private Usuario usuario;
+    
+    @OneToMany(mappedBy = "estudiante")
+    private Set<Subida> subidas =  new HashSet<>();
 
     public Estudiante() {
     }
@@ -164,6 +167,16 @@ public class Estudiante implements Serializable {
     public void setTareas(Set<Tareas> tareas) {
         this.tareas = tareas;
     }
+
+    public Set<Subida> getSubidas() {
+        return subidas;
+    }
+
+    public void setSubidas(Set<Subida> subidas) {
+        this.subidas = subidas;
+    }
+    
+    
 
     @Override
     public String toString() {

@@ -39,6 +39,7 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
@@ -154,7 +155,7 @@ public class Inicio implements Runnable {
 
                                     JSONArray jsonArrayMaterias = new JSONArray(materiasEstudianteEnd);
 
-                                    ArrayList<Materias> arrayListMaterias = obtenerDatos.actualizarMaterias(jsonArrayMaterias, this.estudianteCliente);
+                                    Set<Materias> arrayListMaterias = obtenerDatos.AddEstudianteMaterias(jsonArrayMaterias, this.estudianteCliente);
 
                                     // JSONObject jSONObjectMaterias = (JSONObject) jsonArrayMaterias.get(jM);
                                     String endpointTareas = "http://" + ip + "/api/TareaRegistro/misTareasPendientesPorDescargar";
@@ -168,7 +169,7 @@ public class Inicio implements Runnable {
                                             JSONObject jSONObjectTareasRegistro = new JSONObject(registroTarea);
                                             this.obtenerDatos.actualizarTareas(jSONObjectTareasRegistrar, ip, estudianteCliente, jSONObjectTareasRegistro.getLong("id"));
 
-                                            obtenerDatos.updateBlobTareas(jSONObjectTareasRegistrar, ip);
+                                            obtenerDatos.updateBlobTareas(jSONObjectTareasRegistrar, ip, estudianteCliente);
 
                                         }
                                     }

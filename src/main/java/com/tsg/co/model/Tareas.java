@@ -15,6 +15,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -31,7 +33,12 @@ import javax.validation.constraints.NotNull;
 public class Tareas implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotNull
+    @Column(name = "tareaKiosco", nullable = false, length = 50)
+    private Long tareaKiosco;
 
     @NotNull
     @Column(name = "nombreTarea", nullable = false, length = 50)
@@ -45,7 +52,7 @@ public class Tareas implements Serializable {
     private Long registroTarea;
 
     @OneToMany(mappedBy = "tarea")
-    private Set<Entregas> entregas =  new HashSet<>();
+    private Set<Entregas> entregas = new HashSet<>();
 
     @ManyToOne(optional = true)
     private Materias materia;
@@ -60,8 +67,8 @@ public class Tareas implements Serializable {
 
     }
 
-    public Tareas(Long id, Long registroTarea, String nombreTarea, String codigo, Materias materia, Estudiante estudiante) {
-        this.id = id;
+    public Tareas(Long tareaKiosco, Long registroTarea, String nombreTarea, String codigo, Materias materia, Estudiante estudiante) {
+        this.tareaKiosco = tareaKiosco;
         this.nombreTarea = nombreTarea;
         this.codigo = codigo;
         this.materia = materia;
@@ -69,8 +76,8 @@ public class Tareas implements Serializable {
         this.estudiante = estudiante;
     }
 
-    public Tareas(Long id, Long registroTarea, String nombreTarea, String codigo, Materias materia, Subida subida, Estudiante estudiante) {
-        this.id = id;
+    public Tareas(Long tareaKiosco, Long registroTarea, String nombreTarea, String codigo, Materias materia, Subida subida, Estudiante estudiante) {
+        this.tareaKiosco = tareaKiosco;
         this.nombreTarea = nombreTarea;
         this.codigo = codigo;
         this.materia = materia;
@@ -85,6 +92,14 @@ public class Tareas implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTareaKiosco() {
+        return tareaKiosco;
+    }
+
+    public void setTareaKiosco(Long tareaKiosco) {
+        this.tareaKiosco = tareaKiosco;
     }
 
     public String getNombreTarea() {

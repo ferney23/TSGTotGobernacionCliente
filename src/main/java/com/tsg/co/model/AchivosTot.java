@@ -31,7 +31,12 @@ import javax.validation.constraints.NotNull;
 public class AchivosTot implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idAchivosTot;
+
+    @NotNull
+    @Column(name = "archivoKiosco", nullable = false, length = 50)
+    private Long archivoKiosco;
 
     @Column(name = "codigo", nullable = true, length = 250)
     private String codigo;
@@ -39,52 +44,63 @@ public class AchivosTot implements Serializable {
     @Column(name = "ruta", nullable = true, length = 250)
     private String ruta;
 
-    
-
     @ManyToOne(optional = true)
     private Subida subida;
 
     @ManyToOne(optional = true)
     private Entregas entrega;
-    
+
     @OneToMany(mappedBy = "achivosTot")
-    private Set<MaterialEstudio> materialEstudios =  new HashSet<>();
+    private Set<MaterialEstudio> materialEstudios = new HashSet<>();
 
     public AchivosTot() {
     }
 
-    public AchivosTot(Long idAchivosTot, String codigo, String ruta,Subida subida) {
-        this.idAchivosTot = idAchivosTot;
+    /**
+     *
+     * @param idAchivosTot
+     * @param codigo
+     * @param ruta
+     * @param subida
+     */
+    public AchivosTot(Long archivoKiosco, String codigo, String ruta, Subida subida) {
+        this.archivoKiosco = archivoKiosco;
         this.codigo = codigo;
         this.ruta = ruta;
-        this.subida= subida;
-
-    }
-    
-    
-    public AchivosTot(Long idAchivosTot, String codigo, String ruta,Subida subida,Entregas entregas) {
-        this.idAchivosTot = idAchivosTot;
-        this.codigo = codigo;
-        this.ruta = ruta;
-        this.subida= subida;
-        this.entrega= entregas;
+        this.subida = subida;
 
     }
 
-    
-    public AchivosTot(Long idAchivosTot, String codigo, String ruta) {
-        this.idAchivosTot = idAchivosTot;
+    public AchivosTot(Long archivoKiosco, String codigo, String ruta, Subida subida, Entregas entregas) {
+        this.archivoKiosco = archivoKiosco;
         this.codigo = codigo;
         this.ruta = ruta;
-        
+        this.subida = subida;
+        this.entrega = entregas;
 
     }
+
+    public AchivosTot(Long archivoKiosco, String codigo, String ruta) {
+        this.archivoKiosco = archivoKiosco;
+        this.codigo = codigo;
+        this.ruta = ruta;
+
+    }
+
     public Long getIdAchivosTot() {
         return idAchivosTot;
     }
 
     public void setIdAchivosTot(Long idAchivosTot) {
         this.idAchivosTot = idAchivosTot;
+    }
+
+    public Long getArchivoKiosco() {
+        return archivoKiosco;
+    }
+
+    public void setArchivoKiosco(Long archivoKiosco) {
+        this.archivoKiosco = archivoKiosco;
     }
 
     public String getCodigo() {

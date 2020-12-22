@@ -181,45 +181,41 @@ public class ObtenerDatos {
 
     }
 
-    public ArrayList<Materias> actualizarMaterias(JSONArray jsonArrayMaterias, Estudiante estudiante) {
-        //  manager.close();
+    public ArrayList<Materias> actualizarMaterias(JSONArray jsonArrayMaterias) {
 
         enf = Persistence.createEntityManagerFactory("tsg");
         manager = enf.createEntityManager();
         ArrayList<Materias> auxMaterias = new ArrayList<>();
-        estudiante = manager.find(Estudiante.class, estudiante.getIdEstudiante());
 
         for (int j = 0; j < jsonArrayMaterias.length(); j++) {
             JSONObject objMaterias = (JSONObject) jsonArrayMaterias.get(j);
             Materias existe = manager.find(Materias.class, objMaterias.getLong("id"));
 
             if (existe == null) {
-                manager.getTransaction().begin();
+
                 Materias materiasGuardar = new Materias(objMaterias.getLong("id"),
                         objMaterias.getString("titulo"),
                         objMaterias.getString("subtitulo"),
                         objMaterias.getString("descripcion"),
                         //objMaterias.getString("imagen"),
-                        objMaterias.getString("descripcion"));
+                        objMaterias.getString("subtitulo"));
 
-                //    materiasGuardar.getEstudiantes().add(estudiante);
-                estudiante.addMaterias(materiasGuardar);
-
+                materiasGuardar.persist(materiasGuardar);
                 auxMaterias.add(materiasGuardar);
-                System.out.println("Materia Creaada" + materiasGuardar.getTitulo() + "este es mi estudiante " + estudiante);
-                manager.getTransaction().commit();
+                System.out.println("Materia Creaada" + materiasGuardar.getTitulo());
+
             } else {
-                manager.getTransaction().begin();
+                // manager.getTransaction().begin();
                 existe.setTitulo(objMaterias.getString("titulo"));
                 existe.setSubtitulo(objMaterias.getString("subtitulo"));
-                existe.setDescripcion(objMaterias.getString("titulo"));
+                existe.setDescripcion(objMaterias.getString("descripcion"));
                 // materias.get(i).setSubtitulo(objMaterias.getString("imagen"));
-
-                existe.setCodigo(objMaterias.getString("descripcion"));
-
+                existe.setCodigo(objMaterias.getString("subtitulo"));
                 auxMaterias.add(existe);
+
+                //manager.getTransaction().commit();
+                //manager.close();
                 System.out.println("actualizado");
-                manager.getTransaction().commit();
 
             }
 
@@ -227,6 +223,33 @@ public class ObtenerDatos {
 
         //  manager.close();
         return auxMaterias;
+
+    }
+
+    public Set<Materias> AddEstudianteMaterias(JSONArray jsonArrayMaterias, Estudiante estudiante) {
+        this.actualizarMaterias(jsonArrayMaterias);
+        enf = Persistence.createEntityManagerFactory("tsg");
+        manager = enf.createEntityManager();
+        estudiante = manager.find(Estudiante.class, estudiante.getIdEstudiante());
+        Set<Materias> materiasEstudiante = estudiante.getMateriases();
+
+        for (int j = 0; j < jsonArrayMaterias.length(); j++) {
+            JSONObject objMaterias = (JSONObject) jsonArrayMaterias.get(j);
+            Materias materiasExiste = manager.find(Materias.class, objMaterias.getLong("id"));
+            boolean existeMateriasEstudiante = materiasEstudiante.contains(materiasExiste);
+            System.out.println(estudiante.getNombres() + "este es mi estudiante " + existeMateriasEstudiante + " esta materia la tengo");
+
+            if (existeMateriasEstudiante == false) {
+                manager.getTransaction().begin();
+                estudiante.getMateriases().add(materiasExiste);
+                manager.getTransaction().commit();
+
+            }
+
+        }
+
+        //  manager.close();
+        return estudiante.getMateriases();
 
     }
 
@@ -427,25 +450,47 @@ public class ObtenerDatos {
         return cadena.replaceAll(busqueda, reemplazo);
     }
 
-    public void updateBlobTareas(JSONObject blob, String ip) throws MalformedURLException, IOException {
+    public Subida actualizarSubidas(JSONObject blob, Estudiante estudiante) {
+        enf = Persistence.createEntityManagerFactory("tsg");
+        manager = enf.createEntityManager();
+        Subida subidasExistente = null;
+        Subida subidaAux = null;
+        try {
+            subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id and ma.estudiante.idEstudiante=:idEstudiante").setParameter("id", blob.getJSONObject("file").getLong("descargaId")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
 
+        } catch (Exception e) {
+        }
+
+        if (subidasExistente == null) {
+
+            Subida subidaTarea = new Subida(blob.getJSONObject("file").getLong("descargaId"), blob.getString("fechaDescarga"), "2020", estudiante);
+            subidaTarea.persist(subidaTarea);
+            subidaAux = subidaTarea;
+        } else {
+            subidaAux = subidasExistente;
+        }
+
+        return subidaAux;
+    }
+
+    public void updateBlobTareas(JSONObject blob, String ip, Estudiante estudiante) throws MalformedURLException, IOException {
+        Subida subidaTarea = actualizarSubidas(blob, estudiante);
         enf = Persistence.createEntityManagerFactory("tsg");
         manager = enf.createEntityManager();
 
         AchivosTot achivosTot = null;
         try {
-            achivosTot = (AchivosTot) manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.idAchivosTot= :id").setParameter("id", blob.getLong("id")).getSingleResult();
+            achivosTot = (AchivosTot) manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", blob.getLong("id")).setParameter("idSubidaKiosco", blob.getJSONObject("file").getLong("descargaId")).getSingleResult();
 
         } catch (Exception e) {
         }
 
-        //res = state.executeQuery("SELECT * FROM Blob where Codigo = "+blob.getInt("codigo"));
         if (achivosTot == null) {
 
             int ext = 0;
 
             if (ext == 0) {
-                File Direccion = new File("Data/" + blob.getInt("tareaId") + "BLOB");
+                File Direccion = new File("Data/" + estudiante.getNombres() + "/"  +blob.getInt("tareaId") + "BLOB");
                 int si = 1;
                 if (Direccion.exists()) {
                     if (Direccion.isDirectory()) {
@@ -466,34 +511,15 @@ public class ObtenerDatos {
 
                     } else {
                         String[] Archivo = blob.getJSONObject("file").getString("url").split("/");
-                        Path dest = Paths.get("Data/" + blob.getInt("tareaId") + "BLOB/" + Archivo[Archivo.length - 1]);
+                        Path dest = Paths.get("Data/" + estudiante.getNombres() + "/" + blob.getInt("tareaId") + "BLOB/" + Archivo[Archivo.length - 1]);
                         URL website = new URL(reemplazar(blob.getJSONObject("file").getString("url") + encode("", "UTF-8"), " ", "%20"));
                         try (InputStream in = website.openStream()) {
                             Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
                         }
 
-                        Subida subidasExistente = null;
-                        try {
-                            subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.idSubida= :id").setParameter("id", blob.getJSONObject("file").getLong("descargaId")).getSingleResult();
+                        AchivosTot achivosNuevo = new AchivosTot(blob.getJSONObject("file").getLong("id"), String.valueOf(blob.getJSONObject("file").getLong("id")), dest.toString(), subidaTarea);
+                        achivosNuevo.persist(achivosNuevo);
 
-                        } catch (Exception e) {
-                        }
-                        if (subidasExistente != null) {
-
-                            AchivosTot achivosExistente = (AchivosTot) manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.idAchivosTot= :id").setParameter("id", blob.getLong("id")).getSingleResult();
-                            
-                            
-                            AchivosTot achivosNuevo = new AchivosTot(blob.getJSONObject("file").getLong("id"), String.valueOf(blob.getJSONObject("file").getLong("id")), dest.toString(), subidasExistente);
-                            achivosNuevo.persist(achivosNuevo);
-
-                        } else {
-
-                            Subida subidaTarea = new Subida(blob.getJSONObject("file").getLong("descargaId"), blob.getString("fechaDescarga"), "2020");
-                            subidaTarea.persist(subidaTarea);
-
-                            System.err.println(dest.toFile());
-
-                        }
                     }
                 }
             }
@@ -517,14 +543,14 @@ public class ObtenerDatos {
         if (estudiante != null) {
 
             try {
-                existe = (Tareas) manager.createQuery("SELECT ma FROM Tareas ma WHERE ma.id= :id").setParameter("id", jsonTareas.getLong("tareaId")).getSingleResult();
+                existe = (Tareas) manager.createQuery("SELECT ma FROM Tareas ma WHERE ma.tareaKiosco= :id and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", jsonTareas.getLong("tareaId")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
 
             } catch (Exception e) {
 
             }
 
             try {
-                materiaTarea = (Materias) manager.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id").setParameter("id", jsonTareas.getLong("materiaId")).getSingleResult();
+                materiaTarea = (Materias) manager.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", jsonTareas.getLong("materiaId")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
 
             } catch (Exception e) {
 
@@ -533,7 +559,7 @@ public class ObtenerDatos {
             if (existe == null) {
                 Subida subidasExistente = null;
                 try {
-                    subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.idSubida= :id").setParameter("id", jsonTareas.getJSONObject("subida").getLong("id")).getSingleResult();
+                    subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id  and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", jsonTareas.getJSONObject("subida").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
 
                 } catch (Exception e) {
                 }
@@ -546,7 +572,7 @@ public class ObtenerDatos {
                     System.err.println("Tareas nueva" + "subida existente ");
                 } else {
 
-                    Subida subidaTarea = new Subida(jsonTareas.getJSONObject("file").getLong("descargaId"), jsonTareas.getString("fechaDescarga"), jsonTareas.getString("fechaDescarga"));
+                    Subida subidaTarea = new Subida(jsonTareas.getJSONObject("file").getLong("descargaId"), jsonTareas.getString("fechaDescarga"), jsonTareas.getString("fechaDescarga"), estudiante);
                     subidaTarea.persist(subidaTarea);
 
                     Tareas tareasguardar = new Tareas(jsonTareas.getLong("tareaId"), registroTarea, jsonTareas.getString("nombreActividad"), String.valueOf(jsonTareas.getLong("idArchivoD2L")), materiaTarea, subidaTarea, estudiante);

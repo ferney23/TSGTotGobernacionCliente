@@ -17,7 +17,9 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Persistence;
 import javax.persistence.Table;
@@ -32,9 +34,13 @@ import javax.validation.constraints.NotNull;
 public class Subida implements Serializable {
 
     @Id
-    //@GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idSubida;
 
+    @NotNull
+    @Column(name = "subidaKisoco", nullable = true, length = 50)
+    private Long subidaKisoco;
+    
     @NotNull
     @Column(name = "fecha", nullable = false, length = 50)
     private String fecha;
@@ -44,18 +50,22 @@ public class Subida implements Serializable {
     private String fechaDescarga;
 
     @OneToMany(mappedBy = "subida")
-    private Set<Tareas> tareas =  new HashSet<>();
+    private Set<Tareas> tareas = new HashSet<>();
 
     @OneToMany(mappedBy = "subida")
-    private Set<Entregas> entregas =  new HashSet<>();
+    private Set<Entregas> entregas = new HashSet<>();
 
     @OneToMany(mappedBy = "subida")
-    private Set<AchivosTot> achivosTot =  new HashSet<>();
+    private Set<AchivosTot> achivosTot = new HashSet<>();
 
-    public Subida(Long idSubida, String fecha, String fechaDescarga) {
-        this.idSubida = idSubida;
+    @ManyToOne(optional = true)
+    private Estudiante estudiante;
+
+    public Subida(Long subidaKisoco, String fecha, String fechaDescarga, Estudiante estudiante) {
+        this.subidaKisoco = subidaKisoco;
         this.fecha = fecha;
         this.fechaDescarga = fechaDescarga;
+        this.estudiante = estudiante;
     }
 
     public Subida() {
@@ -65,6 +75,16 @@ public class Subida implements Serializable {
         return idSubida;
     }
 
+    public Long getSubidaKisoco() {
+        return subidaKisoco;
+    }
+
+    public void setSubidaKisoco(Long subidaKisoco) {
+        this.subidaKisoco = subidaKisoco;
+    }
+
+    
+    
     public void setIdSubida(Long idSubida) {
         this.idSubida = idSubida;
     }
@@ -107,6 +127,14 @@ public class Subida implements Serializable {
 
     public void setAchivosTot(Set<AchivosTot> achivosTot) {
         this.achivosTot = achivosTot;
+    }
+
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
     }
 
     @Override
