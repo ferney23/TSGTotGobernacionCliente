@@ -239,9 +239,7 @@ public class TableViewController implements Initializable {
 
     @FXML
     private void actionClases(ActionEvent event) {
-        System.out.println("material estudio");
-        System.out.println("com.tsg.co.controller.TableViewController.actionClases()" + estudiante);
-        System.out.println("com.tsg.co.controller.TableViewController.actionClases()" + materias);
+  
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClasesMaterialFXML.fxml"));
@@ -268,6 +266,8 @@ public class TableViewController implements Initializable {
     @FXML
     private void tareaSelecionada(MouseEvent event) {
 
+        
+        
         try {
             Tareas tarea = null;
             for (Tareas tar : tareaselec) {

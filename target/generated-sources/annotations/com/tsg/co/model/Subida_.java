@@ -9,6 +9,8 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Subida.class)
 public abstract class Subida_ {
 
+	public static volatile SingularAttribute<Subida, Long> subidaKisoco;
+	public static volatile SingularAttribute<Subida, Estudiante> estudiante;
 	public static volatile SingularAttribute<Subida, String> fecha;
 	public static volatile SetAttribute<Subida, AchivosTot> achivosTot;
 	public static volatile SetAttribute<Subida, Entregas> entregas;

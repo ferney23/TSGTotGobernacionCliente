@@ -11,8 +11,10 @@ public abstract class Estudiante_ {
 
 	public static volatile SingularAttribute<Estudiante, String> apellidos;
 	public static volatile SetAttribute<Estudiante, Materias> materiases;
+	public static volatile SetAttribute<Estudiante, Subida> subidas;
 	public static volatile SetAttribute<Estudiante, Entregas> entregas;
 	public static volatile SingularAttribute<Estudiante, Long> idEstudiante;
+	public static volatile SingularAttribute<Estudiante, Usuario> usuario;
 	public static volatile SetAttribute<Estudiante, Tareas> tareas;
 	public static volatile SingularAttribute<Estudiante, Long> edad;
 	public static volatile SetAttribute<Estudiante, InfoGrado> infoGrados;

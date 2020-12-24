@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.MaterialEstudioFXMLController">
+<AnchorPane id="AnchorPane" prefHeight="484.0" prefWidth="696.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.MaterialEstudioFXMLController">
     <stylesheets>
         <URL value="@/styles/materialestudiofxml.css" />
     </stylesheets>
    <children>
-      <AnchorPane fx:id="panelInformacion" layoutX="6.0" prefHeight="111.0" prefWidth="628.0" style="-fx-background-color: blue;" />
+      <AnchorPane fx:id="panelInformacion" layoutX="6.0" prefHeight="111.0" prefWidth="686.0" style="-fx-background-color: blue;" />
+      <TableView fx:id="tableMaterialEstudio" layoutX="72.0" layoutY="162.0" prefHeight="200.0" prefWidth="521.0">
+        <columns>
+          <TableColumn fx:id="colClase" prefWidth="93.0" text="Clase" />
+          <TableColumn fx:id="colTema" prefWidth="107.0" text="Tema" />
+            <TableColumn fx:id="ColNombre" prefWidth="92.0" text="Nombre" />
+            <TableColumn fx:id="colDescripcion" prefWidth="110.0" text="Descripcion" />
+            <TableColumn fx:id="colAdjunto" prefWidth="118.0" text="Adjunto" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

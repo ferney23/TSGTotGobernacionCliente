@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="589.0" prefWidth="787.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.ClasesMaterialController">
+<AnchorPane id="AnchorPane" prefHeight="589.0" prefWidth="787.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.ClasesMaterialController">
     <stylesheets>
         <URL value="@/styles/clasesmaterial.css" />
     </stylesheets>
@@ -66,7 +58,7 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="288.0" prefWidth="660.0">
                                        <children>
-                                          <TableView fx:id="tableMaterialEstudio" layoutX="7.0"  prefHeight="275.0" prefWidth="649.0">
+                                          <TableView fx:id="tableMaterialEstudio" layoutX="7.0" prefHeight="275.0" prefWidth="649.0">
                                             <columns>
                                               <TableColumn fx:id="cellClase" prefWidth="194.0" text="Nombre" />
                                               <TableColumn fx:id="cellMaterial" minWidth="0.0" prefWidth="449.0" text="Clase" />
@@ -84,6 +76,7 @@
             </GridPane>
          </center>
       </BorderPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" />
 
    </children>
 </AnchorPane>

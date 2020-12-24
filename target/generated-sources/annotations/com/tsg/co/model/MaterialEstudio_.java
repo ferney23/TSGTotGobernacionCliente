@@ -9,8 +9,9 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class MaterialEstudio_ {
 
 	public static volatile SingularAttribute<MaterialEstudio, String> descripcion;
-	public static volatile SingularAttribute<MaterialEstudio, AchivosTot> achivosTot;
+	public static volatile SingularAttribute<MaterialEstudio, String> nombreArchivo;
 	public static volatile SingularAttribute<MaterialEstudio, Long> idMaterialEstudio;
+	public static volatile SingularAttribute<MaterialEstudio, String> ruta;
 	public static volatile SingularAttribute<MaterialEstudio, String> nombre;
 	public static volatile SingularAttribute<MaterialEstudio, Clases> clase;
 

@@ -109,7 +109,7 @@ public class ClasesMaterialController implements Initializable {
     }
 
     public void ClasesMateriales(Materias materias) {
-       
+
         enf = Persistence.createEntityManagerFactory("tsg");
         manager = enf.createEntityManager();
 
@@ -128,7 +128,7 @@ public class ClasesMaterialController implements Initializable {
 
                 @Override
                 public void handle(ActionEvent e) {
-                  
+
                     viewMaterialEstudio(observableListClase);
 
                 }
@@ -143,22 +143,18 @@ public class ClasesMaterialController implements Initializable {
 
     }
 
- 
-
     public void viewMaterialEstudio(Clases clases) {
-        
-     System.out.println("Ver Material de estudio" + clases.getNombre());
-     
-      try {
+
+        try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MaterialEstudioFXML.fxml"));
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.setScene(new Scene((Pane) loader.load()));
             MaterialEstudioFXMLController controller = loader.<MaterialEstudioFXMLController>getController();
             controller.setEstudiante(estudiante);
-            controller.setMaterias(clases.getMateria());
             controller.setClases(clases);
-          
+            controller.ViewMaterialEstudio();
+
             stage.getIcons().add(new Image("/img/TOT-Icon.png"));
 
             stage.setTitle("TOT Learning System - Tarea");
