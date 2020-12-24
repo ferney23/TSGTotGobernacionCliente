@@ -45,7 +45,7 @@ public class TestKiosco {
 
             System.out.println(obArchivos);
 
-            inicio.sendhttppostwhitfile("http://localhost:6104/api/Entregas", obArchivos);
+        //    inicio.sendhttppostwhitfile("http://localhost:6104/api/Entregas", obArchivos);
 
             em.getTransaction().begin();
             entrega.getEntrega().setUpp(1L);

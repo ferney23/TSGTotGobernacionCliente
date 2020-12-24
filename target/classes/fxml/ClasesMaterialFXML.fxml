@@ -31,8 +31,8 @@
                         </Label>
                      </children>
                   </Pane>
-                  <Label fx:id="labelNombres" layoutX="132.0" layoutY="67.0" prefHeight="17.0" prefWidth="82.0" text="Nombres" textFill="#170017" />
-                  <Label fx:id="labelMaterias" layoutX="132.0" layoutY="14.0" prefHeight="36.0" prefWidth="106.0" text="Tareas">
+                  <Label fx:id="labelNombres" layoutX="132.0" layoutY="57.0" prefHeight="30.0" prefWidth="234.0" text="Nombres" textFill="#170017" />
+                  <Label fx:id="labelMaterias" layoutX="132.0" layoutY="14.0" prefHeight="36.0" prefWidth="106.0" text="Materias">
                      <font>
                         <Font name="HP Simplified" size="25.0" />
                      </font></Label>
@@ -66,10 +66,10 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="288.0" prefWidth="660.0">
                                        <children>
-                                          <TableView fx:id="tableMaterialEstudio" layoutX="7.0" prefHeight="275.0" prefWidth="649.0">
+                                          <TableView fx:id="tableMaterialEstudio" layoutX="7.0"  prefHeight="275.0" prefWidth="649.0">
                                             <columns>
-                                              <TableColumn fx:id="cellClase" prefWidth="194.0" text="CLASE" />
-                                              <TableColumn fx:id="cellMaterial" minWidth="0.0" prefWidth="449.0" text="MATERIAL " />
+                                              <TableColumn fx:id="cellClase" prefWidth="194.0" text="Nombre" />
+                                              <TableColumn fx:id="cellMaterial" minWidth="0.0" prefWidth="449.0" text="Clase" />
                                             </columns>
                                           </TableView>
                                        </children>

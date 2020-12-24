@@ -205,7 +205,7 @@ public class ObtenerDatos {
                 System.out.println("Materia Creaada" + materiasGuardar.getTitulo());
 
             } else {
-                // manager.getTransaction().begin();
+                manager.getTransaction().begin();
                 existe.setTitulo(objMaterias.getString("titulo"));
                 existe.setSubtitulo(objMaterias.getString("subtitulo"));
                 existe.setDescripcion(objMaterias.getString("descripcion"));
@@ -213,9 +213,9 @@ public class ObtenerDatos {
                 existe.setCodigo(objMaterias.getString("subtitulo"));
                 auxMaterias.add(existe);
 
-                //manager.getTransaction().commit();
+                manager.getTransaction().commit();
                 //manager.close();
-                System.out.println("actualizado");
+                System.out.println("materia actualizada");
 
             }
 
@@ -237,8 +237,7 @@ public class ObtenerDatos {
             JSONObject objMaterias = (JSONObject) jsonArrayMaterias.get(j);
             Materias materiasExiste = manager.find(Materias.class, objMaterias.getLong("id"));
             boolean existeMateriasEstudiante = materiasEstudiante.contains(materiasExiste);
-            System.out.println(estudiante.getNombres() + "este es mi estudiante " + existeMateriasEstudiante + " esta materia la tengo");
-
+          
             if (existeMateriasEstudiante == false) {
                 manager.getTransaction().begin();
                 estudiante.getMateriases().add(materiasExiste);
@@ -267,7 +266,7 @@ public class ObtenerDatos {
             System.out.println(objClases.getLong("id"));
 
             Clases existe = manager.find(Clases.class, objClases.getLong("id"));
-            Materias nueva = manager.find(Materias.class, objClases.getLong("materias_id"));
+            Materias nueva = manager.find(Materias.class, objClases.getLong("materiaId"));
 
             if (existe == null) {
 
@@ -280,13 +279,14 @@ public class ObtenerDatos {
                 arrayListClases.add(clasesGuardar);
             } else {
 
-                // manager.getTransaction().begin();
+                manager.getTransaction().begin();
                 existe.setTema(objClases.getString("tema"));
                 existe.setNombre(objClases.getString("nombre"));
                 existe.setFechaInicio(objClases.getString("fecha_inicio"));
                 existe.setMateria(nueva);
-                manager.close();
-                System.out.println("actualizado");
+                manager.getTransaction().commit();
+                // manager.close();
+                System.out.println("clase actualizada");
                 arrayListClases.add(existe);
 
             }
@@ -296,7 +296,7 @@ public class ObtenerDatos {
 
     }
 
-    public void actualizarMaterialEstudio(JSONArray jsonArrayMaterialEstudio) throws SQLException {
+    public void actualizarMaterialEstudio(JSONArray jsonArrayMaterialEstudio) throws SQLException, MalformedURLException, IOException {
         //int Estudiante = dispositivokiosco.getJSONObject("estudiante").getInt("id");
         //JSONObject estudiantekiosco = dispositivokiosco.getJSONObject("estudiante");
 
@@ -306,8 +306,8 @@ public class ObtenerDatos {
         for (int j = 0; j < jsonArrayMaterialEstudio.length(); j++) {
             JSONObject objMaterialEstudio = (JSONObject) jsonArrayMaterialEstudio.get(j);
             System.out.println(objMaterialEstudio.getLong("id"));
-            Clases nuevaClase = manager.find(Clases.class, objMaterialEstudio.getLong("clases"));
-            AchivosTot achivosTot = null;
+            Clases nuevaClase = manager.find(Clases.class, objMaterialEstudio.getLong("claseId"));
+
             MaterialEstudio existe = null;
 
             try {
@@ -317,69 +317,46 @@ public class ObtenerDatos {
 
             }
 
-            try {
-                achivosTot = (AchivosTot) manager.createQuery("SELECT a FROM AchivosTot a WHERE a.idAchivosTot= :id").setParameter("id", objMaterialEstudio.getLong("blob")).getSingleResult();
-
-            } catch (Exception e) {
-            }
-
             if (existe == null) {
-                MaterialEstudio materialEstudioGuardar = new MaterialEstudio(objMaterialEstudio.getLong("id"),
-                        objMaterialEstudio.getString("nombre"),
-                        objMaterialEstudio.getString("descripcion"), nuevaClase, achivosTot);
 
-                materialEstudioGuardar.persist(materialEstudioGuardar);
-            } else {
+                int ext = 0;
 
-                // manager.getTransaction().begin();
-                existe.setNombre(objMaterialEstudio.getString("nombre"));
-                existe.setDescripcion(objMaterialEstudio.getString("descripcion"));
-                existe.setClase(nuevaClase);
-                existe.setBlob(achivosTot);
-                manager.close();
-                System.out.println("actualizado");
+                if (ext == 0) {
+                    File Direccion = new File("Data/" + objMaterialEstudio.getInt("idD2L") + "BLOB");
+                    int si = 1;
+                    if (Direccion.exists()) {
+                        if (Direccion.isDirectory()) {
+                            System.out.println("Es una carpeta");
+                        }
+                    } else {
+                        if (Direccion.mkdirs()) {
+                            System.out.println("Directorio creado");
+                        } else {
+                            si = 0;
+                            System.out.println("Error al crear directorio");
+                        }
+                    }
 
-            }
+                    if (si != 0) {
 
-        }
-    }
+                        String[] Archivo = objMaterialEstudio.getString("url").split("/");
+                        Path dest = Paths.get("Data/" + objMaterialEstudio.getInt("idD2L") + "BLOB/" + Archivo[Archivo.length - 1]);
+                        URL website = new URL(reemplazar(objMaterialEstudio.getString("url") + encode("", "UTF-8"), " ", "%20"));
 
-    public void actualizarBlobMaterialEstudio(JSONArray jsonArrayMaterialEstudio) throws SQLException {
-        //int Estudiante = dispositivokiosco.getJSONObject("estudiante").getInt("id");
-        //JSONObject estudiantekiosco = dispositivokiosco.getJSONObject("estudiante");
+                        try (InputStream in = website.openStream()) {
+                            Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
+                        }
+                        MaterialEstudio materialEstudioGuardar = new MaterialEstudio(objMaterialEstudio.getLong("id"),
+                                objMaterialEstudio.getString("tema"),
+                                objMaterialEstudio.getString("descripcion"),
+                                nuevaClase, objMaterialEstudio.getString("nombreArchivo"),
+                                dest.toString());
 
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+                        materialEstudioGuardar.persist(materialEstudioGuardar);
 
-        for (int j = 0; j < jsonArrayMaterialEstudio.length(); j++) {
-            JSONObject objMaterialEstudio = (JSONObject) jsonArrayMaterialEstudio.get(j);
+                    }
 
-            Clases nuevaClase = manager.find(Clases.class, objMaterialEstudio.getLong("clases"));
-            AchivosTot achivosTot = null;
-            MaterialEstudio existe = null;
-
-            try {
-                existe = (MaterialEstudio) manager.createQuery("SELECT ma FROM MaterialEstudio ma WHERE ma.idMaterialEstudio= :id").setParameter("id", objMaterialEstudio.getLong("id")).getSingleResult();
-
-            } catch (Exception e) {
-            }
-            achivosTot = (AchivosTot) manager.createQuery("SELECT a FROM AchivosTot a WHERE a.idAchivosTot= :id").setParameter("id", objMaterialEstudio.getLong("blob")).getSingleResult();
-
-            if (existe == null) {
-                MaterialEstudio materialEstudioGuardar = new MaterialEstudio(objMaterialEstudio.getLong("id"),
-                        objMaterialEstudio.getString("nombre"),
-                        objMaterialEstudio.getString("descripcion"), nuevaClase, achivosTot);
-
-                materialEstudioGuardar.persist(materialEstudioGuardar);
-            } else {
-
-                // manager.getTransaction().begin();
-                existe.setNombre(objMaterialEstudio.getString("nombre"));
-                existe.setDescripcion(objMaterialEstudio.getString("descripcion"));
-                existe.setClase(nuevaClase);
-                existe.setBlob(achivosTot);
-                manager.close();
-                System.out.println("actualizado");
+                }
 
             }
 
@@ -490,7 +467,7 @@ public class ObtenerDatos {
             int ext = 0;
 
             if (ext == 0) {
-                File Direccion = new File("Data/" + estudiante.getNombres() + "/"  +blob.getInt("tareaId") + "BLOB");
+                File Direccion = new File("Data/" + estudiante.getNombres() + "/" + blob.getInt("tareaId") + "BLOB");
                 int si = 1;
                 if (Direccion.exists()) {
                     if (Direccion.isDirectory()) {
@@ -550,8 +527,8 @@ public class ObtenerDatos {
             }
 
             try {
-                materiaTarea = (Materias) manager.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", jsonTareas.getLong("materiaId")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
-
+                materiaTarea = (Materias) manager.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id ").setParameter("id", jsonTareas.getLong("materiaId")).getSingleResult();
+                System.out.println("materias tareas");
             } catch (Exception e) {
 
             }
@@ -600,28 +577,34 @@ public class ObtenerDatos {
 
     }
 
-    public void postArchivos(String ip) throws Exception {
-        String endPointPostArchivo = "http://" + ip + "/api/Entregas";
+    public void postArchivos(String ip, String token, Estudiante estudiante) throws Exception {
+        String endPointPostArchivo = "http://" + ip + "/api/entregas/entregarMiTarea";
 
         enf = Persistence.createEntityManagerFactory("tsg");
         manager = enf.createEntityManager();
         // List<Entregas> entregasEnviar = manager.createQuery("FROM Entregas").getResultList();
 
         List<AchivosTot> entregas = manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.entrega.upp= :id").setParameter("id", 0L).getResultList();
-        // System.out.println(entregas);
+         System.out.println(entregas);
 
         for (AchivosTot entrega : entregas) {
+              System.out.println(entrega.getEntrega().getEstudiante() + "Estudiante Entrega");
+                System.out.println(estudiante + "Estudiante activo sin el if ");
+          //  if (entrega.getEntrega().getEstudiante().equals(estudiante)) {
+                System.out.println(entrega.getEntrega().getEstudiante() + "Estudiante Entrega");
+                System.out.println(estudiante + "Estudiante activo");
 
-            JSONObject obArchivos = new JSONObject();
-            obArchivos.put("File", entrega.getRuta());
-            obArchivos.put("TareaRegistroId", entrega.getEntrega().getRtEntrega());
-            obArchivos.put("EstudianteId", entrega.getEntrega().getEstudiante().getIdEstudiante());
+                JSONObject obArchivos = new JSONObject();
+                obArchivos.put("File", entrega.getRuta());
+                obArchivos.put("TareaRegistroId", entrega.getEntrega().getRtEntrega());
+                obArchivos.put("MAC", "E4:BE:ED:A0:01:19");
 
-            inicio.sendhttppostwhitfile(endPointPostArchivo, obArchivos);
-
-            manager.getTransaction().begin();
-            entrega.getEntrega().setUpp(1L);
-            manager.getTransaction().commit();
+                inicio.sendhttppostwhitfile(endPointPostArchivo, obArchivos, token);
+                System.err.println("Se envio el archivo");
+              //  manager.getTransaction().begin();
+              //  entrega.getEntrega().setUpp(1L);
+              //  manager.getTransaction().commit();
+           // }
 
         }
     }

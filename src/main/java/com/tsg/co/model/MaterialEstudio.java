@@ -27,41 +27,40 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "MaterialEstudio")
-public class MaterialEstudio  implements Serializable{
-    
+public class MaterialEstudio implements Serializable {
+
     @Id
     //@GeneratedValue
     private Long idMaterialEstudio;
-    
+
     @NotNull
-    @Column(name = "nombre", nullable = false, length = 50)
+    @Column(name = "nombre", nullable = true, length = 50)
     private String nombre;
-    
+
     @NotNull
-    @Column(name = "descripcion", nullable = false, length = 50)
+    @Column(name = "descripcion", nullable = true, length = 250)
     private String descripcion;
-    
+
+    @Column(name = "nombreArchivo", nullable = true, length = 250)
+    private String nombreArchivo;
+
+    @Column(name = "ruta", nullable = true, length = 250)
+    private String ruta;
+
     @ManyToOne(optional = true)
     private Clases clase;
-   
-    @ManyToOne(optional = true)
-    private AchivosTot achivosTot;
-
 
     public MaterialEstudio() {
     }
 
-    public MaterialEstudio(Long idMaterialEstudio, String nombre, String descripcion, Clases clase,AchivosTot achivosTot) {
+    public MaterialEstudio(Long idMaterialEstudio, String nombre, String descripcion, Clases clase, String nombreArchivo, String ruta) {
         this.idMaterialEstudio = idMaterialEstudio;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.clase = clase;
-        this.achivosTot = achivosTot;
-        
+        this.nombreArchivo = nombreArchivo;
+        this.ruta = ruta;
     }
-    
-    
-    
 
     public Long getIdMaterialEstudio() {
         return idMaterialEstudio;
@@ -95,21 +94,28 @@ public class MaterialEstudio  implements Serializable{
         this.clase = clase;
     }
 
-    public AchivosTot getBlob() {
-        return achivosTot;
-    }
-
-    public void setBlob(AchivosTot blob) {
-        this.achivosTot = blob;
-    }
-
-    
-
-    
     @Override
     public String toString() {
-        return nombre ;
+        return nombre;
     }
+
+    public String getNombreArchivo() {
+        return nombreArchivo;
+    }
+
+    public void setNombreArchivo(String nombreArchivo) {
+        this.nombreArchivo = nombreArchivo;
+    }
+
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
+    }
+    
+    
 
     public void persist(Object object) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
@@ -125,8 +131,5 @@ public class MaterialEstudio  implements Serializable{
             em.close();
         }
     }
-    
-    
-    
-    
+
 }

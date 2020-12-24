@@ -40,19 +40,21 @@ public class Test {
 
         enf = Persistence.createEntityManagerFactory("tsg");
         manageres = enf.createEntityManager();
-        
-       AchivosTot achivosTot = (AchivosTot) manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", 4L).setParameter("idSubidaKiosco", 4L).getSingleResult();
-        System.out.println(achivosTot.getRuta());
-        
+
+//       AchivosTot achivosTot = (AchivosTot) manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", 4L).setParameter("idSubidaKiosco", 4L).getSingleResult();
+        //  System.out.println(achivosTot.getRuta());
         // Estudiante estudiante = (Estudiante) manageres.createQuery("SELECT ma FROM Estudiante ma WHERE ma.idEstudiante= :id").setParameter("id", 209L).getSingleResult();
         //  Usuario usuariosExistentes = (Usuario) manageres.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.contraseña =:contraseña ").setParameter("usuario", "estudiante.uno").setParameter("contraseña", "tsg123").getSingleResult();
-
         // System.out.println(usuariosExistentes.getEstudiante().getNombres());
         Estudiante estudiante = manageres.find(Estudiante.class, 209L);
         Set<Materias> materiasEstudiante = estudiante.getMateriases();
         Materias materiasExiste = manageres.find(Materias.class, 6771L);
-        System.out.println(materiasEstudiante);
-        System.out.println(materiasEstudiante.contains(materiasExiste) + materiasExiste.getTitulo());
+        //System.out.println(materiasEstudiante);
+        //System.out.println(materiasEstudiante.contains(materiasExiste) + materiasExiste.getTitulo());
+
+        Materias materiaTarea = (Materias) manageres.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id ").setParameter("id", 6760L).getSingleResult();
+        System.out.println(materiaTarea.getTitulo());
+
     }
 
     /**

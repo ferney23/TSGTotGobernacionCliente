@@ -117,7 +117,7 @@
                     </descriptorRefs>                                
                     <archive>                         
                         <manifest>                             
-                            <mainClass>com.tsg.co.controller.Pruebas</mainClass>                         
+                            <mainClass>com.tsg.co.controller.App</mainClass>                         
                         </manifest>                     
                     </archive>                 
                 </configuration>                 

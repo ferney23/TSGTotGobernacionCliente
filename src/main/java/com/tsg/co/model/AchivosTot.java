@@ -50,14 +50,12 @@ public class AchivosTot implements Serializable {
     @ManyToOne(optional = true)
     private Entregas entrega;
 
-    @OneToMany(mappedBy = "achivosTot")
-    private Set<MaterialEstudio> materialEstudios = new HashSet<>();
-
     public AchivosTot() {
     }
 
     /**
      *
+     * @param archivoKiosco
      * @param idAchivosTot
      * @param codigo
      * @param ruta
@@ -133,14 +131,6 @@ public class AchivosTot implements Serializable {
 
     public void setEntrega(Entregas entrega) {
         this.entrega = entrega;
-    }
-
-    public Set<MaterialEstudio> getMaterialEstudios() {
-        return materialEstudios;
-    }
-
-    public void setMaterialEstudios(Set<MaterialEstudio> materialEstudios) {
-        this.materialEstudios = materialEstudios;
     }
 
     @Override

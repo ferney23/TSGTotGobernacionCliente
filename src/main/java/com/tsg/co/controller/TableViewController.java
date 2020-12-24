@@ -133,11 +133,9 @@ public class TableViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-      
-     //   llenarEstudiante();
-     //   listarMaterias();
 
+        //   llenarEstudiante();
+        //   listarMaterias();
     }
 
     public Estudiante getEstudiante() {
@@ -146,7 +144,7 @@ public class TableViewController implements Initializable {
 
     public void setEstudiante(Estudiante estudiante) {
         this.estudiante = estudiante;
-    
+
     }
 
     public void llenarEstudiante() {
@@ -241,16 +239,26 @@ public class TableViewController implements Initializable {
 
     @FXML
     private void actionClases(ActionEvent event) {
+        System.out.println("material estudio");
+        System.out.println("com.tsg.co.controller.TableViewController.actionClases()" + estudiante);
+        System.out.println("com.tsg.co.controller.TableViewController.actionClases()" + materias);
         try {
-            Stage stageMaterialesClases = new Stage();
-            FXMLLoader loader = new FXMLLoader();
-            AnchorPane root = (AnchorPane) loader.load(getClass().getResource("/fxml/ClasesMaterialFXML.fxml").openStream());
-            ClasesMaterialController clasesMaterialController = (ClasesMaterialController) loader.getController();
-            clasesMaterialController.recibirHome(this, materias, estudiante);
-            Scene scena = new Scene(root);
-            stageMaterialesClases.setTitle(materias.getTitulo().toUpperCase());
-            stageMaterialesClases.setScene(scena);
-            stageMaterialesClases.show();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClasesMaterialFXML.fxml"));
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.setScene(new Scene((Pane) loader.load()));
+            ClasesMaterialController controller = loader.<ClasesMaterialController>getController();
+
+            controller.setEstudiante(estudiante);
+
+            controller.setMaterias(materias);
+            controller.informacionMateria();
+            controller.ClasesMateriales(materias);
+            stage.getIcons().add(new Image("/img/TOT-Icon.png"));
+
+            stage.setTitle("TOT Learning System - Tarea");
+            stage.setResizable(false);
+            stage.show();
         } catch (IOException e) {
 
         }

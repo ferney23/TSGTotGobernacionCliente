@@ -144,12 +144,10 @@ public class Inicio implements Runnable {
                                     String identificacion = "http://" + ip + "/api/Estudiantes/miidentificacion";
 
                                     String identificacionEndPoint = this.peticionHttpGetToken(identificacion, jsonResp.getString("token"));
+                                    System.out.println(identificacionEndPoint);
                                     JSONObject jSONObjectidentificacion = new JSONObject(identificacionEndPoint);
                                     this.estudianteCliente = this.obtenerDatos.actualizarEstudiante(jSONObjectidentificacion, usuarioRecorrer);
-                                    // usuarioRecorrer.setEstudiante(estudianteCliente);
-                                    // System.out.println(identificacionEndPoint);
-                                    //JSONArray jSONArray = new JSONArray(identificacionEndPoint);
-                                    // JSONObject objTareasforblob = (JSONObject) jSONArray.get(0);
+
                                     String materiasEstudianteEndPointUrl = "http://" + ip + "/api/materias/mismaterias";
                                     String materiasEstudianteEnd = this.peticionHttpGetArray(materiasEstudianteEndPointUrl, jsonResp.getString("token"));
 
@@ -174,7 +172,24 @@ public class Inicio implements Runnable {
                                         }
                                     }
 
-                                    obtenerDatos.postArchivos(ip);
+                                    String endpointClases = "http://" + ip + "/api/clases/misClases";
+                                    String clasesEndPointUrl = this.peticionHttpGetArray(endpointClases, jsonResp.getString("token"));
+
+                                    JSONArray jsonArrayClases = new JSONArray(clasesEndPointUrl);
+
+                                    this.obtenerDatos.actualizarClases(jsonArrayClases);
+
+                                    String endpointMaterialEstudio = "http://" + ip + "/api/MaterialEstudioRegistros/misMaterialesPendientesPorDescargar";
+                                    String materialEstudioEndPointUrl = this.peticionHttpGetArray(endpointMaterialEstudio, jsonResp.getString("token"));
+                                    System.out.println(materialEstudioEndPointUrl);
+
+                                    if (!materialEstudioEndPointUrl.equals("")) {
+                                        JSONArray jsonArrayMaterialEstudio = new JSONArray(materialEstudioEndPointUrl);
+                                        this.obtenerDatos.actualizarMaterialEstudio(jsonArrayMaterialEstudio);
+                                    }
+
+                                    // 
+                                    obtenerDatos.postArchivos(ip,jsonResp.getString("token"),this.estudianteCliente);
 
                                 }
 
@@ -608,7 +623,9 @@ public class Inicio implements Runnable {
         return si;
     }
 
-    public boolean sendhttppostwhitfile(String URL, JSONObject json) throws UnsupportedEncodingException, IOException {
+    public boolean sendhttppostwhitfile(String URL, JSONObject json, String token) throws UnsupportedEncodingException, IOException {
+
+        String bearer = "Bearer ";
 
         TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
@@ -637,22 +654,28 @@ public class Inicio implements Runnable {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         System.out.println(URL);
         HttpPost httppost = new HttpPost(URL);
+
         System.out.println(httppost);
         boolean si = false;
 
         FileBody bin = new FileBody(new File(json.getString("File")));
         MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+        
         reqEntity.addPart("File", bin);
         //  StringBody id = new StringBody(String.valueOf(json.getInt("Entrega_id")), ContentType.DEFAULT_TEXT);
 
         // reqEntity.addPart("Entrega_id", id);
         //reqEntity.addPart("upp", new StringBody(String.valueOf(json.getInt("Subida_id")), ContentType.DEFAULT_TEXT));
-        reqEntity.addPart("EstudianteId", new StringBody(String.valueOf(json.getInt("EstudianteId")), ContentType.DEFAULT_TEXT));
+        reqEntity.addPart("MAC", new StringBody(String.valueOf(json.getString("MAC")), ContentType.DEFAULT_TEXT));
         reqEntity.addPart("TareaRegistroId", new StringBody(String.valueOf(json.getInt("TareaRegistroId")), ContentType.DEFAULT_TEXT));
+        
         HttpEntity entity = reqEntity.build();
         httppost.setEntity(entity);
+        httppost.setHeader("Authorization" ,bearer+token);
 
         HttpResponse httpresponse = httpClient.execute(httppost);
+        
+        
         System.out.println(httpresponse.getCode());
 
         return si;
