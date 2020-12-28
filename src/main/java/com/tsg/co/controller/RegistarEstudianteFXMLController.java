@@ -17,9 +17,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -35,7 +37,7 @@ public class RegistarEstudianteFXMLController implements Initializable {
     @FXML
     private TextField txtUsuario;
     @FXML
-    private TextField txtContraseña;
+    private PasswordField txtContraseña;
     @FXML
     private Label labelUsuario;
     @FXML
@@ -43,6 +45,8 @@ public class RegistarEstudianteFXMLController implements Initializable {
     @FXML
     private Button btnIniciarSesion;
     private Stage stageInicioSesion;
+    @FXML
+    private AnchorPane panelInferior;
 
     /**
      * Initializes the controller class.

@@ -23,6 +23,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -44,15 +46,15 @@ public class InicioSesionFXMLController implements Initializable {
     private static EntityManagerFactory enf;
     private Estudiante estudiante;
     @FXML
-    private JFXButton btnIniciarSesion;
+    private Button btnIniciarSesion;
     private Stage stageInicio;
     private Stage stagePantallaPrincipal;
     @FXML
-    private JFXButton btnRegistrarEstudiante;
+    private Button btnRegistrarEstudiante;
     @FXML
-    private JFXTextField txtUsuarioEstudiante;
+    private TextField txtUsuarioEstudiante;
     @FXML
-    private TextField txtContraseña;
+    private PasswordField txtContraseña;
 
     /**
      * Initializes the controller class.

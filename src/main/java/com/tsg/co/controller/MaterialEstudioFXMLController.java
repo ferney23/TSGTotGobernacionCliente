@@ -59,6 +59,7 @@ public class MaterialEstudioFXMLController implements Initializable {
     private TableColumn<ViewMaterialEstudio, String> colDescripcion;
     @FXML
     private TableColumn<ViewMaterialEstudio, Button> colAdjunto;
+
     /**
      * Initializes the controller class.
      */
@@ -92,9 +93,8 @@ public class MaterialEstudioFXMLController implements Initializable {
         ObservableList<MaterialEstudio> observableListMaterialEstudios = FXCollections.observableArrayList(materialEstudios);
 
         for (MaterialEstudio observableListEstudio : observableListMaterialEstudios) {
-            System.out.println(observableListEstudio.getNombre() + "Estoy dentro del observable");
-            Button buttonVerMas = new Button("Ver Archivo Adjunto");
 
+            Button buttonVerMas = new Button("Ver Archivo Adjunto");
             ViewMaterialEstudio viewMaterialEstudio = new ViewMaterialEstudio();
             viewMaterialEstudio.setNombre(observableListEstudio.getNombre());
             viewMaterialEstudio.setTema(observableListEstudio.getClase().getTema());
@@ -106,9 +106,7 @@ public class MaterialEstudioFXMLController implements Initializable {
 
                 @Override
                 public void handle(ActionEvent e) {
-                    
                     viewArchivos(observableListEstudio.getRuta());
-
                 }
             });
 
@@ -123,10 +121,10 @@ public class MaterialEstudioFXMLController implements Initializable {
         colAdjunto.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, Button>("btnArchivoAdjunto"));
 
     }
-    
-    public void viewArchivos(String ruta){
+
+    public void viewArchivos(String ruta) {
         try {
-          
+
             File f = new File(ruta);
             System.out.println(ruta);
             try {
