@@ -94,8 +94,10 @@ public class MaterialEstudioFXMLController implements Initializable {
 
         for (MaterialEstudio observableListEstudio : observableListMaterialEstudios) {
 
-            Button buttonVerMas = new Button("Ver Archivo Adjunto");
+            Button buttonVerMas = new Button(observableListEstudio.getNombreArchivo());
+            buttonVerMas.getStylesheets().add(getClass().getResource("/styles/botones.css").toExternalForm());
             ViewMaterialEstudio viewMaterialEstudio = new ViewMaterialEstudio();
+            
             viewMaterialEstudio.setNombre(observableListEstudio.getNombre());
             viewMaterialEstudio.setTema(observableListEstudio.getClase().getTema());
             viewMaterialEstudio.setClase(observableListEstudio.getClase().getNombre());

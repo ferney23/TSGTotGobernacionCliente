@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+
 <?import java.net.URL?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="363.0" prefWidth="500.0" style="-fx-background-image:url(img/Fondo.png)" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.InicioSesionFXMLController">
+<AnchorPane id="AnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="363.0" prefWidth="500.0" style="-fx-background-image:url(img/Login.png)" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.InicioSesionFXMLController">
     <stylesheets>
         <URL value="@/styles/iniciosesionfxml.css" />
     </stylesheets>
@@ -26,11 +27,11 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <PasswordField fx:id="txtContraseña" prefHeight="31.0" prefWidth="163.0" promptText="ingrese su contraseña" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <PasswordField fx:id="txtContraseña" prefHeight="31.0" prefWidth="163.0" promptText="ingrese su contraseña" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font size="16.0" />
                </font></PasswordField>
-            <TextField fx:id="txtUsuarioEstudiante" prefHeight="35.0" prefWidth="163.0" promptText="Ingrese su usuario" GridPane.columnIndex="1">
+            <TextField fx:id="txtUsuarioEstudiante" prefHeight="35.0" prefWidth="163.0" promptText="Ingrese su usuario" style="-fx-background-color: white;" GridPane.columnIndex="1">
                <font>
                   <Font size="16.0" />
                </font></TextField>
@@ -46,8 +47,8 @@
       </GridPane>
       <AnchorPane layoutX="2.0" layoutY="263.0" prefHeight="107.0" prefWidth="500.0">
          <children>
-            <Button fx:id="btnIniciarSesion" layoutX="282.0" onMouseClicked="#ObtenerUsuario" prefHeight="39.0" prefWidth="150.0" text="Iniciar Sesion " />
-            <Button fx:id="btnRegistrarEstudiante" layoutX="64.0" onMouseClicked="#registrarEstudiante" prefHeight="39.0" prefWidth="150.0" text="Registrarse" />
+            <JFXButton fx:id="btnIniciarSesion" layoutX="282.0" onMouseClicked="#ObtenerUsuario" prefHeight="39.0" prefWidth="150.0" text="Iniciar Sesion " />
+            <JFXButton fx:id="btnRegistrarEstudiante" layoutX="64.0" onMouseClicked="#registrarEstudiante" prefHeight="39.0" prefWidth="150.0" text="Registrarse" />
          </children>
       </AnchorPane>
    </children>

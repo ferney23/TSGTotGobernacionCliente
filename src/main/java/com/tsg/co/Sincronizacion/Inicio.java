@@ -189,7 +189,7 @@ public class Inicio implements Runnable {
                                     }
 
                                     // 
-                                    obtenerDatos.postArchivos(ip,jsonResp.getString("token"),this.estudianteCliente);
+                                    obtenerDatos.postArchivos(ip, jsonResp.getString("token"), this.estudianteCliente);
 
                                 }
 
@@ -660,7 +660,7 @@ public class Inicio implements Runnable {
 
         FileBody bin = new FileBody(new File(json.getString("File")));
         MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
-        
+
         reqEntity.addPart("File", bin);
         //  StringBody id = new StringBody(String.valueOf(json.getInt("Entrega_id")), ContentType.DEFAULT_TEXT);
 
@@ -668,14 +668,13 @@ public class Inicio implements Runnable {
         //reqEntity.addPart("upp", new StringBody(String.valueOf(json.getInt("Subida_id")), ContentType.DEFAULT_TEXT));
         reqEntity.addPart("MAC", new StringBody(String.valueOf(json.getString("MAC")), ContentType.DEFAULT_TEXT));
         reqEntity.addPart("TareaRegistroId", new StringBody(String.valueOf(json.getInt("TareaRegistroId")), ContentType.DEFAULT_TEXT));
-        
+
         HttpEntity entity = reqEntity.build();
         httppost.setEntity(entity);
-        httppost.setHeader("Authorization" ,bearer+token);
+        httppost.setHeader("Authorization", bearer + token);
 
         HttpResponse httpresponse = httpClient.execute(httppost);
-        
-        
+
         System.out.println(httpresponse.getCode());
 
         return si;

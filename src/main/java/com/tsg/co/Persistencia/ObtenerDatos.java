@@ -597,7 +597,7 @@ public class ObtenerDatos {
                 JSONObject obArchivos = new JSONObject();
                 obArchivos.put("File", entrega.getRuta());
                 obArchivos.put("TareaRegistroId", entrega.getEntrega().getRtEntrega());
-                obArchivos.put("MAC", "E4:BE:ED:A0:01:19");
+                obArchivos.put("MAC", Inicio.getMacAddress());
 
                 inicio.sendhttppostwhitfile(endPointPostArchivo, obArchivos, token);
                 System.err.println("Se envio el archivo");

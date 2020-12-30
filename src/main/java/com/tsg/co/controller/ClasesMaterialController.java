@@ -37,6 +37,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -70,10 +72,16 @@ public class ClasesMaterialController implements Initializable {
     @FXML
     private TableColumn<VistaModeloClases, String> cellClase = new TableColumn<>();
     @FXML
-    private TableColumn<VistaModeloClases, Button> cellMaterial = new TableColumn<>();
+    private TableColumn<VistaModeloClases, String> cellTema = new TableColumn<>();
     @FXML
     private TableView<VistaModeloClases> tableMaterialEstudio = new TableView<>();
     //private ObservableList<VistaModeloClases> observaMaterial;
+    @FXML
+    private Label panelTableClases;
+    @FXML
+    private TableColumn<VistaModeloClases, Button> cellMaterialEstudio = new TableColumn<>();
+    @FXML
+    private AnchorPane panelImage;
 
     /**
      * Initializes the controller class.
@@ -119,9 +127,13 @@ public class ClasesMaterialController implements Initializable {
         for (Clases observableListClase : observableListClases) {
             System.out.println(observableListClase.getNombre() + "Estoy dentro del observable");
             Button buttonVerMas = new Button("Ver Mas");
+            buttonVerMas.setMinHeight(30);
+            buttonVerMas.setMaxSize(100, 30);
+            buttonVerMas.getStylesheets().add(getClass().getResource("/styles/botones.css").toExternalForm());
 
             VistaModeloClases vistaModeloClases = new VistaModeloClases();
             vistaModeloClases.setNombre(observableListClase.getNombre());
+            vistaModeloClases.setTema(observableListClase.getTema());
             vistaModeloClases.setVerMas(buttonVerMas);
 
             buttonVerMas.setOnAction(new EventHandler<ActionEvent>() {
@@ -139,7 +151,8 @@ public class ClasesMaterialController implements Initializable {
         }
 
         cellClase.setCellValueFactory(new PropertyValueFactory<VistaModeloClases, String>("nombre"));
-        cellMaterial.setCellValueFactory(new PropertyValueFactory<VistaModeloClases, Button>("verMas"));
+        cellTema.setCellValueFactory(new PropertyValueFactory<VistaModeloClases, String>("tema"));
+        cellMaterialEstudio.setCellValueFactory(new PropertyValueFactory<VistaModeloClases, Button>("verMas"));
 
     }
 
@@ -160,6 +173,7 @@ public class ClasesMaterialController implements Initializable {
             stage.setTitle("TOT Learning System - Tarea");
             stage.setResizable(false);
             stage.show();
+            stage.getFullScreenExitKeyCombination();
         } catch (IOException e) {
 
         }
