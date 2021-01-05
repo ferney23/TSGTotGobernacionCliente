@@ -26,10 +26,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -89,6 +93,13 @@ public class TareasArchivosFXMLController implements Initializable {
     private Button dibujoitem;
     @FXML
     private Button botoncargar;
+    @FXML
+    private Button btnPantallaPrincipal;
+
+    private Stage stagePantallaPrincipal;
+    private Scene scenePrincipal;
+    private Scene sceneInicioSesion;
+    private Stage stageInicioSesion;
 
     /**
      * Initializes the controller class.
@@ -136,6 +147,43 @@ public class TareasArchivosFXMLController implements Initializable {
         //  codigotarealabel.setText(codigotarea);
     }
 
+    public Stage getStagePantallaPrincipal() {
+        return stagePantallaPrincipal;
+    }
+
+    public void setStagePantallaPrincipal(Stage stagePantallaPrincipal) {
+        this.stagePantallaPrincipal = stagePantallaPrincipal;
+    }
+
+    public Scene getScenePrincipal() {
+        return scenePrincipal;
+    }
+
+    public void setScenePrincipal(Scene scenePrincipal) {
+        this.scenePrincipal = scenePrincipal;
+    }
+
+    public Scene getSceneInicioSesion() {
+        return sceneInicioSesion;
+    }
+
+    public void setSceneInicioSesion(Scene sceneInicioSesion) {
+        this.sceneInicioSesion = sceneInicioSesion;
+    }
+
+    public Stage getStageInicioSesion() {
+        return stageInicioSesion;
+    }
+
+    public void setStageInicioSesion(Stage stageInicioSesion) {
+        this.stageInicioSesion = stageInicioSesion;
+    }
+
+    
+    
+    
+    
+    
     @FXML
     private void cargararchivo(MouseEvent event) throws IOException {
         Button b = (Button) event.getSource();
@@ -275,6 +323,31 @@ public class TareasArchivosFXMLController implements Initializable {
          * (IOException e) { e.printStackTrace(); }
          *
          */
+    }
+
+    @FXML
+    private void clickedPantallaPrincipal(MouseEvent event) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TableView.fxml"));
+            this.scenePrincipal.setRoot((Pane) loader.load());
+            // this.inicioSesionFXMLController.getStagePantallaPrincipal().setScene(this.scenePrincipal);
+            this.stagePantallaPrincipal.setScene(scenePrincipal);
+            TableViewController tableViewController = loader.<TableViewController>getController();
+            tableViewController.setScenePrincipal(scenePrincipal);
+            tableViewController.setStagePantallaPrincipal(stagePantallaPrincipal);
+            tableViewController.setSceneInicioSesion(sceneInicioSesion);
+            tableViewController.setStageInicioSesion(stageInicioSesion);
+            tableViewController.setEstudiante(estudiante);
+            tableViewController.llenarEstudiante();
+            tableViewController.listarMaterias();
+            // tableViewController.setSceneInicioSesion(sceneInicioSesion);
+            // tableViewController.setStageInicioSesion(stageInicioSesion);
+
+        } catch (IOException ex) {
+            Logger.getLogger(ClasesMaterialController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
 }

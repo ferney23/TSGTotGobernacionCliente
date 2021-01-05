@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-
 <?import java.net.URL?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -51,5 +50,6 @@
             <JFXButton fx:id="btnRegistrarEstudiante" layoutX="64.0" onMouseClicked="#registrarEstudiante" prefHeight="39.0" prefWidth="150.0" text="Registrarse" />
          </children>
       </AnchorPane>
+      <Label fx:id="labelinfoConexion" layoutX="21.0" layoutY="20.0" prefHeight="26.0" prefWidth="150.0" text="Conectado a un Kiosco" />
    </children>
 </AnchorPane>

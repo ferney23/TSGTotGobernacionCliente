@@ -8,26 +8,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorpane" prefHeight="688.0" prefWidth="878.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.TareasArchivosFXMLController">
+<AnchorPane id="AnchorPane" fx:id="anchorpane" prefHeight="688.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.TareasArchivosFXMLController">
         <stylesheets>
             <URL value="@/styles/archivosfxml.css" />
         </stylesheets>
        <children>
-                <TableView fx:id="tableArchivo" layoutX="78.0" layoutY="130.0" onMouseClicked="#mouseSelArchivo" prefHeight="472.0" prefWidth="324.0">
+                <TableView fx:id="tableArchivo" layoutX="78.0" layoutY="150.0" onMouseClicked="#mouseSelArchivo" prefHeight="472.0" prefWidth="320.0">
                   <columns>
                     <TableColumn fx:id="imagetype" prefWidth="45.0" />
                     <TableColumn fx:id="nombrematerial1" prefWidth="215.0" text="MATERIAL TAREA" />
                     <TableColumn fx:id="optionstable" prefWidth="63.0" text="..." />
                   </columns>
                 </TableView>
-            <TableView fx:id="tableArchivo1" layoutX="500.0" layoutY="132.0" onMouseClicked="#mouseArchivoNuevo" prefHeight="468.0" prefWidth="315.0">
+            <TableView fx:id="tableArchivo1" layoutX="618.0" layoutY="150.0" onMouseClicked="#mouseArchivoNuevo" prefHeight="468.0" prefWidth="320.0">
                <columns>
                   <TableColumn fx:id="imagentype1" prefWidth="43.0" />
-                  <TableColumn fx:id="nombrematerial" prefWidth="208.0" text="ENTREGAS " />
+                  <TableColumn fx:id="nombrematerial" prefWidth="215.0" text="ENTREGAS " />
             <TableColumn fx:id="options" prefWidth="63.0" text="..." />
                </columns>
             </TableView>
-            <Pane id="panelInfoGrado" layoutY="1.0" prefHeight="120.0" prefWidth="890.0" style="-fx-background-image:url(img/Header.jpg)">
+            <Pane id="panelInfoGrado" layoutY="1.0" prefHeight="140.0" prefWidth="990.0" style="-fx-background-image:url(img/Header.jpg)">
                <children>
                   <Pane fx:id="dibujo" prefHeight="120.0" prefWidth="119.0">
                <children>
@@ -36,7 +36,8 @@
                   <Label fx:id="nombretarea" layoutX="137.0" layoutY="47.0" prefHeight="26.0" prefWidth="315.0" text="Label" />
                   <Label fx:id="nombreestudiante" layoutX="137.0" layoutY="3.0" prefHeight="38.0" prefWidth="315.0" text="Label" />
                   <Label fx:id="materianombre" layoutX="137.0" layoutY="73.0" prefHeight="26.0" prefWidth="315.0" text="Label" />
-                  <Button fx:id="botoncargar" layoutX="633.0" layoutY="41.0" mnemonicParsing="false" onMouseClicked="#cargararchivo" prefHeight="38.0" prefWidth="191.0" text="Subir Archivos" />
+                  <Button fx:id="botoncargar" layoutX="751.0" layoutY="22.0" mnemonicParsing="false" onMouseClicked="#cargararchivo" prefHeight="38.0" prefWidth="191.0" text="Subir Archivos" />
+            <Button fx:id="btnPantallaPrincipal" layoutX="751.0" layoutY="80.0" mnemonicParsing="false" onMouseClicked="#clickedPantallaPrincipal" prefHeight="38.0" prefWidth="191.0" text="Volver" />
                </children>
             </Pane>
        </children>

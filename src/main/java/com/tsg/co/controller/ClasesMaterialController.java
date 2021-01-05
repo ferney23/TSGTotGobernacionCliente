@@ -5,6 +5,7 @@
  */
 package com.tsg.co.controller;
 
+import com.jfoenix.controls.JFXButton;
 import com.tsg.co.model.Clases;
 import com.tsg.co.model.CustomImage;
 import com.tsg.co.model.Estudiante;
@@ -20,6 +21,8 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -82,6 +85,18 @@ public class ClasesMaterialController implements Initializable {
     private TableColumn<VistaModeloClases, Button> cellMaterialEstudio = new TableColumn<>();
     @FXML
     private AnchorPane panelImage;
+    @FXML
+    private JFXButton btnPantallaInicio;
+
+    private TableViewController tableViewController;
+
+    private Stage stagePrincipal;
+    private Scene scenePrincipal;
+    @FXML
+    private JFXButton btnCerrarSesion;
+
+    private Scene sceneInicioSesion;
+    private Stage stageInicioSesion;
 
     /**
      * Initializes the controller class.
@@ -92,6 +107,14 @@ public class ClasesMaterialController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+    }
+
+    public TableViewController getTableViewController() {
+        return tableViewController;
+    }
+
+    public void setTableViewController(TableViewController tableViewController) {
+        this.tableViewController = tableViewController;
     }
 
     public Estudiante getEstudiante() {
@@ -114,6 +137,38 @@ public class ClasesMaterialController implements Initializable {
         labelNombres.setText(estudiante.getNombres() + " " + estudiante.getApellidos());
         labelMaterias.setText(materias.getTitulo());
 
+    }
+
+    public Stage getStagePrincipal() {
+        return stagePrincipal;
+    }
+
+    public void setStagePrincipal(Stage stagePrincipal) {
+        this.stagePrincipal = stagePrincipal;
+    }
+
+    public Scene getScenePrincipal() {
+        return scenePrincipal;
+    }
+
+    public void setScenePrincipal(Scene scenePrincipal) {
+        this.scenePrincipal = scenePrincipal;
+    }
+
+    public Scene getSceneInicioSesion() {
+        return sceneInicioSesion;
+    }
+
+    public void setSceneInicioSesion(Scene sceneInicioSesion) {
+        this.sceneInicioSesion = sceneInicioSesion;
+    }
+
+    public Stage getStageInicioSesion() {
+        return stageInicioSesion;
+    }
+
+    public void setStageInicioSesion(Stage stageInicioSesion) {
+        this.stageInicioSesion = stageInicioSesion;
     }
 
     public void ClasesMateriales(Materias materias) {
@@ -177,6 +232,48 @@ public class ClasesMaterialController implements Initializable {
         } catch (IOException e) {
 
         }
+    }
+
+    @FXML
+    private void volverPantallaPrincipal(MouseEvent event) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TableView.fxml"));
+            this.scenePrincipal.setRoot((Pane) loader.load());
+            // this.inicioSesionFXMLController.getStagePantallaPrincipal().setScene(this.scenePrincipal);
+            this.stagePrincipal.setScene(scenePrincipal);
+            TableViewController tableViewController = loader.<TableViewController>getController();
+            tableViewController.setScenePrincipal(scenePrincipal);
+            tableViewController.setStagePantallaPrincipal(stagePrincipal);
+            tableViewController.setEstudiante(estudiante);
+            tableViewController.llenarEstudiante();
+            tableViewController.listarMaterias();
+            tableViewController.setSceneInicioSesion(sceneInicioSesion);
+            tableViewController.setStageInicioSesion(stageInicioSesion);
+
+        } catch (IOException ex) {
+            Logger.getLogger(ClasesMaterialController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    @FXML
+    private void eventCerrarSesion(MouseEvent event) throws IOException {
+
+        //  this.stageInicioSesion.getIcons().add(new Image("img/TOT-Icon.png"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/InicioSesionFXML.fxml"));
+        this.sceneInicioSesion.setRoot((Pane) loader.load());
+        this.stageInicioSesion.setScene(this.sceneInicioSesion);
+        InicioSesionFXMLController inicioFXMLController = loader.<InicioSesionFXMLController>getController();
+        inicioFXMLController.setStageInicioSesion(this.stageInicioSesion);
+        inicioFXMLController.setSceneInicioSesion(sceneInicioSesion);
+
+        this.stageInicioSesion.setTitle("TOT Learning System - Client");
+        this.stageInicioSesion.setResizable(false);
+        this.stagePrincipal.close();
+        this.estudiante = null;
+        this.stageInicioSesion.show();
+
     }
 
 }

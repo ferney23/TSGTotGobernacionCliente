@@ -82,6 +82,7 @@ public class Inicio implements Runnable {
     private Long fin;
     private double tiempo;
     private Long inicioTiempo;
+    private boolean conectado;
 
     /**
      *
@@ -91,6 +92,14 @@ public class Inicio implements Runnable {
         this.obtenerDatos = new ObtenerDatos(this);
         this.verificacion = new Verificacion();
         this.manejoDatos = new ManejoDatos();
+    }
+
+    public boolean isConectado() {
+        return conectado;
+    }
+
+    public void setConectado(boolean conectado) {
+        this.conectado = conectado;
     }
 
     @Override
@@ -105,7 +114,7 @@ public class Inicio implements Runnable {
             System.err.println(GetAddress);
             obtenerDatos.KioscosListos();
             List<Kiosko> kioskos = manager.createQuery("FROM Kiosko").getResultList();
-            boolean conectado;
+            // boolean conectado;
             boolean saber = false;
             obtenerDatos.IniciarVersion();
 

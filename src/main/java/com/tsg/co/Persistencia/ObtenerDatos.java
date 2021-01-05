@@ -237,7 +237,7 @@ public class ObtenerDatos {
             JSONObject objMaterias = (JSONObject) jsonArrayMaterias.get(j);
             Materias materiasExiste = manager.find(Materias.class, objMaterias.getLong("id"));
             boolean existeMateriasEstudiante = materiasEstudiante.contains(materiasExiste);
-          
+
             if (existeMateriasEstudiante == false) {
                 manager.getTransaction().begin();
                 estudiante.getMateriases().add(materiasExiste);
@@ -584,27 +584,22 @@ public class ObtenerDatos {
         manager = enf.createEntityManager();
         // List<Entregas> entregasEnviar = manager.createQuery("FROM Entregas").getResultList();
 
-        List<AchivosTot> entregas = manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.entrega.upp= :id").setParameter("id", 0L).getResultList();
-         System.out.println(entregas);
+        List<AchivosTot> entregas = manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.entrega.upp = :id and ma.entrega.estudiante.idEstudiante=:idEstudiante").setParameter("id", 0L).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
+        System.out.println(entregas);
 
         for (AchivosTot entrega : entregas) {
-              System.out.println(entrega.getEntrega().getEstudiante() + "Estudiante Entrega");
-                System.out.println(estudiante + "Estudiante activo sin el if ");
-          //  if (entrega.getEntrega().getEstudiante().equals(estudiante)) {
-                System.out.println(entrega.getEntrega().getEstudiante() + "Estudiante Entrega");
-                System.out.println(estudiante + "Estudiante activo");
 
-                JSONObject obArchivos = new JSONObject();
-                obArchivos.put("File", entrega.getRuta());
-                obArchivos.put("TareaRegistroId", entrega.getEntrega().getRtEntrega());
-                obArchivos.put("MAC", Inicio.getMacAddress());
+            JSONObject obArchivos = new JSONObject();
+            obArchivos.put("File", entrega.getRuta());
+            obArchivos.put("TareaRegistroId", entrega.getEntrega().getRtEntrega());
+            obArchivos.put("MAC", Inicio.getMacAddress());
+            System.out.println(Inicio.getMacAddress());
 
-                inicio.sendhttppostwhitfile(endPointPostArchivo, obArchivos, token);
-                System.err.println("Se envio el archivo");
-              //  manager.getTransaction().begin();
-              //  entrega.getEntrega().setUpp(1L);
-              //  manager.getTransaction().commit();
-           // }
+            inicio.sendhttppostwhitfile(endPointPostArchivo, obArchivos, token);
+            System.err.println("Se envio el archivo");
+            manager.getTransaction().begin();
+            entrega.getEntrega().setUpp(1L);
+            manager.getTransaction().commit();
 
         }
     }

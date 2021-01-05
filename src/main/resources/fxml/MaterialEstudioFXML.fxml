@@ -10,7 +10,7 @@
         <URL value="@/styles/materialestudiofxml.css" />
     </stylesheets>
    <children>
-      <AnchorPane fx:id="panelInformacion" layoutX="6.0" prefHeight="111.0" prefWidth="686.0" style="-fx-background-color: blue;" />
+      <AnchorPane fx:id="panelInformacion" layoutX="6.0" prefHeight="111.0" prefWidth="686.0"  style="-fx-background-image:url(img/Header.jpg)" />
       <TableView fx:id="tableMaterialEstudio" layoutX="72.0" layoutY="162.0" prefHeight="200.0" prefWidth="521.0">
         <columns>
           <TableColumn fx:id="colClase" prefWidth="93.0" text="Clase" />

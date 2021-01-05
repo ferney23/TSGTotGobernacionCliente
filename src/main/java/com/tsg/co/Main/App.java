@@ -1,5 +1,6 @@
-package com.tsg.co.controller;
+package com.tsg.co.Main;
 
+import com.tsg.co.controller.*;
 import com.sun.javafx.application.LauncherImpl;
 import com.tsg.co.Sincronizacion.Inicio;
 import javafx.application.Application;

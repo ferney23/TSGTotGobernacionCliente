@@ -125,6 +125,13 @@ public class TableViewController implements Initializable {
     @FXML
     private Image imagenGrado;
 
+    private ClasesMaterialController clasesMaterialController;
+
+    private Stage stagePantallaPrincipal;
+    private Scene scenePrincipal;
+    private Scene sceneInicioSesion;
+    private Stage stageInicioSesion;
+
     /**
      * Initializes the controller class.
      *
@@ -138,6 +145,14 @@ public class TableViewController implements Initializable {
         //   listarMaterias();
     }
 
+    public ClasesMaterialController getClasesMaterialController() {
+        return clasesMaterialController;
+    }
+
+    public void setClasesMaterialController(ClasesMaterialController clasesMaterialController) {
+        this.clasesMaterialController = clasesMaterialController;
+    }
+
     public Estudiante getEstudiante() {
         return estudiante;
     }
@@ -145,6 +160,38 @@ public class TableViewController implements Initializable {
     public void setEstudiante(Estudiante estudiante) {
         this.estudiante = estudiante;
 
+    }
+
+    public Scene getScenePrincipal() {
+        return scenePrincipal;
+    }
+
+    public void setScenePrincipal(Scene scenePrincipal) {
+        this.scenePrincipal = scenePrincipal;
+    }
+
+    public Scene getSceneInicioSesion() {
+        return sceneInicioSesion;
+    }
+
+    public void setSceneInicioSesion(Scene sceneInicioSesion) {
+        this.sceneInicioSesion = sceneInicioSesion;
+    }
+
+    public Stage getStageInicioSesion() {
+        return stageInicioSesion;
+    }
+
+    public void setStageInicioSesion(Stage stageInicioSesion) {
+        this.stageInicioSesion = stageInicioSesion;
+    }
+
+    public Stage getStagePantallaPrincipal() {
+        return stagePantallaPrincipal;
+    }
+
+    public void setStagePantallaPrincipal(Stage stagePantallaPrincipal) {
+        this.stagePantallaPrincipal = stagePantallaPrincipal;
     }
 
     public void llenarEstudiante() {
@@ -239,35 +286,42 @@ public class TableViewController implements Initializable {
 
     @FXML
     private void actionClases(ActionEvent event) {
-  
-        try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClasesMaterialFXML.fxml"));
-            Stage stage = new Stage(StageStyle.DECORATED);
-            stage.setScene(new Scene((Pane) loader.load()));
-            ClasesMaterialController controller = loader.<ClasesMaterialController>getController();
+        if (materias != null) {
+            System.out.println(materias.getTitulo());
+            try {
 
-            controller.setEstudiante(estudiante);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClasesMaterialFXML.fxml"));
+                //Stage stage = new Stage(StageStyle.DECORATED);
 
-            controller.setMaterias(materias);
-            controller.informacionMateria();
-            controller.ClasesMateriales(materias);
-            stage.getIcons().add(new Image("/img/TOT-Icon.png"));
+                this.scenePrincipal.setRoot((Pane) loader.load());
+                this.stagePantallaPrincipal.setScene(this.scenePrincipal);
+                clasesMaterialController = loader.<ClasesMaterialController>getController();
+                clasesMaterialController.setEstudiante(estudiante);
+                clasesMaterialController.setMaterias(materias);
+                clasesMaterialController.informacionMateria();
+                clasesMaterialController.ClasesMateriales(materias);
+                clasesMaterialController.setScenePrincipal(scenePrincipal);
+                clasesMaterialController.setStageInicioSesion(stageInicioSesion);
+                clasesMaterialController.setSceneInicioSesion(sceneInicioSesion);
+                clasesMaterialController.setStagePrincipal(stagePantallaPrincipal);
+                this.stagePantallaPrincipal.getIcons().add(new Image("/img/TOT-Icon.png"));
+                this.stagePantallaPrincipal.setTitle("TOT Learning System - Tarea");
+                this.stagePantallaPrincipal.setResizable(false);
+                this.stagePantallaPrincipal.show();
 
-            stage.setTitle("TOT Learning System - Tarea");
-            stage.setResizable(false);
-            stage.show();
-        } catch (IOException e) {
+                // this.stagePantallaPrincipal.close();
+            } catch (IOException e) {
 
+            }
+        } else {
+            labelMaterias.setText("SELECCIONE UNA MATERIA ");
         }
-
     }
 
     @FXML
     private void tareaSelecionada(MouseEvent event) {
 
-        
-        
         try {
             Tareas tarea = null;
             for (Tareas tar : tareaselec) {
@@ -276,27 +330,35 @@ public class TableViewController implements Initializable {
                 }
             }
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TareasArchivosFXML.fxml"));
-            Stage stage = new Stage(StageStyle.DECORATED);
-            stage.setScene(new Scene((Pane) loader.load()));
+            //Stage stage = new Stage(StageStyle.DECORATED);
+
+            this.scenePrincipal.setRoot((Pane) loader.load());
+            
+            this.stagePantallaPrincipal.setScene(this.scenePrincipal);
+           // this.stagePantallaPrincipal.setWidth(878);
+          //  this.stagePantallaPrincipal.setHeight(688);
             CustomImage obj = (CustomImage) tablatareass.getSelectionModel().getSelectedItem();
             Materias mat = jlistMaterias.getSelectionModel().getSelectedItem();
             TareasArchivosFXMLController controller = loader.<TareasArchivosFXMLController>getController();
             controller.setEstudiante(estudiante);
-
+            controller.setScenePrincipal(scenePrincipal);
+            controller.setStagePantallaPrincipal(stagePantallaPrincipal);
+            controller.setSceneInicioSesion(sceneInicioSesion);
+            controller.setStageInicioSesion(stageInicioSesion);
             controller.setTarea(tarea);
             controller.setMateria(mat);
-            stage.getIcons().add(new Image("/img/TOT-Icon.png"));
+            this.stagePantallaPrincipal.getIcons().add(new Image("/img/TOT-Icon.png"));
 
-            stage.setTitle("TOT Learning System - Tarea");
-            stage.setResizable(false);
-            stage.show();
+            this.stagePantallaPrincipal.setTitle("TOT Learning System - Tarea");
+            this.stagePantallaPrincipal.setResizable(false);
+            this.stagePantallaPrincipal.show();
 
             System.out.println(tablatareass.getSelectionModel().getSelectedItem());
         } catch (IOException ex) {
             Logger.getLogger(TableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @FXML
     private void sincronizar(MouseEvent event) {
 
