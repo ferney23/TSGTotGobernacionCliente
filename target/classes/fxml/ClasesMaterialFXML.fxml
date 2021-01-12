@@ -37,8 +37,8 @@
                                 <Font name="HP Simplified" size="25.0" />
                             </font>
                         </Label>
-                  <JFXButton fx:id="btnPantallaInicio" layoutX="791.0" layoutY="81.0" onMouseClicked="#volverPantallaPrincipal" prefHeight="33.0" prefWidth="178.0" text="Volver a Pantalla Principal" />
-                  <JFXButton fx:id="btnCerrarSesion" layoutX="862.0" layoutY="25.0" onMouseClicked="#eventCerrarSesion" prefHeight="32.0" prefWidth="107.0" text="Cerrar Sesion" />
+                  <JFXButton fx:id="btnPantallaInicio" layoutX="785.0" layoutY="81.0" onMouseClicked="#volverPantallaPrincipal" prefHeight="30.0" prefWidth="191.0" text="Volver" textAlignment="CENTER" />
+                  <JFXButton fx:id="btnCerrarSesion" layoutX="785.0" layoutY="20.0" onMouseClicked="#eventCerrarSesion" prefHeight="30.0" prefWidth="191.0" text="Cerrar Sesion" textAlignment="CENTER" />
                     </children>
                 </Pane>
             </top>
@@ -52,43 +52,54 @@
                         <RowConstraints maxHeight="350.0" minHeight="10.0" prefHeight="339.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-                            <children>
-                                <Pane prefHeight="335.0" prefWidth="500.0" style="-fx-background-color: blue;">
-                                    <children>
-                                        <Pane layoutX="-1.0" prefHeight="45.0" prefWidth="500.0" style="-fx-background-image:url(img/Header.jpg)">
-                                            <children>
-                                                <Label fx:id="panelTableClases" layoutX="180.0" layoutY="1.0" prefHeight="37.0" prefWidth="299.0" style="-fx-text-fill:white;-fx-text-alignment:left; " text="Clases y Materiales">
-                                                    <font>
-                                                        <Font size="25.0" />
-                                                    </font>
-                                                </Label>
-                                            </children>
-                                        </Pane>
-                              
-                                              <AnchorPane layoutX="1.0" layoutY="46.0" minHeight="0.0" minWidth="0.0" prefHeight="288.0" prefWidth="500.0">
-                                            <children>
-                                                <TableView fx:id="tableMaterialEstudio" layoutX="7.0" prefHeight="275.0" prefWidth="480.0">
-                                                    <columns>
-                                                        <TableColumn fx:id="cellClase" prefWidth="158.0" text="Nombre" />
-                                                        <TableColumn fx:id="cellTema" minWidth="0.0" prefWidth="192.0" text="Tema" />
-                                          <TableColumn fx:id="cellMaterialEstudio" maxWidth="300.0" prefWidth="150.0" text="Material Estudio" />
-                                                    </columns>
-                                                </TableView>
-                                            </children>
-                                        </AnchorPane>
-                               
-                                    </children>
-                                </Pane>
-                        <TableView fx:id="tableMaterialEstudio1" layoutX="511.0" layoutY="14.0" prefHeight="310.0" prefWidth="480.0">
+                  <GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="360.0" minWidth="10.0" prefWidth="104.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="589.0" minWidth="10.0" prefWidth="563.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Pane fx:id="paneltitulo" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <children>
+                                          <Label fx:id="panelTableClases" alignment="CENTER" layoutX="102.0" layoutY="-5.0" prefHeight="43.0" prefWidth="400.0" style="-fx-text-fill: black; -fx-background-image: url(img/Header.jpg);" text="Clases y Material de Estudio" textAlignment="CENTER" textOverrun="CLIP">
+                                              <font>
+                                                  <Font size="25.0" />
+                                              </font>
+                                          </Label>
+                           </children>
+                        </Pane>
+                     </children>
+                  </GridPane>
+                  <GridPane GridPane.rowIndex="1">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                                    <TableView fx:id="tableMaterialEstudio" prefHeight="328.0" prefWidth="510.0">
+                                        <columns>
+                                            <TableColumn fx:id="cellClase" prefWidth="158.0" text="Nombre" />
+                                            <TableColumn fx:id="cellTema" minWidth="0.0" prefWidth="122.0" text="Tema" />
+                              <TableColumn fx:id="cellMaterialEstudio" maxWidth="300.0" prefWidth="220.0" text="Material Estudio" />
+                                        </columns>
+                                    </TableView>
+                        <TableView fx:id="tableArchivos" prefHeight="132.0" prefWidth="243.0" GridPane.columnIndex="1">
                            <columns>
-                              <TableColumn fx:id="ColNombre" prefWidth="159.0" text="Nombre" />
+                              <TableColumn fx:id="ColNombre" minWidth="0.0" prefWidth="159.0" text="Nombre" />
                               <TableColumn fx:id="colDescripcion" prefWidth="187.0" text="Descripcion" />
                               <TableColumn fx:id="colAdjunto" prefWidth="108.0" text="Adjunto" />
                            </columns>
                         </TableView>
-                            </children>
-                        </Pane>
+                     </children>
+                  </GridPane>
                     </children>
                 </GridPane>
             </center>

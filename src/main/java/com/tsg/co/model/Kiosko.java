@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tsg.model;
+package com.tsg.co.model;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -23,17 +23,16 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "Kiosco")
-public class Kiosko implements Serializable{
-    
+public class Kiosko implements Serializable {
+
     @Id
     //@GeneratedValue
     private Long idKisco;
-    
+
     @NotNull
     @Column(name = "PORT", nullable = false, length = 50)
     private String PORT;
-    
-    
+
     @NotNull
     @Column(name = "IP", nullable = false, length = 50)
     private String IP;
@@ -70,17 +69,15 @@ public class Kiosko implements Serializable{
     public void setIP(String IP) {
         this.IP = IP;
     }
-    
-  
 
     @Override
     public String toString() {
         return PORT + ", IP=" + IP + '}';
     }
 
-    public void persist(Object object) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-        EntityManager em = emf.createEntityManager();
+    public void persist(Object object, EntityManagerFactory emf, EntityManager em) {
+        // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
+        em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
             em.persist(object);
@@ -89,9 +86,8 @@ public class Kiosko implements Serializable{
             e.printStackTrace();
             em.getTransaction().rollback();
         } finally {
-            em.close();
+            // em.close();
         }
     }
-    
-    
+
 }

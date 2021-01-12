@@ -20,7 +20,7 @@
 #nombretarea{
     -fx-font-size: 20pt;  
 }
-#botoncargar {
+#botoncargar,#btnPantallaPrincipal {
     -fx-text-fill: #ffffff;
 }
 #panelInfoGrado{
@@ -168,13 +168,10 @@
 
     -fx-size:50;
     -fx-alignment: LEFT;
-    -fx-border-color: #F1940A;
+    -fx-border-color: white;
     -fx-border-width: 2 2 2 2;
     -fx-font-family: 'Delicious';
     -fx-text-alignment: center;
-
-
-
 }
 .table-view:row-selection {
     -fx-background-color: transparent;

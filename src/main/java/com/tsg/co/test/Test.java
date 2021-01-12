@@ -17,7 +17,7 @@ import com.tsg.co.model.Materias;
 import com.tsg.co.model.Subida;
 import com.tsg.co.model.Tareas;
 import com.tsg.co.model.Usuario;
-import com.tsg.model.Kiosko;
+import com.tsg.co.model.Kiosko;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

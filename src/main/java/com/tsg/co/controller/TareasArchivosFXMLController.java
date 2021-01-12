@@ -57,8 +57,8 @@ import javax.persistence.Persistence;
  */
 public class TareasArchivosFXMLController implements Initializable {
 
-    private static EntityManager manager;
-    private static EntityManagerFactory enf;
+    private EntityManager manager;
+    private EntityManagerFactory enf;
     private String codigotarea;
     @FXML
     private TableView<CustomImage> tableArchivo = new TableView<CustomImage>();
@@ -179,11 +179,22 @@ public class TareasArchivosFXMLController implements Initializable {
         this.stageInicioSesion = stageInicioSesion;
     }
 
-    
-    
-    
-    
-    
+    public EntityManager getManager() {
+        return manager;
+    }
+
+    public void setManager(EntityManager manager) {
+        this.manager = manager;
+    }
+
+    public EntityManagerFactory getEnf() {
+        return enf;
+    }
+
+    public void setEnf(EntityManagerFactory enf) {
+        this.enf = enf;
+    }
+
     @FXML
     private void cargararchivo(MouseEvent event) throws IOException {
         Button b = (Button) event.getSource();
@@ -220,13 +231,13 @@ public class TareasArchivosFXMLController implements Initializable {
                         StandardCopyOption.REPLACE_EXISTING);
 
                 Entregas nuevaEntrega = new Entregas(0L, this.estudiante, this.tarea.getSubida(), this.tarea, this.tarea.getRegistroTarea());
-                nuevaEntrega.persist(nuevaEntrega);
+                nuevaEntrega.persist(nuevaEntrega, enf, manager);
                 String archivoTotcodigo = nuevaEntrega.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
-
+                System.err.println(archivoTotcodigo);
                 Long idArchivoTot = Long.parseLong(archivoTotcodigo);
 
                 AchivosTot achivosNuevo = new AchivosTot(idArchivoTot, archivoTotcodigo, dest.toString(), this.tarea.getSubida(), nuevaEntrega);
-                achivosNuevo.persist(achivosNuevo);
+                achivosNuevo.persist(achivosNuevo, enf, manager);
 
                 tableArchivo1.getItems().add(itemlist);
                 imagentype1.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
@@ -237,8 +248,8 @@ public class TareasArchivosFXMLController implements Initializable {
     }
 
     public void mostrarArchivo() {
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+        //  enf = Persistence.createEntityManagerFactory("tsg");
+        //  manager = enf.createEntityManager();
 
         List<AchivosTot> achivosTots1 = manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.subida.tareas.id= :id").setParameter("id", tarea.getId()).getResultList();
 
@@ -328,26 +339,31 @@ public class TareasArchivosFXMLController implements Initializable {
     @FXML
     private void clickedPantallaPrincipal(MouseEvent event) {
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TableView.fxml"));
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TableView.fxml"));
             this.scenePrincipal.setRoot((Pane) loader.load());
-            // this.inicioSesionFXMLController.getStagePantallaPrincipal().setScene(this.scenePrincipal);
-            this.stagePantallaPrincipal.setScene(scenePrincipal);
-            TableViewController tableViewController = loader.<TableViewController>getController();
-            tableViewController.setScenePrincipal(scenePrincipal);
-            tableViewController.setStagePantallaPrincipal(stagePantallaPrincipal);
-            tableViewController.setSceneInicioSesion(sceneInicioSesion);
-            tableViewController.setStageInicioSesion(stageInicioSesion);
-            tableViewController.setEstudiante(estudiante);
-            tableViewController.llenarEstudiante();
-            tableViewController.listarMaterias();
-            // tableViewController.setSceneInicioSesion(sceneInicioSesion);
-            // tableViewController.setStageInicioSesion(stageInicioSesion);
-
         } catch (IOException ex) {
-            Logger.getLogger(ClasesMaterialController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TareasArchivosFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        // this.inicioSesionFXMLController.getStagePantallaPrincipal().setScene(this.scenePrincipal);
+        this.stagePantallaPrincipal.setScene(scenePrincipal);
+        TableViewController tableViewController = loader.<TableViewController>getController();
 
+        tableViewController.setEnf(enf);
+        tableViewController.setManager(manager);
+        tableViewController.setEstudiante(estudiante);
+        tableViewController.llenarEstudiante();
+        tableViewController.listarMaterias();
+        // tableViewController.setMaterias(materia);
+        tableViewController.listarTareas(materia);
+        System.out.println(materia);
+        tableViewController.setScenePrincipal(scenePrincipal);
+        tableViewController.setStagePantallaPrincipal(stagePantallaPrincipal);
+        tableViewController.setSceneInicioSesion(sceneInicioSesion);
+        tableViewController.setStageInicioSesion(stageInicioSesion);
+
+        // tableViewController.setSceneInicioSesion(sceneInicioSesion);
+        // tableViewController.setStageInicioSesion(stageInicioSesion);
     }
 
 }

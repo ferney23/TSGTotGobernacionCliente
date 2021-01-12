@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -184,18 +185,20 @@ public class Materias implements Serializable {
         this.estudiantes = estudiantes;
     }
 
-    public void persist(Object object) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-        EntityManager em = emf.createEntityManager();
+    public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+       // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
+        em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
             em.persist(object);
             em.getTransaction().commit();
         } catch (Exception e) {
+            e.printStackTrace();
             em.getTransaction().rollback();
         } finally {
-            em.close();
+           // em.close();
         }
     }
+
 
 }

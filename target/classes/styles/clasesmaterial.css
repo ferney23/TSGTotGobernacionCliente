@@ -77,7 +77,7 @@
  */
 
 .table-view .column-header-background .label{
-     -fx-text-fill: #F05A24;
+     -fx-text-fill: white;
      -fx-alignment: LEFT;
      -fx-font-size: 15pt ;
      
@@ -86,13 +86,13 @@
 .table-view .column-header,
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {   
-    -fx-background-color: white;
+   -fx-background-color: #F05A24;
     -fx-stroke: transparent;
     -fx-size:50;
     -fx-alignment: CENTER ;    
     -fx-border-radius: 20px;
     -fx-border-width: 2 0 2 0;
-    -fx-border-color: rgba(200, 200, 200, 1.0);
+    -fx-border-color: #F05A24;
     -fx-text-alignment: center;
     -fx-text-fill: #F05A24;
 }
@@ -101,7 +101,7 @@
 
     -fx-size:50;
     -fx-alignment: LEFT;
-    -fx-border-color: rgba(200, 200, 200, 1.0);
+    -fx-border-color: white;
     -fx-border-width: 2 2 2 2;
     -fx-font-family: 'Delicious';
     -fx-text-alignment: center;
@@ -112,10 +112,10 @@
 
 .table-view:row-selection {
     -fx-background-color: transparent;
-    -fx-text-fill: white;
+  
     -fx-fixed-cell-size: 50;
     -fx-alignment: LEFT;
-    -fx-border-color: rgba(200, 200, 200, 1.0);
+  
     -fx-border-width: 2 2 2 2;
     -fx-text-alignment: center;
 
@@ -125,15 +125,30 @@
     -fx-text-fill: black; /* 5 */ 
     -fx-font-size: 15.0;
     -fx-alignment: left ;
-    -fx-border-color: rgba(200, 200, 200, 1.0);
     -fx-border-width: 2 2 2 2;
-    -fx-border-color: white;
+    
      -fx-padding: 10 ;
 }
 .table-row-cell:selected {
-    -fx-background-color: #F1940A;
+    -fx-background-color: white;
     -fx-background-insets: 0;
     -fx-background-radius: 1;
 }
 
-
+#btnPantallaInicio,#btnCerrarSesion { 
+    -fx-text-fill: #ffffff;
+    -fx-background-color: 
+        linear-gradient(#fbb034, #e68400),
+        linear-gradient(#ffef84, #f2ba44),
+        linear-gradient(#ffea6a, #efaa22),
+        linear-gradient(#ffe657 0%, #f8c202 40%, #eea10b 100%),
+        linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 30;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: #654b00;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20 10 20;
+    -fx-spacing: 20 ;
+    -fx-effect: dropshadow( one-pass-box , grey , 7 , 0.0 , 2 , 2 );
+}

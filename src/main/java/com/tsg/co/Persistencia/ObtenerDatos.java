@@ -18,7 +18,7 @@ import com.tsg.co.model.Subida;
 import com.tsg.co.model.Tareas;
 import com.tsg.co.model.Usuario;
 import com.tsg.co.model.Version;
-import com.tsg.model.Kiosko;
+import com.tsg.co.model.Kiosko;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,8 +56,8 @@ import org.json.JSONObject;
 public class ObtenerDatos {
 
     private Inicio inicio;
-    private static EntityManager manager;
-    private static EntityManagerFactory enf;
+    private  EntityManager manager;
+    private  EntityManagerFactory enf;
     private boolean nuevoCliente;
 
     public ObtenerDatos() {
@@ -76,16 +76,36 @@ public class ObtenerDatos {
         this.inicio = inicio;
     }
 
+    public EntityManager getManager() {
+        return manager;
+    }
+
+    public void setManager(EntityManager manager) {
+        this.manager = manager;
+    }
+
+    public EntityManagerFactory getEnf() {
+        return enf;
+    }
+
+    public void setEnf(EntityManagerFactory enf) {
+        this.enf = enf;
+    }
+
+    
+    
+    
     public Version IniciarVersion() {
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+        //enf = Persistence.createEntityManagerFactory("tsg");
+       // manager = enf.createEntityManager();
 
         Version auxVersion = null;
         Version existeVersion = null;
 
         try {
             existeVersion = (Version) manager.createQuery("SELECT ma FROM Version ma WHERE ma.idVersion = :id").setParameter("id", 1L).getSingleResult();
-
+            
+            
         } catch (Exception e) {
         }
 
@@ -94,7 +114,7 @@ public class ObtenerDatos {
             nuevoCliente = true;
 
             Version version = new Version(1L, 1);
-            version.persist(version);
+            version.persist(version,enf,manager);
             auxVersion = version;
 
         } else {
@@ -106,8 +126,8 @@ public class ObtenerDatos {
     }
 
     public Kiosko KioscosListos() {
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+       // enf = Persistence.createEntityManagerFactory("tsg");
+       // manager = enf.createEntityManager();
         Kiosko auxKiosco = null;
         Kiosko existeKiosco = null;
         try {
@@ -118,7 +138,7 @@ public class ObtenerDatos {
 
         if (existeKiosco == null) {
             Kiosko nuevoKisko = new Kiosko(1L, "6104", "localhost");
-            nuevoKisko.persist(nuevoKisko);
+            nuevoKisko.persist(nuevoKisko,enf,manager);
             auxKiosco = nuevoKisko;
 
         } else {
@@ -133,8 +153,8 @@ public class ObtenerDatos {
 
         Estudiante estudianteMac = null;
 
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+       // enf = Persistence.createEntityManagerFactory("tsg");
+       // manager = enf.createEntityManager();
 
         Estudiante estudiante = manager.find(Estudiante.class, estudiantekiosco.getLong("id"));
         InfoGrado existeInfoGrado = null;
@@ -152,7 +172,7 @@ public class ObtenerDatos {
                     estudiantekiosco.getString("apellidos"),
                     estudiantekiosco.getLong("id"),
                     usuario);
-            estudianteNuevo.persist(estudianteNuevo);
+            estudianteNuevo.persist(estudianteNuevo,enf,manager);
             // estudianteCreado = estudiantekiosco.getLong("id");
             // estudiante = estudianteNuevo;
             System.out.println("creado");
@@ -165,7 +185,7 @@ public class ObtenerDatos {
             estudiante.setEdad(estudiantekiosco.getLong("id"));
 
             manager.getTransaction().commit();
-            manager.close();
+          //  manager.close();
             System.out.println("actualizado");
             // estudianteCreado = estudiantekiosco.getLong("id");
             estudianteMac = estudiante;
@@ -174,7 +194,7 @@ public class ObtenerDatos {
 
         if (existeInfoGrado == null) {
             InfoGrado infoGrado = new InfoGrado(1L, "11", "TSG", "TSG", "Bogota", estudianteMac);
-            infoGrado.persist(infoGrado);
+            infoGrado.persist(infoGrado,enf,manager);
         }
 
         return estudianteMac;
@@ -183,8 +203,8 @@ public class ObtenerDatos {
 
     public ArrayList<Materias> actualizarMaterias(JSONArray jsonArrayMaterias) {
 
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+        //enf = Persistence.createEntityManagerFactory("tsg");
+       // manager = enf.createEntityManager();
         ArrayList<Materias> auxMaterias = new ArrayList<>();
 
         for (int j = 0; j < jsonArrayMaterias.length(); j++) {
@@ -200,7 +220,7 @@ public class ObtenerDatos {
                         //objMaterias.getString("imagen"),
                         objMaterias.getString("subtitulo"));
 
-                materiasGuardar.persist(materiasGuardar);
+                materiasGuardar.persist(materiasGuardar,enf,manager);
                 auxMaterias.add(materiasGuardar);
                 System.out.println("Materia Creaada" + materiasGuardar.getTitulo());
 
@@ -228,8 +248,8 @@ public class ObtenerDatos {
 
     public Set<Materias> AddEstudianteMaterias(JSONArray jsonArrayMaterias, Estudiante estudiante) {
         this.actualizarMaterias(jsonArrayMaterias);
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+        //enf = Persistence.createEntityManagerFactory("tsg");
+       // manager = enf.createEntityManager();
         estudiante = manager.find(Estudiante.class, estudiante.getIdEstudiante());
         Set<Materias> materiasEstudiante = estudiante.getMateriases();
 
@@ -256,8 +276,8 @@ public class ObtenerDatos {
         //int Estudiante = dispositivokiosco.getJSONObject("estudiante").getInt("id");
         //JSONObject estudiantekiosco = dispositivokiosco.getJSONObject("estudiante");
 
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+       // enf = Persistence.createEntityManagerFactory("tsg");
+      //  manager = enf.createEntityManager();
         ArrayList<Clases> arrayListClases = new ArrayList();
 
         for (int j = 0; j < jsonArrayClases.length(); j++) {
@@ -275,7 +295,7 @@ public class ObtenerDatos {
                         objClases.getString("nombre"),
                         objClases.getString("fecha_inicio"),
                         nueva);
-                clasesGuardar.persist(clasesGuardar);
+                clasesGuardar.persist(clasesGuardar,enf,manager);
                 arrayListClases.add(clasesGuardar);
             } else {
 
@@ -300,8 +320,8 @@ public class ObtenerDatos {
         //int Estudiante = dispositivokiosco.getJSONObject("estudiante").getInt("id");
         //JSONObject estudiantekiosco = dispositivokiosco.getJSONObject("estudiante");
 
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+       // enf = Persistence.createEntityManagerFactory("tsg");
+      //  manager = enf.createEntityManager();
 
         for (int j = 0; j < jsonArrayMaterialEstudio.length(); j++) {
             JSONObject objMaterialEstudio = (JSONObject) jsonArrayMaterialEstudio.get(j);
@@ -352,7 +372,7 @@ public class ObtenerDatos {
                                 nuevaClase, objMaterialEstudio.getString("nombreArchivo"),
                                 dest.toString());
 
-                        materialEstudioGuardar.persist(materialEstudioGuardar);
+                        materialEstudioGuardar.persist(materialEstudioGuardar,enf,manager);
 
                     }
 
@@ -371,8 +391,8 @@ public class ObtenerDatos {
 
     public boolean updateBlo(JSONObject blob) throws MalformedURLException, IOException {
 
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+      //  enf = Persistence.createEntityManagerFactory("tsg");
+       // manager = enf.createEntityManager();
         boolean i = false;
 
         AchivosTot achivosTot = null;
@@ -412,7 +432,7 @@ public class ObtenerDatos {
                         Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
                     }
                     AchivosTot achivosNuevo = new AchivosTot(blob.getLong("codigo"), String.valueOf(blob.getLong("codigo")), dest.toString());
-                    achivosNuevo.persist(achivosNuevo);
+                    achivosNuevo.persist(achivosNuevo,enf,manager);
                     System.err.println(dest.toFile());
                 }
 
@@ -428,8 +448,8 @@ public class ObtenerDatos {
     }
 
     public Subida actualizarSubidas(JSONObject blob, Estudiante estudiante) {
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+      //  enf = Persistence.createEntityManagerFactory("tsg");
+       // manager = enf.createEntityManager();
         Subida subidasExistente = null;
         Subida subidaAux = null;
         try {
@@ -441,7 +461,7 @@ public class ObtenerDatos {
         if (subidasExistente == null) {
 
             Subida subidaTarea = new Subida(blob.getJSONObject("file").getLong("descargaId"), blob.getString("fechaDescarga"), "2020", estudiante);
-            subidaTarea.persist(subidaTarea);
+            subidaTarea.persist(subidaTarea,enf,manager);
             subidaAux = subidaTarea;
         } else {
             subidaAux = subidasExistente;
@@ -452,8 +472,8 @@ public class ObtenerDatos {
 
     public void updateBlobTareas(JSONObject blob, String ip, Estudiante estudiante) throws MalformedURLException, IOException {
         Subida subidaTarea = actualizarSubidas(blob, estudiante);
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+        //enf = Persistence.createEntityManagerFactory("tsg");
+       // manager = enf.createEntityManager();
 
         AchivosTot achivosTot = null;
         try {
@@ -495,7 +515,7 @@ public class ObtenerDatos {
                         }
 
                         AchivosTot achivosNuevo = new AchivosTot(blob.getJSONObject("file").getLong("id"), String.valueOf(blob.getJSONObject("file").getLong("id")), dest.toString(), subidaTarea);
-                        achivosNuevo.persist(achivosNuevo);
+                        achivosNuevo.persist(achivosNuevo,enf, manager);
 
                     }
                 }
@@ -507,8 +527,8 @@ public class ObtenerDatos {
 
     public Tareas actualizarTareas(JSONObject jsonTareas, String ip, Estudiante estudiante, Long registroTarea) throws SQLException {
 
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+       // enf = Persistence.createEntityManagerFactory("tsg");
+        //manager = enf.createEntityManager();
 
         System.out.println(jsonTareas.getLong("tareaId"));
 
@@ -543,17 +563,17 @@ public class ObtenerDatos {
 
                 if (subidasExistente != null) {
                     Tareas tareasguardar = new Tareas(jsonTareas.getLong("tareaId"), registroTarea, jsonTareas.getString("nombre"), jsonTareas.getString("codigo"), materiaTarea, subidasExistente, estudiante);
-                    tareasguardar.persist(tareasguardar);
+                    tareasguardar.persist(tareasguardar,enf,manager);
                     auxTareas = tareasguardar;
 
                     System.err.println("Tareas nueva" + "subida existente ");
                 } else {
 
                     Subida subidaTarea = new Subida(jsonTareas.getJSONObject("file").getLong("descargaId"), jsonTareas.getString("fechaDescarga"), jsonTareas.getString("fechaDescarga"), estudiante);
-                    subidaTarea.persist(subidaTarea);
+                    subidaTarea.persist(subidaTarea,enf,manager);
 
                     Tareas tareasguardar = new Tareas(jsonTareas.getLong("tareaId"), registroTarea, jsonTareas.getString("nombreActividad"), String.valueOf(jsonTareas.getLong("idArchivoD2L")), materiaTarea, subidaTarea, estudiante);
-                    tareasguardar.persist(tareasguardar);
+                    tareasguardar.persist(tareasguardar,enf,manager);
                     auxTareas = tareasguardar;
                     System.err.println("Tareas nueva" + "subida nueva ");
 
@@ -567,7 +587,7 @@ public class ObtenerDatos {
                 existe.setRegistroTarea(registroTarea);
                 existe.setMateria(materiaTarea);
                 auxTareas = existe;
-                manager.close();
+             //   manager.close();
                 System.out.println("actualizado");
 
             }
@@ -580,8 +600,8 @@ public class ObtenerDatos {
     public void postArchivos(String ip, String token, Estudiante estudiante) throws Exception {
         String endPointPostArchivo = "http://" + ip + "/api/entregas/entregarMiTarea";
 
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+    //    enf = Persistence.createEntityManagerFactory("tsg");
+      //  manager = enf.createEntityManager();
         // List<Entregas> entregasEnviar = manager.createQuery("FROM Entregas").getResultList();
 
         List<AchivosTot> entregas = manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.entrega.upp = :id and ma.entrega.estudiante.idEstudiante=:idEstudiante").setParameter("id", 0L).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
@@ -606,9 +626,9 @@ public class ObtenerDatos {
 
     public void actualizarVersion(double numero) {
 
-        enf = Persistence.createEntityManagerFactory("tsg");
+       // enf = Persistence.createEntityManagerFactory("tsg");
 
-        manager = enf.createEntityManager();
+      //  manager = enf.createEntityManager();
         Version version = (Version) manager.createQuery("SELECT ma FROM Version ma WHERE ma.idVersion= :id").setParameter("id", 1L).getSingleResult();
 
         manager.getTransaction().begin();
@@ -630,8 +650,8 @@ public class ObtenerDatos {
     }
 
     public List<Estudiante> ListarEstudiantes() {
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+    //    enf = Persistence.createEntityManagerFactory("tsg");
+    //    manager = enf.createEntityManager();
 
         List<Estudiante> estudiantesGuardados = manager.createQuery("FROM  Estudiante").getResultList();
 

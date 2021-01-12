@@ -3,6 +3,7 @@
  */
 
 .button { 
+    -fx-text-fill: #ffffff;
     -fx-background-color: 
         linear-gradient(#fbb034, #e68400),
         linear-gradient(#ffef84, #f2ba44),

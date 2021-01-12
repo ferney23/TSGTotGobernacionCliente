@@ -48,8 +48,8 @@ import javax.persistence.Persistence;
  */
 public class InicioSesionFXMLController implements Initializable {
 
-    private static EntityManager manager;
-    private static EntityManagerFactory enf;
+    private EntityManager manager;
+    private EntityManagerFactory enf;
     private Estudiante estudiante;
     private Inicio inicio;
     @FXML
@@ -82,6 +82,22 @@ public class InicioSesionFXMLController implements Initializable {
 
     public void IniciarSesion() {
 
+    }
+
+    public EntityManager getManager() {
+        return manager;
+    }
+
+    public void setManager(EntityManager manager) {
+        this.manager = manager;
+    }
+
+    public EntityManagerFactory getEnf() {
+        return enf;
+    }
+
+    public void setEnf(EntityManagerFactory enf) {
+        this.enf = enf;
     }
 
     public Stage getStagePantallaPrincipal() {
@@ -125,64 +141,62 @@ public class InicioSesionFXMLController implements Initializable {
     }
 
     public boolean isConectado() {
-        
+
         return conectado;
     }
 
     public void setConectado(boolean conectado) {
         this.conectado = conectado;
-        if (this.conectado==true) {
-             labelinfoConexion.setText("ONLINE");
-        }else{
-             labelinfoConexion.setText("OFLINE");
+        if (this.conectado == true) {
+            labelinfoConexion.setText("ONLINE");
+        } else {
+            labelinfoConexion.setText("OFLINE");
         }
-        
-       
+
     }
-    
-    
-    
+
     @FXML
     private void ObtenerUsuario(MouseEvent event) {
         try {
             enf = Persistence.createEntityManagerFactory("tsg");
-            manager = enf.createEntityManager();
-            // Long estudianteConsultar = Long.parseLong(txtidEstudiante.getText());
+           manager = enf.createEntityManager();
+            Usuario usuariosExistentes = null;
+
             try {
-
-                Usuario usuariosExistentes = (Usuario) manager.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.contraseña =:contraseña ").setParameter("usuario", txtUsuarioEstudiante.getText()).setParameter("contraseña", txtContraseña.getText()).getSingleResult();
-                this.estudiante = usuariosExistentes.getEstudiante();
-                //  estudiante = (Estudiante) manager.createQuery("SELECT ma FROM Estudiante ma WHERE ma.nombres=:id").setParameter("id", txtidEstudiante.getText()).getSingleResult();
-
+                usuariosExistentes = (Usuario) manager.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.password =:contraseña ").setParameter("usuario", txtUsuarioEstudiante.getText()).setParameter("contraseña", txtContraseña.getText()).getSingleResult();
             } catch (Exception e) {
+
             }
-            if (estudiante != null) {
-
-                stagePantallaPrincipal = new Stage();
-                stagePantallaPrincipal.getIcons().add(new Image("img/TOT-Icon.png"));
-
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TableView.fxml"));
-                this.scenePantallaPrincipal = new Scene((Pane) loader.load());
-                stagePantallaPrincipal.setScene(this.scenePantallaPrincipal);
-                tableViewController = loader.<TableViewController>getController();
-                tableViewController.setEstudiante(estudiante);
-                tableViewController.llenarEstudiante();
-                tableViewController.listarMaterias();
-
-                tableViewController.setStagePantallaPrincipal(stagePantallaPrincipal);
-                tableViewController.setScenePrincipal(scenePantallaPrincipal);
-                tableViewController.setStageInicioSesion(stageInicioSesion);
-                tableViewController.setSceneInicioSesion(sceneInicioSesion);
-                stagePantallaPrincipal.setTitle("TOT Learning System - Client");
-                stagePantallaPrincipal.setResizable(false);
-
-                stagePantallaPrincipal.show();
-                this.stageInicioSesion.close();
-
+            if (usuariosExistentes == null) {
+                txtUsuarioEstudiante.setText("Usuario Incorrecto ");
+                txtContraseña.setText("Usuario Incorrecto  ");
             } else {
-                txtUsuarioEstudiante.setText("Datos Incorrectos  ");
+                this.estudiante = usuariosExistentes.getEstudiante();
+                if (estudiante != null) {
+                    stagePantallaPrincipal = new Stage();
+                    stagePantallaPrincipal.getIcons().add(new Image("img/TOT-Icon.png"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TableView.fxml"));
+                    this.scenePantallaPrincipal = new Scene((Pane) loader.load());
+                    stagePantallaPrincipal.setScene(this.scenePantallaPrincipal);
+                    tableViewController = loader.<TableViewController>getController();
+                    this.tableViewController.setEnf(enf);
+                    this.tableViewController.setManager(manager);
+                    tableViewController.setEstudiante(estudiante);
+                    tableViewController.llenarEstudiante();
+                    tableViewController.listarMaterias();
+                    tableViewController.setStagePantallaPrincipal(stagePantallaPrincipal);
+                    tableViewController.setScenePrincipal(scenePantallaPrincipal);
+                    tableViewController.setStageInicioSesion(stageInicioSesion);
+                    tableViewController.setSceneInicioSesion(sceneInicioSesion);
+                    stagePantallaPrincipal.setTitle("TOT Learning System - Client");
+                    stagePantallaPrincipal.setResizable(false);
+                    stagePantallaPrincipal.show();
+                    this.stageInicioSesion.close();
 
-                txtContraseña.setText("Datos Incorrectos  ");
+                } else {
+                    txtUsuarioEstudiante.setText("Usuario no sincronizado  ");
+                    txtContraseña.setText("Datos Incorrectos  ");
+                }
             }
 
         } catch (IOException ex) {
@@ -194,17 +208,25 @@ public class InicioSesionFXMLController implements Initializable {
     @FXML
     private void registrarEstudiante(MouseEvent event) {
 
+        Usuario usuariosExistentes = null;
+
         if ((txtUsuarioEstudiante.getText().length() > 0) && (txtUsuarioEstudiante.getText().length() <= 30)) {
+            try {
+                usuariosExistentes = (Usuario) manager.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.password =:contraseña ").setParameter("usuario", txtUsuarioEstudiante.getText()).setParameter("contraseña", txtContraseña.getText()).getSingleResult();
+            } catch (Exception e) {
+
+            }
 
             String nombre = txtUsuarioEstudiante.getText();
             String contraseña = txtContraseña.getText();
-            try {
+            if (usuariosExistentes == null) {
                 Usuario usuarioRegistrar = new Usuario(nombre, contraseña);
-                usuarioRegistrar.persist(usuarioRegistrar);
-            } catch (Exception e) {
-                System.out.println(e.getCause().getMessage());
-                txtUsuarioEstudiante.setText("El usuario : " + nombre + " ya esta registrado");
+                usuarioRegistrar.persist(usuarioRegistrar, enf, manager);
+                txtUsuarioEstudiante.setText("Usuario creado: " + nombre);
+            } else {
+                txtUsuarioEstudiante.setText("Este usuario ya esta registrado");
             }
+
         }
 
     }

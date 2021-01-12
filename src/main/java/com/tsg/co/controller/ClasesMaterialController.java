@@ -13,6 +13,7 @@ import com.tsg.co.model.InfoGrado;
 import com.tsg.co.model.MaterialEstudio;
 import com.tsg.co.model.Materias;
 import com.tsg.co.model.Tareas;
+import com.tsg.co.vista.ViewMaterialEstudio;
 import com.tsg.co.vista.VistaModeloClases;
 import java.awt.Desktop;
 import java.io.File;
@@ -58,8 +59,8 @@ import javax.persistence.Persistence;
  */
 public class ClasesMaterialController implements Initializable {
 
-    private static EntityManager manager;
-    private static EntityManagerFactory enf;
+    private  EntityManager manager;
+    private  EntityManagerFactory enf;
     private Materias materias;
     private Estudiante estudiante;
 
@@ -84,8 +85,6 @@ public class ClasesMaterialController implements Initializable {
     @FXML
     private TableColumn<VistaModeloClases, Button> cellMaterialEstudio = new TableColumn<>();
     @FXML
-    private AnchorPane panelImage;
-    @FXML
     private JFXButton btnPantallaInicio;
 
     private TableViewController tableViewController;
@@ -97,6 +96,16 @@ public class ClasesMaterialController implements Initializable {
 
     private Scene sceneInicioSesion;
     private Stage stageInicioSesion;
+    @FXML
+    private TableView<ViewMaterialEstudio> tableArchivos;
+    @FXML
+    private TableColumn<ViewMaterialEstudio, String> ColNombre;
+    @FXML
+    private TableColumn<ViewMaterialEstudio, String> colDescripcion;
+    @FXML
+    private TableColumn<ViewMaterialEstudio, Button> colAdjunto;
+    @FXML
+    private Pane paneltitulo;
 
     /**
      * Initializes the controller class.
@@ -117,6 +126,7 @@ public class ClasesMaterialController implements Initializable {
         this.tableViewController = tableViewController;
     }
 
+    
     public Estudiante getEstudiante() {
         return estudiante;
     }
@@ -171,10 +181,28 @@ public class ClasesMaterialController implements Initializable {
         this.stageInicioSesion = stageInicioSesion;
     }
 
+    public EntityManager getManager() {
+        return manager;
+    }
+
+    public void setManager(EntityManager manager) {
+        this.manager = manager;
+    }
+
+    public EntityManagerFactory getEnf() {
+        return enf;
+    }
+
+    public void setEnf(EntityManagerFactory enf) {
+        this.enf = enf;
+    }
+
+    
+    
     public void ClasesMateriales(Materias materias) {
 
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+      //  enf = Persistence.createEntityManagerFactory("tsg");
+     //   manager = enf.createEntityManager();
 
         List<Clases> clases = manager.createQuery("SELECT ma FROM Clases ma WHERE ma.materia.idMateria= :id").setParameter("id", materias.getIdMateria()).getResultList();
         ObservableList<Clases> observableListClases = FXCollections.observableArrayList(clases);
@@ -213,25 +241,43 @@ public class ClasesMaterialController implements Initializable {
 
     public void viewMaterialEstudio(Clases clases) {
 
-        try {
+       // enf = Persistence.createEntityManagerFactory("tsg");
+        //manager = enf.createEntityManager();
+        tableArchivos.getItems().clear();
+        List<MaterialEstudio> materialEstudios = manager.createQuery("SELECT ma FROM MaterialEstudio ma WHERE ma.clase.idClases= :id").setParameter("id", clases.getIdClases()).getResultList();
+        ObservableList<MaterialEstudio> observableListMaterialEstudios = FXCollections.observableArrayList(materialEstudios);
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MaterialEstudioFXML.fxml"));
-            Stage stage = new Stage(StageStyle.DECORATED);
-            stage.setScene(new Scene((Pane) loader.load()));
-            MaterialEstudioFXMLController controller = loader.<MaterialEstudioFXMLController>getController();
-            controller.setEstudiante(estudiante);
-            controller.setClases(clases);
-            controller.ViewMaterialEstudio();
+        for (MaterialEstudio observableListEstudio : observableListMaterialEstudios) {
 
-            stage.getIcons().add(new Image("/img/TOT-Icon.png"));
+            Button buttonVerMas = new Button(observableListEstudio.getNombreArchivo());
+            buttonVerMas.getStylesheets().add(getClass().getResource("/styles/botones.css").toExternalForm());
+            ViewMaterialEstudio viewMaterialEstudio = new ViewMaterialEstudio();
 
-            stage.setTitle("TOT Learning System - Tarea");
-            stage.setResizable(false);
-            stage.show();
-            stage.getFullScreenExitKeyCombination();
-        } catch (IOException e) {
+            viewMaterialEstudio.setNombre(observableListEstudio.getNombre());
+            viewMaterialEstudio.setTema(observableListEstudio.getClase().getTema());
+            viewMaterialEstudio.setClase(observableListEstudio.getClase().getNombre());
+            viewMaterialEstudio.setDescripcion(observableListEstudio.getDescripcion());
+            viewMaterialEstudio.setBtnArchivoAdjunto(buttonVerMas);
+
+            buttonVerMas.setOnAction(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    viewArchivos(observableListEstudio.getRuta());
+                }
+            });
+
+            tableArchivos.getItems().add(viewMaterialEstudio);
 
         }
+
+        ColNombre.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, String>("nombre"));
+        //  colTema.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, String>("tema"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, String>("descripcion"));
+        // colClase.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, String>("clase"));
+        colAdjunto.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, Button>("btnArchivoAdjunto"));
+
+        
     }
 
     @FXML
@@ -245,6 +291,9 @@ public class ClasesMaterialController implements Initializable {
             TableViewController tableViewController = loader.<TableViewController>getController();
             tableViewController.setScenePrincipal(scenePrincipal);
             tableViewController.setStagePantallaPrincipal(stagePrincipal);
+            tableViewController.setEnf(enf);
+            tableViewController.setManager(manager);
+            
             tableViewController.setEstudiante(estudiante);
             tableViewController.llenarEstudiante();
             tableViewController.listarMaterias();
@@ -258,15 +307,21 @@ public class ClasesMaterialController implements Initializable {
     }
 
     @FXML
-    private void eventCerrarSesion(MouseEvent event) throws IOException {
+    private void eventCerrarSesion(MouseEvent event) {
 
         //  this.stageInicioSesion.getIcons().add(new Image("img/TOT-Icon.png"));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/InicioSesionFXML.fxml"));
-        this.sceneInicioSesion.setRoot((Pane) loader.load());
+        try {
+            this.sceneInicioSesion.setRoot((Pane) loader.load());
+        } catch (IOException ex) {
+            Logger.getLogger(ClasesMaterialController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.stageInicioSesion.setScene(this.sceneInicioSesion);
         InicioSesionFXMLController inicioFXMLController = loader.<InicioSesionFXMLController>getController();
         inicioFXMLController.setStageInicioSesion(this.stageInicioSesion);
         inicioFXMLController.setSceneInicioSesion(sceneInicioSesion);
+        inicioFXMLController.setEnf(enf);
+        inicioFXMLController.setManager(manager);
 
         this.stageInicioSesion.setTitle("TOT Learning System - Client");
         this.stageInicioSesion.setResizable(false);
@@ -274,6 +329,20 @@ public class ClasesMaterialController implements Initializable {
         this.estudiante = null;
         this.stageInicioSesion.show();
 
+    }
+
+    public void viewArchivos(String ruta) {
+        try {
+
+            File f = new File(ruta);
+            System.out.println(ruta);
+            try {
+                Desktop.getDesktop().open(f);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+        }
     }
 
 }

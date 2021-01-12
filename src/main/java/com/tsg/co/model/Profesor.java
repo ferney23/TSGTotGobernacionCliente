@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -87,7 +89,20 @@ public class Profesor implements  Serializable{
         return "Profesor{" + "idProfesor=" + idProfesor + ", nombre=" + nombre + ", apellidos=" + apellidos + ", codigo=" + codigo + '}';
     }
 
-
+ public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+       // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
+        em = emf.createEntityManager();
+        em.getTransaction().begin();
+        try {
+            em.persist(object);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            em.getTransaction().rollback();
+        } finally {
+           // em.close();
+        }
+    }
     
     
     

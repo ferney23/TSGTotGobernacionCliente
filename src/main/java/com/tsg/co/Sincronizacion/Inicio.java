@@ -19,7 +19,7 @@ import com.tsg.co.model.Materias;
 import com.tsg.co.model.Tareas;
 import com.tsg.co.model.Usuario;
 import com.tsg.co.model.Version;
-import com.tsg.model.Kiosko;
+import com.tsg.co.model.Kiosko;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -72,8 +72,8 @@ import org.apache.hc.core5.http.HttpResponse;
  */
 public class Inicio implements Runnable {
 
-    private static EntityManager manager;
-    private static EntityManagerFactory enf;
+    private  EntityManager manager;
+    private  EntityManagerFactory enf;
     private ObtenerDatos obtenerDatos;
     private ManejoDatos manejoDatos;
     private Verificacion verificacion;
@@ -88,10 +88,23 @@ public class Inicio implements Runnable {
      *
      */
     public Inicio() {
-
+        if(enf==null){
+            System.out.println("com.tsg.co.Sincronizacion.Inicio.<init>()");
+           enf = Persistence.createEntityManagerFactory("tsg");
+        }
+        
+        
+        manager = enf.createEntityManager();
         this.obtenerDatos = new ObtenerDatos(this);
         this.verificacion = new Verificacion();
         this.manejoDatos = new ManejoDatos();
+        this.obtenerDatos.setEnf(enf);
+        this.obtenerDatos.setManager(manager);
+        this.manejoDatos.setEnf(enf);
+        this.manejoDatos.setManager(manager);
+        // manager = enf.createEntityManager();
+        //manager.getTransaction().begin();
+
     }
 
     public boolean isConectado() {
@@ -102,13 +115,28 @@ public class Inicio implements Runnable {
         this.conectado = conectado;
     }
 
+    public EntityManager getManager() {
+        return manager;
+    }
+
+    public void setManager(EntityManager manager) {
+        this.manager = manager;
+    }
+
+    public EntityManagerFactory getEnf() {
+        return enf;
+    }
+
+    public void setEnf(EntityManagerFactory enf) {
+        this.enf = enf;
+    }
+
     @Override
     public void run() {
         this.inicioTiempo = System.currentTimeMillis();
 
         try {
-            enf = Persistence.createEntityManagerFactory("tsg");
-            manager = enf.createEntityManager();
+
             String GetAddress = getMacAddress();
 
             System.err.println(GetAddress);
@@ -144,62 +172,65 @@ public class Inicio implements Runnable {
                                     //this.estudianteCliente = estudianteRecorrer;
                                     JSONObject objectUsuarios = new JSONObject();
                                     objectUsuarios.put("username", usuarioRecorrer.getUsername());
-                                    objectUsuarios.put("password", usuarioRecorrer.getContraseña());
+                                    objectUsuarios.put("password", usuarioRecorrer.getPassword());
 
                                     String login = "http://" + ip + "/api/cuentas/login";
+                                    System.out.println();
+
                                     String loginEndPoint = this.peticionHttpPostIniciarSesion(login, objectUsuarios);
-                                    JSONObject jsonResp = new JSONObject(loginEndPoint);
+                                    System.out.println(loginEndPoint + "respuesta");
+                                    if (!loginEndPoint.equals("")) {
+                                        JSONObject jsonResp = new JSONObject(loginEndPoint);
+                                        String identificacion = "http://" + ip + "/api/Estudiantes/miidentificacion";
 
-                                    String identificacion = "http://" + ip + "/api/Estudiantes/miidentificacion";
+                                        String identificacionEndPoint = this.peticionHttpGetToken(identificacion, jsonResp.getString("token"));
+                                        System.out.println(identificacionEndPoint);
+                                        JSONObject jSONObjectidentificacion = new JSONObject(identificacionEndPoint);
+                                        this.estudianteCliente = this.obtenerDatos.actualizarEstudiante(jSONObjectidentificacion, usuarioRecorrer);
 
-                                    String identificacionEndPoint = this.peticionHttpGetToken(identificacion, jsonResp.getString("token"));
-                                    System.out.println(identificacionEndPoint);
-                                    JSONObject jSONObjectidentificacion = new JSONObject(identificacionEndPoint);
-                                    this.estudianteCliente = this.obtenerDatos.actualizarEstudiante(jSONObjectidentificacion, usuarioRecorrer);
+                                        String materiasEstudianteEndPointUrl = "http://" + ip + "/api/materias/mismaterias";
+                                        String materiasEstudianteEnd = this.peticionHttpGetArray(materiasEstudianteEndPointUrl, jsonResp.getString("token"));
 
-                                    String materiasEstudianteEndPointUrl = "http://" + ip + "/api/materias/mismaterias";
-                                    String materiasEstudianteEnd = this.peticionHttpGetArray(materiasEstudianteEndPointUrl, jsonResp.getString("token"));
+                                        JSONArray jsonArrayMaterias = new JSONArray(materiasEstudianteEnd);
 
-                                    JSONArray jsonArrayMaterias = new JSONArray(materiasEstudianteEnd);
+                                        Set<Materias> arrayListMaterias = obtenerDatos.AddEstudianteMaterias(jsonArrayMaterias, this.estudianteCliente);
 
-                                    Set<Materias> arrayListMaterias = obtenerDatos.AddEstudianteMaterias(jsonArrayMaterias, this.estudianteCliente);
+                                        // JSONObject jSONObjectMaterias = (JSONObject) jsonArrayMaterias.get(jM);
+                                        String endpointTareas = "http://" + ip + "/api/TareaRegistro/misTareasPendientesPorDescargar";
+                                        String tareasEndPointUrl = this.peticionHttpGetArray(endpointTareas, jsonResp.getString("token"));
+                                        if (!tareasEndPointUrl.equals("")) {
+                                            JSONArray jSONArrayTareas = new JSONArray(tareasEndPointUrl);
+                                            for (int jt = 0; jt < jSONArrayTareas.length(); jt++) {
+                                                JSONObject jSONObjectTareasRegistrar = (JSONObject) jSONArrayTareas.get(jt);
+                                                String registroTarea = this.CrearRegistroTarea(ip, jSONObjectTareasRegistrar.getLong("tareaId"), jsonResp.getString("token"));
 
-                                    // JSONObject jSONObjectMaterias = (JSONObject) jsonArrayMaterias.get(jM);
-                                    String endpointTareas = "http://" + ip + "/api/TareaRegistro/misTareasPendientesPorDescargar";
-                                    String tareasEndPointUrl = this.peticionHttpGetArray(endpointTareas, jsonResp.getString("token"));
-                                    if (!tareasEndPointUrl.equals("")) {
-                                        JSONArray jSONArrayTareas = new JSONArray(tareasEndPointUrl);
-                                        for (int jt = 0; jt < jSONArrayTareas.length(); jt++) {
-                                            JSONObject jSONObjectTareasRegistrar = (JSONObject) jSONArrayTareas.get(jt);
-                                            String registroTarea = this.CrearRegistroTarea(ip, jSONObjectTareasRegistrar.getLong("tareaId"), jsonResp.getString("token"));
+                                                JSONObject jSONObjectTareasRegistro = new JSONObject(registroTarea);
+                                                this.obtenerDatos.actualizarTareas(jSONObjectTareasRegistrar, ip, estudianteCliente, jSONObjectTareasRegistro.getLong("id"));
 
-                                            JSONObject jSONObjectTareasRegistro = new JSONObject(registroTarea);
-                                            this.obtenerDatos.actualizarTareas(jSONObjectTareasRegistrar, ip, estudianteCliente, jSONObjectTareasRegistro.getLong("id"));
+                                                obtenerDatos.updateBlobTareas(jSONObjectTareasRegistrar, ip, estudianteCliente);
 
-                                            obtenerDatos.updateBlobTareas(jSONObjectTareasRegistrar, ip, estudianteCliente);
-
+                                            }
                                         }
+
+                                        String endpointClases = "http://" + ip + "/api/clases/misClases";
+                                        String clasesEndPointUrl = this.peticionHttpGetArray(endpointClases, jsonResp.getString("token"));
+
+                                        JSONArray jsonArrayClases = new JSONArray(clasesEndPointUrl);
+
+                                        this.obtenerDatos.actualizarClases(jsonArrayClases);
+
+                                        String endpointMaterialEstudio = "http://" + ip + "/api/MaterialEstudioRegistros/misMaterialesPendientesPorDescargar";
+                                        String materialEstudioEndPointUrl = this.peticionHttpGetArray(endpointMaterialEstudio, jsonResp.getString("token"));
+                                        System.out.println(materialEstudioEndPointUrl);
+
+                                        if (!materialEstudioEndPointUrl.equals("")) {
+                                            JSONArray jsonArrayMaterialEstudio = new JSONArray(materialEstudioEndPointUrl);
+                                            this.obtenerDatos.actualizarMaterialEstudio(jsonArrayMaterialEstudio);
+                                        }
+
+                                        // 
+                                        obtenerDatos.postArchivos(ip, jsonResp.getString("token"), this.estudianteCliente);
                                     }
-
-                                    String endpointClases = "http://" + ip + "/api/clases/misClases";
-                                    String clasesEndPointUrl = this.peticionHttpGetArray(endpointClases, jsonResp.getString("token"));
-
-                                    JSONArray jsonArrayClases = new JSONArray(clasesEndPointUrl);
-
-                                    this.obtenerDatos.actualizarClases(jsonArrayClases);
-
-                                    String endpointMaterialEstudio = "http://" + ip + "/api/MaterialEstudioRegistros/misMaterialesPendientesPorDescargar";
-                                    String materialEstudioEndPointUrl = this.peticionHttpGetArray(endpointMaterialEstudio, jsonResp.getString("token"));
-                                    System.out.println(materialEstudioEndPointUrl);
-
-                                    if (!materialEstudioEndPointUrl.equals("")) {
-                                        JSONArray jsonArrayMaterialEstudio = new JSONArray(materialEstudioEndPointUrl);
-                                        this.obtenerDatos.actualizarMaterialEstudio(jsonArrayMaterialEstudio);
-                                    }
-
-                                    // 
-                                    obtenerDatos.postArchivos(ip, jsonResp.getString("token"), this.estudianteCliente);
-
                                 }
 
                             }
@@ -553,21 +584,18 @@ public class Inicio implements Runnable {
             os.write(input.getBytes());
             os.flush();
 
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + conn.getResponseCode());
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        (conn.getInputStream())));
+                String output;
+
+                while ((output = br.readLine()) != null) {
+                    bien = bien.concat(output);
+                }
+                conn.disconnect();
             }
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-            String output;
             //System.out.println("Output from Server .... \n");
-            while ((output = br.readLine()) != null) {
-                bien = bien.concat(output);
-            }
-            conn.disconnect();
-
         } catch (MalformedURLException e) {
 
             e.printStackTrace();

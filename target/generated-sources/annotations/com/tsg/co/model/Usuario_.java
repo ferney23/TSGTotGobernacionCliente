@@ -9,9 +9,9 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class Usuario_ {
 
 	public static volatile SingularAttribute<Usuario, Estudiante> estudiante;
+	public static volatile SingularAttribute<Usuario, String> password;
 	public static volatile SingularAttribute<Usuario, Long> id;
 	public static volatile SingularAttribute<Usuario, String> username;
-	public static volatile SingularAttribute<Usuario, String> contraseña;
 
 }
 

@@ -55,8 +55,8 @@ import javax.persistence.Persistence;
  */
 public class TableViewController implements Initializable {
 
-    private static EntityManager manager;
-    private static EntityManagerFactory enf;
+    private  EntityManager manager;
+    private  EntityManagerFactory enf;
     private Materias materias;
     private Estudiante estudiante;
     private List<Tareas> tareaselec = new ArrayList<Tareas>();
@@ -145,6 +145,25 @@ public class TableViewController implements Initializable {
         //   listarMaterias();
     }
 
+    public EntityManager getManager() {
+        return manager;
+    }
+
+    public void setManager(EntityManager manager) {
+        this.manager = manager;
+    }
+
+    public EntityManagerFactory getEnf() {
+        return enf;
+    }
+
+    public void setEnf(EntityManagerFactory enf) {
+        this.enf = enf;
+    }
+
+   
+    
+    
     public ClasesMaterialController getClasesMaterialController() {
         return clasesMaterialController;
     }
@@ -195,8 +214,8 @@ public class TableViewController implements Initializable {
     }
 
     public void llenarEstudiante() {
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+     //   enf = Persistence.createEntityManagerFactory("tsg");
+       // manager = enf.createEntityManager();
         CustomImage item_1 = new CustomImage(new ImageView(new Image("img/librotareas.png")));
 
         imageColumn.setGraphic(item_1.getImage());
@@ -223,8 +242,8 @@ public class TableViewController implements Initializable {
 
     public void listarMaterias() {
         jlistMaterias.getItems().clear();
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+     //   enf = Persistence.createEntityManagerFactory("tsg");
+       // manager = enf.createEntityManager();
         //listMaterias.getItems().add(materias)
         Set<Materias> materiases = estudiante.getMateriases();
 
@@ -236,7 +255,13 @@ public class TableViewController implements Initializable {
 
     @FXML
     private void seleccionarTareas(MouseEvent event) {
-        enf = Persistence.createEntityManagerFactory("tsg");
+        
+        if (enf==null) {
+           enf = Persistence.createEntityManagerFactory("tsg");
+            System.out.println("com.tsg.co.controller.TableViewController.seleccionarTareas()");
+            System.out.println("aca vengo null");
+        }
+     
         manager = enf.createEntityManager();
 
         tablatareass.getItems().clear();
@@ -284,6 +309,57 @@ public class TableViewController implements Initializable {
 
     }
 
+    
+    public void listarTareas(Materias materias){
+        enf = Persistence.createEntityManagerFactory("tsg");
+        manager = enf.createEntityManager();
+
+        tablatareass.getItems().clear();
+        //this.materias = jlistMaterias.getSelectionModel().getSelectedItem();
+        //System.out.println(this.materias.getTitulo());
+
+        List<Tareas> tareas = manager.createQuery("SELECT ma FROM Tareas ma WHERE ma.materia.idMateria= :id and ma.estudiante.idEstudiante= :idEstudiante ").setParameter("id", materias.getIdMateria()).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
+
+        ObservableList<Tareas> observableListTareas = FXCollections.observableArrayList(tareas);
+        int pendientes = 0;
+        tareaselec.clear();
+        tareaselec.addAll(observableListTareas);
+
+        for (Tareas tar : observableListTareas) {
+            //TableColumn<CustomImage, Image> imagecolumss  =  new TableColumn<>();
+            CustomImage itemlist = new CustomImage();
+            itemlist.setNombreTarea(tar.getNombreTarea());
+            //validacion SI ESTA ENTREGADA  if(tar.)
+            CustomImage item_1 = null;
+            if (tar.getSubida().getEntregas() != null && tar.getSubida().getEntregas().size() != 0) {
+                item_1 = new CustomImage(new ImageView(new Image("img/trueyes.png")));
+                item_1.getImage().setFitHeight(25);
+                item_1.getImage().setFitWidth(25);
+                //tar.setImage(item_1);
+
+            } else {
+                item_1 = new CustomImage(new ImageView(new Image("img/dangerNo.png")));
+                item_1.getImage().setFitHeight(30);
+                item_1.getImage().setFitWidth(40);
+                // tar.setImage(item_1);
+                pendientes++;
+            }
+            itemlist.setCodigo(tar.getCodigo());
+            itemlist.setImage(item_1.getImage());
+
+            //imagecolum.setCellValueFactory((Callback<TableColumn.CellDataFeatures<CustomImage, Image>, ObservableValue<Image>>) imagecolumss);
+            tablatareass.getItems().add(itemlist);
+        }
+        labelContadortareas.setText("" + pendientes);
+        //columnEstadoTareas.setCellValueFactory(new PropertyValueFactory<Tareas, Long>("id"));
+        //imagecolum.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("image"));
+        imageColumn.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
+        columnTareasPendientes.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("nombreTarea"));
+        labelMaterias.setText(materias.getTitulo().toUpperCase());
+        
+    }
+    
+    
     @FXML
     private void actionClases(ActionEvent event) {
 
@@ -297,6 +373,8 @@ public class TableViewController implements Initializable {
                 this.scenePrincipal.setRoot((Pane) loader.load());
                 this.stagePantallaPrincipal.setScene(this.scenePrincipal);
                 clasesMaterialController = loader.<ClasesMaterialController>getController();
+                clasesMaterialController.setEnf(enf);
+                clasesMaterialController.setManager(manager);
                 clasesMaterialController.setEstudiante(estudiante);
                 clasesMaterialController.setMaterias(materias);
                 clasesMaterialController.informacionMateria();
@@ -340,6 +418,9 @@ public class TableViewController implements Initializable {
             CustomImage obj = (CustomImage) tablatareass.getSelectionModel().getSelectedItem();
             Materias mat = jlistMaterias.getSelectionModel().getSelectedItem();
             TareasArchivosFXMLController controller = loader.<TareasArchivosFXMLController>getController();
+            controller.setEnf(enf);
+            controller.setManager(manager);
+            
             controller.setEstudiante(estudiante);
             controller.setScenePrincipal(scenePrincipal);
             controller.setStagePantallaPrincipal(stagePantallaPrincipal);
@@ -358,14 +439,27 @@ public class TableViewController implements Initializable {
             Logger.getLogger(TableViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public Materias getMaterias() {
+        return materias;
+    }
+
+    public void setMaterias(Materias materias) {
+        this.materias = materias;
+    }
+    
+    
+    
     
     @FXML
     private void sincronizar(MouseEvent event) {
 
+       // manager.close();
         Inicio inicio = new Inicio();
         inicio.run();
         llenarEstudiante();
-
+       // inicio.setEnf(enf);
+       // inicio.setManager(manager);
         listarMaterias();
 
     }

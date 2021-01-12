@@ -15,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -163,9 +164,9 @@ public class Tareas implements Serializable {
         return nombreTarea;
     }
 
-    public void persist(Object object) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-        EntityManager em = emf.createEntityManager();
+    public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+       // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
+        em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
             em.persist(object);
@@ -174,7 +175,7 @@ public class Tareas implements Serializable {
             e.printStackTrace();
             em.getTransaction().rollback();
         } finally {
-            em.close();
+           // em.close();
         }
     }
 

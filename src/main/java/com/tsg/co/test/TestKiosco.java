@@ -10,7 +10,7 @@ import com.tsg.co.model.AchivosTot;
 import com.tsg.co.model.Entregas;
 import com.tsg.co.model.Materias;
 import com.tsg.co.model.Tareas;
-import com.tsg.model.Kiosko;
+import com.tsg.co.model.Kiosko;
 import com.tsg.co.model.Version;
 import java.io.IOException;
 import java.util.List;

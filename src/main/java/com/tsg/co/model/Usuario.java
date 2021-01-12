@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,23 +38,23 @@ public class Usuario implements Serializable {
     private String username;
 
     @NotNull
-    @Column(name = "contraseña", nullable = false, length = 100)
-    private String contraseña;
+    @Column(name = "password", nullable = false, length = 100)
+    private String password;
 
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "usuario" )
     private Estudiante estudiante;
 
     public Usuario() {
     }
 
-    public Usuario(String username, String contraseña) {
+    public Usuario(String username, String password) {
         this.username = username;
-        this.contraseña = contraseña;
+        this.password = password;
     }
 
-    public Usuario(String username, String contraseña, Estudiante estudiante) {
+    public Usuario(String username, String password, Estudiante estudiante) {
         this.username = username;
-        this.contraseña = contraseña;
+        this.password = password;
         this.estudiante = estudiante;
     }
 
@@ -73,12 +74,12 @@ public class Usuario implements Serializable {
         this.username = username;
     }
 
-    public String getContraseña() {
-        return contraseña;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Estudiante getEstudiante() {
@@ -91,23 +92,24 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "Usuario{" + "username=" + username + ", contrase\u00f1a=" + contraseña + '}';
+        return "Usuario{" + "username=" + username + ", password=" + password+ '}';
     }
 
-    public void persist(Object object) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-        EntityManager em = emf.createEntityManager();
+    public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+       // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
+        em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
+           // System.out.println("Usuario creado" + "Ferney ");
             em.persist(object);
             em.getTransaction().commit();
         } catch (Exception e) {
-            e.printStackTrace();
+           // e.printStackTrace();
             System.out.println("com.tsg.co.model.Usuario.persist()" + "Ferney ");
             
             em.getTransaction().rollback();
         } finally {
-            em.close();
+           // em.close();
         }
     }
 
