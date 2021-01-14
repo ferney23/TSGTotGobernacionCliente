@@ -48,7 +48,7 @@ import javax.persistence.Persistence;
  */
 public class InicioSesionFXMLController implements Initializable {
 
-    private EntityManager manager;
+    // private EntityManager manager;
     private EntityManagerFactory enf;
     private Estudiante estudiante;
     private Inicio inicio;
@@ -82,14 +82,6 @@ public class InicioSesionFXMLController implements Initializable {
 
     public void IniciarSesion() {
 
-    }
-
-    public EntityManager getManager() {
-        return manager;
-    }
-
-    public void setManager(EntityManager manager) {
-        this.manager = manager;
     }
 
     public EntityManagerFactory getEnf() {
@@ -157,9 +149,12 @@ public class InicioSesionFXMLController implements Initializable {
 
     @FXML
     private void ObtenerUsuario(MouseEvent event) {
+
+        //System.out.println("Vengo nulo");
+        //enf = Persistence.createEntityManagerFactory("tsg");
+        EntityManager manager = enf.createEntityManager();
         try {
-            enf = Persistence.createEntityManagerFactory("tsg");
-           manager = enf.createEntityManager();
+
             Usuario usuariosExistentes = null;
 
             try {
@@ -180,7 +175,7 @@ public class InicioSesionFXMLController implements Initializable {
                     stagePantallaPrincipal.setScene(this.scenePantallaPrincipal);
                     tableViewController = loader.<TableViewController>getController();
                     this.tableViewController.setEnf(enf);
-                    this.tableViewController.setManager(manager);
+                    //   this.tableViewController.setManager(manager);
                     tableViewController.setEstudiante(estudiante);
                     tableViewController.llenarEstudiante();
                     tableViewController.listarMaterias();
@@ -202,12 +197,13 @@ public class InicioSesionFXMLController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(InicioSesionFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        manager.close();
 
     }
 
     @FXML
     private void registrarEstudiante(MouseEvent event) {
-
+        EntityManager manager = enf.createEntityManager();
         Usuario usuariosExistentes = null;
 
         if ((txtUsuarioEstudiante.getText().length() > 0) && (txtUsuarioEstudiante.getText().length() <= 30)) {
@@ -221,13 +217,14 @@ public class InicioSesionFXMLController implements Initializable {
             String contraseña = txtContraseña.getText();
             if (usuariosExistentes == null) {
                 Usuario usuarioRegistrar = new Usuario(nombre, contraseña);
-                usuarioRegistrar.persist(usuarioRegistrar, enf, manager);
+                usuarioRegistrar.persist(usuarioRegistrar, manager);
                 txtUsuarioEstudiante.setText("Usuario creado: " + nombre);
             } else {
                 txtUsuarioEstudiante.setText("Este usuario ya esta registrado");
             }
 
         }
+        manager.close();
 
     }
 

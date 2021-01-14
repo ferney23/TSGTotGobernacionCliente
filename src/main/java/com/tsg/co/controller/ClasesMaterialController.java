@@ -59,7 +59,7 @@ import javax.persistence.Persistence;
  */
 public class ClasesMaterialController implements Initializable {
 
-    private  EntityManager manager;
+  //  private  EntityManager manager;
     private  EntityManagerFactory enf;
     private Materias materias;
     private Estudiante estudiante;
@@ -181,13 +181,7 @@ public class ClasesMaterialController implements Initializable {
         this.stageInicioSesion = stageInicioSesion;
     }
 
-    public EntityManager getManager() {
-        return manager;
-    }
-
-    public void setManager(EntityManager manager) {
-        this.manager = manager;
-    }
+   
 
     public EntityManagerFactory getEnf() {
         return enf;
@@ -202,7 +196,7 @@ public class ClasesMaterialController implements Initializable {
     public void ClasesMateriales(Materias materias) {
 
       //  enf = Persistence.createEntityManagerFactory("tsg");
-     //   manager = enf.createEntityManager();
+        EntityManager   manager = enf.createEntityManager();
 
         List<Clases> clases = manager.createQuery("SELECT ma FROM Clases ma WHERE ma.materia.idMateria= :id").setParameter("id", materias.getIdMateria()).getResultList();
         ObservableList<Clases> observableListClases = FXCollections.observableArrayList(clases);
@@ -236,13 +230,13 @@ public class ClasesMaterialController implements Initializable {
         cellClase.setCellValueFactory(new PropertyValueFactory<VistaModeloClases, String>("nombre"));
         cellTema.setCellValueFactory(new PropertyValueFactory<VistaModeloClases, String>("tema"));
         cellMaterialEstudio.setCellValueFactory(new PropertyValueFactory<VistaModeloClases, Button>("verMas"));
-
+        manager.close();
     }
 
     public void viewMaterialEstudio(Clases clases) {
 
        // enf = Persistence.createEntityManagerFactory("tsg");
-        //manager = enf.createEntityManager();
+        EntityManager manager = enf.createEntityManager();
         tableArchivos.getItems().clear();
         List<MaterialEstudio> materialEstudios = manager.createQuery("SELECT ma FROM MaterialEstudio ma WHERE ma.clase.idClases= :id").setParameter("id", clases.getIdClases()).getResultList();
         ObservableList<MaterialEstudio> observableListMaterialEstudios = FXCollections.observableArrayList(materialEstudios);
@@ -277,7 +271,7 @@ public class ClasesMaterialController implements Initializable {
         // colClase.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, String>("clase"));
         colAdjunto.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, Button>("btnArchivoAdjunto"));
 
-        
+        manager.close();
     }
 
     @FXML
@@ -291,8 +285,8 @@ public class ClasesMaterialController implements Initializable {
             TableViewController tableViewController = loader.<TableViewController>getController();
             tableViewController.setScenePrincipal(scenePrincipal);
             tableViewController.setStagePantallaPrincipal(stagePrincipal);
-            tableViewController.setEnf(enf);
-            tableViewController.setManager(manager);
+           tableViewController.setEnf(enf);
+           // tableViewController.setManager(manager);
             
             tableViewController.setEstudiante(estudiante);
             tableViewController.llenarEstudiante();
@@ -321,7 +315,7 @@ public class ClasesMaterialController implements Initializable {
         inicioFXMLController.setStageInicioSesion(this.stageInicioSesion);
         inicioFXMLController.setSceneInicioSesion(sceneInicioSesion);
         inicioFXMLController.setEnf(enf);
-        inicioFXMLController.setManager(manager);
+      //  inicioFXMLController.setManager(manager);
 
         this.stageInicioSesion.setTitle("TOT Learning System - Client");
         this.stageInicioSesion.setResizable(false);

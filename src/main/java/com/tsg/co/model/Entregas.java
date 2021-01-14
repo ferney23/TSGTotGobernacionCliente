@@ -35,7 +35,7 @@ import javax.validation.constraints.NotNull;
 public class Entregas implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
@@ -70,8 +70,8 @@ public class Entregas implements Serializable {
 
     }
 
-    public Entregas(Long upp, Estudiante estudiante, Subida subida, Tareas tarea,Long rtEntrega) {
-
+    public Entregas(Long id,Long upp, Estudiante estudiante, Subida subida, Tareas tarea,Long rtEntrega) {
+        this.id = id;
         this.upp = upp;
         this.estudiante = estudiante;
         this.subida = subida;
@@ -166,9 +166,9 @@ public class Entregas implements Serializable {
         return "id=" + id;
     }
 
-   public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+   public void persist(Object object , EntityManager em) {
         //EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-          em = emf.createEntityManager();
+         // em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
             em.persist(object);
@@ -176,10 +176,11 @@ public class Entregas implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
             em.getTransaction().rollback();
-        } finally {
-          //  em.close();
         }
     }
+   
+   
+   
 
    
 }

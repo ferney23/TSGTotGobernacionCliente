@@ -41,7 +41,7 @@ public class Usuario implements Serializable {
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
-    @OneToOne(mappedBy = "usuario" )
+    @OneToOne(mappedBy = "usuario")
     private Estudiante estudiante;
 
     public Usuario() {
@@ -92,25 +92,23 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "Usuario{" + "username=" + username + ", password=" + password+ '}';
+        return "Usuario{" + "username=" + username + ", password=" + password + '}';
     }
 
-    public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
-       // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-        em = emf.createEntityManager();
+    public void persist(Object object, EntityManager em) {
+        // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
+        // em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
-           // System.out.println("Usuario creado" + "Ferney ");
+            // System.out.println("Usuario creado" + "Ferney ");
             em.persist(object);
             em.getTransaction().commit();
         } catch (Exception e) {
-           // e.printStackTrace();
+            // e.printStackTrace();
             System.out.println("com.tsg.co.model.Usuario.persist()" + "Ferney ");
-            
+
             em.getTransaction().rollback();
-        } finally {
-           // em.close();
-        }
+        } 
     }
 
 }

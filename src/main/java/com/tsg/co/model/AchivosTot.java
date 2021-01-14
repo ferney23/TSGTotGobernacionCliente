@@ -32,7 +32,7 @@ import javax.validation.constraints.NotNull;
 public class AchivosTot implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    // @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idAchivosTot;
 
     @NotNull
@@ -62,7 +62,8 @@ public class AchivosTot implements Serializable {
      * @param ruta
      * @param subida
      */
-    public AchivosTot(Long archivoKiosco, String codigo, String ruta, Subida subida) {
+    public AchivosTot(Long idAchivosTot, Long archivoKiosco, String codigo, String ruta, Subida subida) {
+        this.idAchivosTot = idAchivosTot;
         this.archivoKiosco = archivoKiosco;
         this.codigo = codigo;
         this.ruta = ruta;
@@ -70,7 +71,8 @@ public class AchivosTot implements Serializable {
 
     }
 
-    public AchivosTot(Long archivoKiosco, String codigo, String ruta, Subida subida, Entregas entregas) {
+    public AchivosTot(Long idAchivosTot, Long archivoKiosco, String codigo, String ruta, Subida subida, Entregas entregas) {
+        this.idAchivosTot = idAchivosTot;
         this.archivoKiosco = archivoKiosco;
         this.codigo = codigo;
         this.ruta = ruta;
@@ -79,7 +81,8 @@ public class AchivosTot implements Serializable {
 
     }
 
-    public AchivosTot(Long archivoKiosco, String codigo, String ruta) {
+    public AchivosTot(Long idAchivosTot,Long archivoKiosco, String codigo, String ruta) {
+        this.idAchivosTot = idAchivosTot;
         this.archivoKiosco = archivoKiosco;
         this.codigo = codigo;
         this.ruta = ruta;
@@ -139,9 +142,9 @@ public class AchivosTot implements Serializable {
         return idAchivosTot + ruta;
     }
 
-    public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+    public void persist(Object object, EntityManager em) {
         //EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-         em = emf.createEntityManager();
+        //  em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
             em.persist(object);
@@ -149,9 +152,9 @@ public class AchivosTot implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
             em.getTransaction().rollback();
-        } finally {
-          //  em.close();
         }
     }
-   
+
+    
+
 }

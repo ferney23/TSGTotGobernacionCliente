@@ -33,8 +33,8 @@ public class App extends Application {
         inicioSesionFXMLController.setStageInicioSesion(this.stageInicioSesion);
         inicioSesionFXMLController.setSceneInicioSesion(this.sceneInicioSesion);
         inicioSesionFXMLController.setConectado(this.inicio.isConectado());
-        this.inicioSesionFXMLController.setEnf(this.inicio.getEnf());
-        this.inicioSesionFXMLController.setManager(this.inicio.getManager());
+         this.inicioSesionFXMLController.setEnf(this.inicio.getEnf());
+        //this.inicioSesionFXMLController.setManager(this.inicio.getManager());
         this.stageInicioSesion.setTitle("TOT Learning System - Client");
         this.stageInicioSesion.setResizable(false);
         this.stageInicioSesion.show();
@@ -42,6 +42,11 @@ public class App extends Application {
             @Override
 
             public void handle(WindowEvent event) {
+                System.out.println(".handle()");
+                //inicio.getEnf().close();
+
+                
+                //inicio.getManager().close();
                 inicio.getEnf().close();
                 Platform.exit();
                 System.exit(0);

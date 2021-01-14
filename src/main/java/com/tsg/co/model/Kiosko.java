@@ -75,9 +75,9 @@ public class Kiosko implements Serializable {
         return PORT + ", IP=" + IP + '}';
     }
 
-    public void persist(Object object, EntityManagerFactory emf, EntityManager em) {
+    public void persist(Object object, EntityManager em) {
         // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-        em = emf.createEntityManager();
+      //  em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
             em.persist(object);
@@ -85,9 +85,7 @@ public class Kiosko implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
             em.getTransaction().rollback();
-        } finally {
-            // em.close();
-        }
+        } 
     }
 
 }

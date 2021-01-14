@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull;
 public class Tareas implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+   // @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
@@ -68,6 +68,16 @@ public class Tareas implements Serializable {
 
     }
 
+    /**
+     * 
+     * @param id
+     * @param tareaKiosco
+     * @param registroTarea
+     * @param nombreTarea
+     * @param codigo
+     * @param materia
+     * @param estudiante 
+     *
     public Tareas(Long tareaKiosco, Long registroTarea, String nombreTarea, String codigo, Materias materia, Estudiante estudiante) {
         this.tareaKiosco = tareaKiosco;
         this.nombreTarea = nombreTarea;
@@ -76,8 +86,11 @@ public class Tareas implements Serializable {
         this.registroTarea = registroTarea;
         this.estudiante = estudiante;
     }
+      **/
 
-    public Tareas(Long tareaKiosco, Long registroTarea, String nombreTarea, String codigo, Materias materia, Subida subida, Estudiante estudiante) {
+    public Tareas(Long id,Long tareaKiosco, Long registroTarea, String nombreTarea, String codigo, Materias materia, Subida subida, Estudiante estudiante) {
+        this.id=id;
+        
         this.tareaKiosco = tareaKiosco;
         this.nombreTarea = nombreTarea;
         this.codigo = codigo;
@@ -164,9 +177,9 @@ public class Tareas implements Serializable {
         return nombreTarea;
     }
 
-    public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+    public void persist(Object object , EntityManager em) {
        // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-        em = emf.createEntityManager();
+       // em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
             em.persist(object);
@@ -174,9 +187,7 @@ public class Tareas implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
             em.getTransaction().rollback();
-        } finally {
-           // em.close();
-        }
+        } 
     }
 
 }

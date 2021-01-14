@@ -117,7 +117,7 @@ public class MaterialEstudio implements Serializable {
     }
     
     
-public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+public void persist(Object object , EntityManager em) {
        // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
         //em = emf.createEntityManager();
         em.getTransaction().begin();
@@ -127,9 +127,7 @@ public void persist(Object object ,EntityManagerFactory emf , EntityManager em) 
         } catch (Exception e) {
             e.printStackTrace();
             em.getTransaction().rollback();
-        } finally {
-           // em.close();
-        }
+        } 
     }
 
 }

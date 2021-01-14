@@ -52,6 +52,15 @@ public class Profesor implements  Serializable{
     public Profesor() {
     }
 
+    public Profesor(Long idProfesor, String nombre, String apellidos, Long codigo) {
+        this.idProfesor = idProfesor;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.codigo = codigo;
+    }
+    
+    
+
     public Long getIdProfesor() {
         return idProfesor;
     }
@@ -89,9 +98,9 @@ public class Profesor implements  Serializable{
         return "Profesor{" + "idProfesor=" + idProfesor + ", nombre=" + nombre + ", apellidos=" + apellidos + ", codigo=" + codigo + '}';
     }
 
- public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+ public void persist(Object object , EntityManager em) {
        // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-        em = emf.createEntityManager();
+       // em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
             em.persist(object);
@@ -99,9 +108,7 @@ public class Profesor implements  Serializable{
         } catch (Exception e) {
             e.printStackTrace();
             em.getTransaction().rollback();
-        } finally {
-           // em.close();
-        }
+        } 
     }
     
     

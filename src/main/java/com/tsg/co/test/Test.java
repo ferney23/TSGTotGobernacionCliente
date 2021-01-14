@@ -18,6 +18,8 @@ import com.tsg.co.model.Subida;
 import com.tsg.co.model.Tareas;
 import com.tsg.co.model.Usuario;
 import com.tsg.co.model.Kiosko;
+import com.tsg.co.model.Profesor;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,15 +48,30 @@ public class Test {
         // Estudiante estudiante = (Estudiante) manageres.createQuery("SELECT ma FROM Estudiante ma WHERE ma.idEstudiante= :id").setParameter("id", 209L).getSingleResult();
         //  Usuario usuariosExistentes = (Usuario) manageres.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.contraseña =:contraseña ").setParameter("usuario", "estudiante.uno").setParameter("contraseña", "tsg123").getSingleResult();
         // System.out.println(usuariosExistentes.getEstudiante().getNombres());
-        Estudiante estudiante = manageres.find(Estudiante.class, 209L);
-        Set<Materias> materiasEstudiante = estudiante.getMateriases();
-        Materias materiasExiste = manageres.find(Materias.class, 6771L);
+        // Estudiante estudiante = manageres.find(Estudiante.class, 209L);
+        //  Set<Materias> materiasEstudiante = estudiante.getMateriases();
+        //  Materias materiasExiste = manageres.find(Materias.class, 6771L);
         //System.out.println(materiasEstudiante);
         //System.out.println(materiasEstudiante.contains(materiasExiste) + materiasExiste.getTitulo());
+        //   Materias materiaTarea = (Materias) manageres.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id ").setParameter("id", 6760L).getSingleResult();
+        //   System.out.println(materiaTarea.getTitulo());
+        Long id = null;
+        try {
+            id = (long) manageres.createQuery("Select MAX(ID) FROM Profesor").getSingleResult();
+        } catch (Exception e) {
+        }
 
-        Materias materiaTarea = (Materias) manageres.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id ").setParameter("id", 6760L).getSingleResult();
-        System.out.println(materiaTarea.getTitulo());
-
+        if (id ==null) {       
+            System.out.println(id);
+        }else if (id>=1){
+            Long idGuardar= id + 1L;
+            Profesor profesor = new Profesor(idGuardar, "Pepe", "Perez", idGuardar);
+            profesor.persist(profesor,  manageres);
+         //   id = (long) manageres.createQuery("Select MAX(ID) FROM Profesor").getSingleResult();
+            System.err.println("Ferney"); 
+        }
+        
+     
     }
 
     /**

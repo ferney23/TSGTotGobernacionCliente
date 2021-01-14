@@ -17,27 +17,20 @@ import javax.persistence.Persistence;
  */
 public class ManejoDatos {
 
-    private  EntityManager manager;
-    private  EntityManagerFactory enf;
+    // private  EntityManager manager;
+    private EntityManagerFactory enf;
 
     public ManejoDatos() {
     }
 
     public List<Usuario> listarUsuarios() {
 
-    //    enf = Persistence.createEntityManagerFactory("tsg");
-    //    manager = enf.createEntityManager();
+        //    enf = Persistence.createEntityManagerFactory("tsg");
+        EntityManager manager = enf.createEntityManager();
         List<Usuario> usuariosExistentes = manager.createQuery("SELECT ma FROM  Usuario ma").getResultList();
+        manager.close();
 
         return usuariosExistentes;
-    }
-
-    public EntityManager getManager() {
-        return manager;
-    }
-
-    public void setManager(EntityManager manager) {
-        this.manager = manager;
     }
 
     public EntityManagerFactory getEnf() {
@@ -47,6 +40,5 @@ public class ManejoDatos {
     public void setEnf(EntityManagerFactory enf) {
         this.enf = enf;
     }
-    
-    
+
 }

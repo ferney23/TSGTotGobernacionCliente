@@ -42,8 +42,8 @@ public class MaterialEstudioFXMLController implements Initializable {
     private Clases clases;
     private Estudiante estudiante;
 
-    private static EntityManager manager;
-    private static EntityManagerFactory enf;
+   // private static EntityManager manager;
+    private  EntityManagerFactory enf;
 
     @FXML
     private AnchorPane panelInformacion;
@@ -86,8 +86,8 @@ public class MaterialEstudioFXMLController implements Initializable {
 
     public void ViewMaterialEstudio() {
         // this.clases = clases;
-        enf = Persistence.createEntityManagerFactory("tsg");
-        manager = enf.createEntityManager();
+       // enf = Persistence.createEntityManagerFactory("tsg");
+         EntityManager   manager = enf.createEntityManager();
 
         List<MaterialEstudio> materialEstudios = manager.createQuery("SELECT ma FROM MaterialEstudio ma WHERE ma.clase.idClases= :id").setParameter("id", this.clases.getIdClases()).getResultList();
         ObservableList<MaterialEstudio> observableListMaterialEstudios = FXCollections.observableArrayList(materialEstudios);
@@ -121,7 +121,7 @@ public class MaterialEstudioFXMLController implements Initializable {
         colDescripcion.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, String>("descripcion"));
         colClase.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, String>("clase"));
         colAdjunto.setCellValueFactory(new PropertyValueFactory<ViewMaterialEstudio, Button>("btnArchivoAdjunto"));
-
+        manager.close();
     }
 
     public void viewArchivos(String ruta) {

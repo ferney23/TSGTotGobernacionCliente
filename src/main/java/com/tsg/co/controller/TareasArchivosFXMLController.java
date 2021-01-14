@@ -10,6 +10,7 @@ import com.tsg.co.model.CustomImage;
 import com.tsg.co.model.Entregas;
 import com.tsg.co.model.Estudiante;
 import com.tsg.co.model.Materias;
+import com.tsg.co.model.Profesor;
 import com.tsg.co.model.Subida;
 import com.tsg.co.model.Tareas;
 import java.awt.Desktop;
@@ -57,7 +58,7 @@ import javax.persistence.Persistence;
  */
 public class TareasArchivosFXMLController implements Initializable {
 
-    private EntityManager manager;
+  //  private EntityManager manager;
     private EntityManagerFactory enf;
     private String codigotarea;
     @FXML
@@ -179,14 +180,6 @@ public class TareasArchivosFXMLController implements Initializable {
         this.stageInicioSesion = stageInicioSesion;
     }
 
-    public EntityManager getManager() {
-        return manager;
-    }
-
-    public void setManager(EntityManager manager) {
-        this.manager = manager;
-    }
-
     public EntityManagerFactory getEnf() {
         return enf;
     }
@@ -194,6 +187,9 @@ public class TareasArchivosFXMLController implements Initializable {
     public void setEnf(EntityManagerFactory enf) {
         this.enf = enf;
     }
+
+
+    
 
     @FXML
     private void cargararchivo(MouseEvent event) throws IOException {
@@ -230,15 +226,16 @@ public class TareasArchivosFXMLController implements Initializable {
                 Files.copy(file.toPath(), dest,
                         StandardCopyOption.REPLACE_EXISTING);
 
-                Entregas nuevaEntrega = new Entregas(0L, this.estudiante, this.tarea.getSubida(), this.tarea, this.tarea.getRegistroTarea());
-                nuevaEntrega.persist(nuevaEntrega, enf, manager);
-                String archivoTotcodigo = nuevaEntrega.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
+                String archivoTotcodigo = "";
+                Entregas entregaArchivos = guardarEntregas();
+                archivoTotcodigo = entregaArchivos.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
+
                 System.err.println(archivoTotcodigo);
                 Long idArchivoTot = Long.parseLong(archivoTotcodigo);
-
-                AchivosTot achivosNuevo = new AchivosTot(idArchivoTot, archivoTotcodigo, dest.toString(), this.tarea.getSubida(), nuevaEntrega);
-                achivosNuevo.persist(achivosNuevo, enf, manager);
-
+                guardarArchivo(idArchivoTot, archivoTotcodigo, dest.toString(), entregaArchivos);
+                
+                //AchivosTot achivosNuevo = new AchivosTot(1L, idArchivoTot, archivoTotcodigo, dest.toString(), this.tarea.getSubida(), entregaArchivos);
+               // achivosNuevo.persist(achivosNuevo);
                 tableArchivo1.getItems().add(itemlist);
                 imagentype1.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
                 nombrematerial.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("nombreTarea"));
@@ -247,24 +244,70 @@ public class TareasArchivosFXMLController implements Initializable {
         }
     }
 
+    public void guardarArchivo(Long idArchivoTot, String archivoTotcodigo, String destino, Entregas entregaArchivos) {
+         EntityManager manager = enf.createEntityManager();
+        
+        Long idArchivo = null;
+        try {
+            idArchivo = (long) manager.createQuery("Select MAX(ID) FROM AchivosTot").getSingleResult();
+        } catch (Exception e) {
+        }
+        if (idArchivo == null) {
+            AchivosTot achivosNuevo = new AchivosTot(1L, idArchivoTot, archivoTotcodigo, destino, this.tarea.getSubida(), entregaArchivos);
+            achivosNuevo.persist(achivosNuevo, manager);
+            idArchivo = (long) manager.createQuery("Select MAX(ID) FROM AchivosTot").getSingleResult();
+            //  archivoTotcodigo = nuevaEntrega.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
+
+        } else if (idArchivo >= 1) {
+            Long idGuardarArchivo = idArchivo + 1L;
+            AchivosTot achivosNuevo = new AchivosTot(idGuardarArchivo, idArchivoTot, archivoTotcodigo, destino, this.tarea.getSubida(), entregaArchivos);
+            achivosNuevo.persist(achivosNuevo, manager);
+            idArchivo = (long) manager.createQuery("Select MAX(ID) FROM AchivosTot").getSingleResult();
+            System.err.println("Ferney");
+        }
+        manager.close();
+        
+
+    }
+
+    public Entregas guardarEntregas() {
+        EntityManager manager = enf.createEntityManager();
+        Entregas nuevaEntrega = null;
+        Long idEntrega = null;
+        try {
+            idEntrega = (long) manager.createQuery("Select MAX(ID) FROM Entregas").getSingleResult();
+        } catch (Exception e) {
+        }
+        if (idEntrega == null) {
+            // Long idGuardarEntrega = idEntrega + 1L;
+            nuevaEntrega = new Entregas(1L, 0L, this.estudiante, this.tarea.getSubida(), this.tarea, this.tarea.getRegistroTarea());
+            nuevaEntrega.persist(nuevaEntrega, manager);
+            idEntrega = (long) manager.createQuery("Select MAX(ID) FROM Entregas").getSingleResult();
+            //  archivoTotcodigo = nuevaEntrega.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
+
+        } else if (idEntrega >= 1) {
+            Long idGuardarEntrega = idEntrega + 1L;
+            nuevaEntrega = new Entregas(idGuardarEntrega, 0L, this.estudiante, this.tarea.getSubida(), this.tarea, this.tarea.getRegistroTarea());
+            nuevaEntrega.persist(nuevaEntrega,  manager);
+            //      archivoTotcodigo = nuevaEntrega.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
+            idEntrega = (long) manager.createQuery("Select MAX(ID) FROM Entregas").getSingleResult();
+            System.err.println("Ferney");
+        }
+        manager.close();
+        return nuevaEntrega;
+
+    }
+
     public void mostrarArchivo() {
         //  enf = Persistence.createEntityManagerFactory("tsg");
         //  manager = enf.createEntityManager();
-
+        EntityManager manager = enf.createEntityManager();
         List<AchivosTot> achivosTots1 = manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.subida.tareas.id= :id").setParameter("id", tarea.getId()).getResultList();
 
         List<AchivosTot> achivosTots = new ArrayList<>();
         for (AchivosTot arch : achivosTots1) {
             System.out.println(arch);
             achivosTots.add(arch);
-            /**
-             *
-             * try { if
-             * (arch.getSubida().getIdSubida().equals(tarea.getSubida().getIdSubida()))
-             * { System.out.println(arch); achivosTots.add(arch); } } catch
-             * (Exception e) { }
-             *
-             */
         }
         ObservableList<AchivosTot> observableListaArchivos = FXCollections.observableArrayList(achivosTots);
         List<CustomImage> obj = new ArrayList<>();
@@ -294,7 +337,7 @@ public class TareasArchivosFXMLController implements Initializable {
         imagetype.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
         nombrematerial1.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("nombreTarea"));
         //labelMaterias.setText(materias.getTitulo().toUpperCase());
-
+        manager.close();
     }
 
     @FXML
@@ -326,14 +369,6 @@ public class TareasArchivosFXMLController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        /**
-         * tableArchivo1.getSelectionModel().getSelectedItem(); String ruta =
-         * tableArchivo1.getSelectionModel().getSelectedItem().getRuta(); File f
-         * = new File(".\\" + ruta); try { Desktop.getDesktop().open(f); } catch
-         * (IOException e) { e.printStackTrace(); }
-         *
-         */
     }
 
     @FXML
@@ -350,12 +385,12 @@ public class TareasArchivosFXMLController implements Initializable {
         TableViewController tableViewController = loader.<TableViewController>getController();
 
         tableViewController.setEnf(enf);
-        tableViewController.setManager(manager);
+       // tableViewController.setManager(manager);
         tableViewController.setEstudiante(estudiante);
         tableViewController.llenarEstudiante();
         tableViewController.listarMaterias();
         // tableViewController.setMaterias(materia);
-        tableViewController.listarTareas(materia);
+        //   tableViewController.listarTareas(materia);
         System.out.println(materia);
         tableViewController.setScenePrincipal(scenePrincipal);
         tableViewController.setStagePantallaPrincipal(stagePantallaPrincipal);

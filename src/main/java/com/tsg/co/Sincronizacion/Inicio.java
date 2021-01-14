@@ -72,8 +72,9 @@ import org.apache.hc.core5.http.HttpResponse;
  */
 public class Inicio implements Runnable {
 
-    private  EntityManager manager;
-    private  EntityManagerFactory enf;
+    
+    private EntityManagerFactory enf =Persistence.createEntityManagerFactory("tsg");
+  //  private EntityManager manager = enf.createEntityManager(); 
     private ObtenerDatos obtenerDatos;
     private ManejoDatos manejoDatos;
     private Verificacion verificacion;
@@ -88,20 +89,16 @@ public class Inicio implements Runnable {
      *
      */
     public Inicio() {
-        if(enf==null){
-            System.out.println("com.tsg.co.Sincronizacion.Inicio.<init>()");
-           enf = Persistence.createEntityManagerFactory("tsg");
-        }
+
+      //  enf = Persistence.createEntityManagerFactory("tsg");
+
         
-        
-        manager = enf.createEntityManager();
         this.obtenerDatos = new ObtenerDatos(this);
         this.verificacion = new Verificacion();
         this.manejoDatos = new ManejoDatos();
         this.obtenerDatos.setEnf(enf);
-        this.obtenerDatos.setManager(manager);
         this.manejoDatos.setEnf(enf);
-        this.manejoDatos.setManager(manager);
+        
         // manager = enf.createEntityManager();
         //manager.getTransaction().begin();
 
@@ -115,13 +112,6 @@ public class Inicio implements Runnable {
         this.conectado = conectado;
     }
 
-    public EntityManager getManager() {
-        return manager;
-    }
-
-    public void setManager(EntityManager manager) {
-        this.manager = manager;
-    }
 
     public EntityManagerFactory getEnf() {
         return enf;
@@ -131,8 +121,12 @@ public class Inicio implements Runnable {
         this.enf = enf;
     }
 
+   
+     
+    
     @Override
     public void run() {
+        //  manager = enf.createEntityManager();
         this.inicioTiempo = System.currentTimeMillis();
 
         try {
@@ -141,7 +135,9 @@ public class Inicio implements Runnable {
 
             System.err.println(GetAddress);
             obtenerDatos.KioscosListos();
+             EntityManager manager = enf.createEntityManager();
             List<Kiosko> kioskos = manager.createQuery("FROM Kiosko").getResultList();
+            manager.close();
             // boolean conectado;
             boolean saber = false;
             obtenerDatos.IniciarVersion();
@@ -158,8 +154,9 @@ public class Inicio implements Runnable {
                             String version1 = this.peticionHttpGet(version);
                             JSONObject obj1 = new JSONObject(version1);
                             float versionnube = (float) obj1.getDouble("numero");
-                            Version versionBases = manager.find(Version.class, 1L);
-
+                            EntityManager manageres = enf.createEntityManager();
+                            Version versionBases = manageres.find(Version.class, 1L);
+                            manageres.close();
                             float versionactual = (float) versionBases.getNumero();
                             System.out.println("version actual" + versionactual + "version kisoko" + versionnube);
                             if (versionactual == versionnube) {

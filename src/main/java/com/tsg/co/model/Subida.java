@@ -35,7 +35,7 @@ import javax.validation.constraints.NotNull;
 public class Subida implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+   // @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idSubida;
 
     @NotNull
@@ -62,7 +62,8 @@ public class Subida implements Serializable {
     @ManyToOne(optional = true)
     private Estudiante estudiante;
 
-    public Subida(Long subidaKisoco, String fecha, String fechaDescarga, Estudiante estudiante) {
+    public Subida(Long idSubida ,Long subidaKisoco, String fecha, String fechaDescarga, Estudiante estudiante) {
+        this.idSubida=idSubida;
         this.subidaKisoco = subidaKisoco;
         this.fecha = fecha;
         this.fechaDescarga = fechaDescarga;
@@ -143,9 +144,9 @@ public class Subida implements Serializable {
         return "idSubida=" + idSubida;
     }
 
-     public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+     public void persist(Object object, EntityManager em) {
        // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-        em = emf.createEntityManager();
+      //  em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
             em.persist(object);
@@ -153,9 +154,7 @@ public class Subida implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
             em.getTransaction().rollback();
-        } finally {
-           // em.close();
-        }
+        } 
     }
 
 }

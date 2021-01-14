@@ -143,7 +143,7 @@ public class Clases implements Serializable{
       
     }
 
-  public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+  public void persist(Object object , EntityManager em) {
        // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
         //em = emf.createEntityManager();
         em.getTransaction().begin();

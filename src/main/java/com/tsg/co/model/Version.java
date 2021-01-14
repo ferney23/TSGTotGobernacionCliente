@@ -62,7 +62,7 @@ public class Version implements Serializable {
         return String.valueOf(numero);
     }
 
-    public void persist(Object object ,EntityManagerFactory emf , EntityManager em) {
+    public void persist(Object object , EntityManager em) {
         //EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
       //   em = emf.createEntityManager();
         em.getTransaction().begin();
