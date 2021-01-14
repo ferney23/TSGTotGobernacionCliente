@@ -150,8 +150,6 @@ public class InicioSesionFXMLController implements Initializable {
     @FXML
     private void ObtenerUsuario(MouseEvent event) {
 
-        //System.out.println("Vengo nulo");
-        //enf = Persistence.createEntityManagerFactory("tsg");
         EntityManager manager = enf.createEntityManager();
         try {
 

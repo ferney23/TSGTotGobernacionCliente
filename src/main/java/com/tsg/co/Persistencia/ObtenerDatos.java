@@ -57,7 +57,6 @@ public class ObtenerDatos {
 
     private Inicio inicio;
     private EntityManagerFactory enf;
-    // private EntityManager manager;
 
     private boolean nuevoCliente;
 
@@ -85,14 +84,9 @@ public class ObtenerDatos {
         this.enf = enf;
     }
 
-   
-    
-    
-
     public Version IniciarVersion() {
-        //enf = Persistence.createEntityManagerFactory("tsg");
-        EntityManager manager = enf.createEntityManager();
 
+        EntityManager manager = enf.createEntityManager();
         Version auxVersion = null;
         Version existeVersion = null;
 
@@ -103,9 +97,7 @@ public class ObtenerDatos {
         }
 
         if (existeVersion == null) {
-
             nuevoCliente = true;
-
             Version version = new Version(1L, 1);
             version.persist(version, manager);
             auxVersion = version;
@@ -113,14 +105,12 @@ public class ObtenerDatos {
         } else {
             auxVersion = existeVersion;
         }
-        System.out.println("cliente nuevo " + this.nuevoCliente);
-
         manager.close();
         return auxVersion;
     }
 
     public Kiosko KioscosListos() {
-        // enf = Persistence.createEntityManagerFactory("tsg");
+
         EntityManager manager = enf.createEntityManager();
         Kiosko auxKiosco = null;
         Kiosko existeKiosco = null;
@@ -148,7 +138,6 @@ public class ObtenerDatos {
 
         Estudiante estudianteMac = null;
 
-        // enf = Persistence.createEntityManagerFactory("tsg");
         EntityManager manager = enf.createEntityManager();
         Estudiante estudiante = manager.find(Estudiante.class, estudiantekiosco.getLong("id"));
         InfoGrado existeInfoGrado = null;
@@ -262,7 +251,7 @@ public class ObtenerDatos {
 
         }
 
-        //  manager.close();
+        manager.close();
         return estudiante.getMateriases();
 
     }
@@ -270,8 +259,6 @@ public class ObtenerDatos {
     public ArrayList<Clases> actualizarClases(JSONArray jsonArrayClases) throws SQLException {
         //int Estudiante = dispositivokiosco.getJSONObject("estudiante").getInt("id");
         //JSONObject estudiantekiosco = dispositivokiosco.getJSONObject("estudiante");
-
-        // enf = Persistence.createEntityManagerFactory("tsg");
         EntityManager manager = enf.createEntityManager();
         ArrayList<Clases> arrayListClases = new ArrayList();
 
@@ -314,10 +301,6 @@ public class ObtenerDatos {
     }
 
     public void actualizarMaterialEstudio(JSONArray jsonArrayMaterialEstudio) throws SQLException, MalformedURLException, IOException {
-        //int Estudiante = dispositivokiosco.getJSONObject("estudiante").getInt("id");
-        //JSONObject estudiantekiosco = dispositivokiosco.getJSONObject("estudiante");
-
-        // enf = Persistence.createEntityManagerFactory("tsg");
         EntityManager manager = enf.createEntityManager();
         for (int j = 0; j < jsonArrayMaterialEstudio.length(); j++) {
             JSONObject objMaterialEstudio = (JSONObject) jsonArrayMaterialEstudio.get(j);
@@ -385,7 +368,7 @@ public class ObtenerDatos {
     }
 
     public Subida actualizarSubidas(JSONObject blob, Estudiante estudiante) {
-        //  enf = Persistence.createEntityManagerFactory("tsg");
+
         EntityManager manager = enf.createEntityManager();
         Subida subidasExistente = null;
         Subida subidaAux = null;
@@ -397,10 +380,6 @@ public class ObtenerDatos {
 
         if (subidasExistente == null) {
             subidaAux = guardarSubida(blob.getJSONObject("file").getLong("descargaId"), blob.getString("fechaDescarga"), estudiante);
-
-            //Subida subidaTarea = new Subida(blob.getJSONObject("file").getLong("descargaId"), blob.getString("fechaDescarga"), "2020", estudiante);
-            // subidaTarea.persist(subidaTarea, enf, manager);
-            // subidaAux = subidaTarea;
         } else {
             subidaAux = subidasExistente;
         }
@@ -442,8 +421,6 @@ public class ObtenerDatos {
 
     public void updateBlobTareas(JSONObject blob, String ip, Estudiante estudiante) throws MalformedURLException, IOException {
         Subida subidaTarea = actualizarSubidas(blob, estudiante);
-        //enf = Persistence.createEntityManagerFactory("tsg");
-        // manager = enf.createEntityManager();
         EntityManager manager = enf.createEntityManager();
         AchivosTot achivosTot = null;
         try {
@@ -484,8 +461,6 @@ public class ObtenerDatos {
                             Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
                         }
 
-                        // AchivosTot achivosNuevo = new AchivosTot(blob.getJSONObject("file").getLong("id"), String.valueOf(blob.getJSONObject("file").getLong("id")), dest.toString(), subidaTarea);
-                        // achivosNuevo.persist(achivosNuevo,enf, manager);
                         guardarArchivo(blob.getJSONObject("file").getLong("id"), String.valueOf(blob.getJSONObject("file").getLong("id")), dest.toString(), subidaTarea);
 
                     }
@@ -521,9 +496,6 @@ public class ObtenerDatos {
     }
 
     public Tareas actualizarTareas(JSONObject jsonTareas, String ip, Estudiante estudiante, Long registroTarea) throws SQLException {
-
-        // enf = Persistence.createEntityManagerFactory("tsg");
-        //manager = enf.createEntityManager();
         System.out.println(jsonTareas.getLong("tareaId"));
         EntityManager manager = enf.createEntityManager();
         //BlobsKiosco blobagregar = manager.find(BlobsKiosco.class, 527789L);
@@ -565,8 +537,6 @@ public class ObtenerDatos {
 
                     Subida subidaAux = guardarSubida(jsonTareas.getJSONObject("file").getLong("descargaId"), jsonTareas.getString("fechaDescarga"), estudiante);
 
-                    // Subida subidaTarea = new Subida(jsonTareas.getJSONObject("file").getLong("descargaId"), jsonTareas.getString("fechaDescarga"), jsonTareas.getString("fechaDescarga"), estudiante);
-                    // subidaTarea.persist(subidaTarea, enf, manager);
                     Tareas tareasguardar = new Tareas(registroTarea, jsonTareas.getLong("tareaId"), registroTarea, jsonTareas.getString("nombreActividad"), String.valueOf(jsonTareas.getLong("idArchivoD2L")), materiaTarea, subidaAux, estudiante);
                     tareasguardar.persist(tareasguardar, manager);
                     auxTareas = tareasguardar;
@@ -575,8 +545,6 @@ public class ObtenerDatos {
                 }
 
             } else {
-
-                // manager.getTransaction().begin();
                 existe.setCodigo(String.valueOf(jsonTareas.getLong("idArchivoD2L")));
                 existe.setNombreTarea(jsonTareas.getString("nombreActividad"));
                 existe.setRegistroTarea(registroTarea);
@@ -596,9 +564,6 @@ public class ObtenerDatos {
     public void postArchivos(String ip, String token, Estudiante estudiante) throws Exception {
         String endPointPostArchivo = "http://" + ip + "/api/entregas/entregarMiTarea";
         EntityManager manager = enf.createEntityManager();
-        //    enf = Persistence.createEntityManagerFactory("tsg");
-        //  manager = enf.createEntityManager();
-        // List<Entregas> entregasEnviar = manager.createQuery("FROM Entregas").getResultList();
         List<AchivosTot> entregas = manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.entrega.upp = :id and ma.entrega.estudiante.idEstudiante=:idEstudiante").setParameter("id", 0L).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
         System.out.println(entregas);
 
@@ -621,9 +586,6 @@ public class ObtenerDatos {
     }
 
     public void actualizarVersion(double numero) {
-
-        // enf = Persistence.createEntityManagerFactory("tsg");
-        //  manager = enf.createEntityManager();
         EntityManager manager = enf.createEntityManager();
         Version version = (Version) manager.createQuery("SELECT ma FROM Version ma WHERE ma.idVersion= :id").setParameter("id", 1L).getSingleResult();
 
@@ -633,7 +595,6 @@ public class ObtenerDatos {
         manager.close();
     }
 
-    
     public boolean isNuevoCliente() {
         return nuevoCliente;
     }
@@ -643,8 +604,6 @@ public class ObtenerDatos {
     }
 
     public List<Estudiante> ListarEstudiantes() {
-        //    enf = Persistence.createEntityManagerFactory("tsg");
-        //    manager = enf.createEntityManager();
         EntityManager manager = enf.createEntityManager();
         List<Estudiante> estudiantesGuardados = manager.createQuery("FROM  Estudiante").getResultList();
         manager.close();

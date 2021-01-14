@@ -90,18 +90,12 @@ public class Inicio implements Runnable {
      */
     public Inicio() {
 
-      //  enf = Persistence.createEntityManagerFactory("tsg");
-
-        
         this.obtenerDatos = new ObtenerDatos(this);
         this.verificacion = new Verificacion();
         this.manejoDatos = new ManejoDatos();
         this.obtenerDatos.setEnf(enf);
         this.manejoDatos.setEnf(enf);
         
-        // manager = enf.createEntityManager();
-        //manager.getTransaction().begin();
-
     }
 
     public boolean isConectado() {
@@ -135,7 +129,7 @@ public class Inicio implements Runnable {
 
             System.err.println(GetAddress);
             obtenerDatos.KioscosListos();
-             EntityManager manager = enf.createEntityManager();
+            EntityManager manager = enf.createEntityManager();
             List<Kiosko> kioskos = manager.createQuery("FROM Kiosko").getResultList();
             manager.close();
             // boolean conectado;
