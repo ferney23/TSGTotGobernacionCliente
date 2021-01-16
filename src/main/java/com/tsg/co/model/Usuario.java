@@ -104,8 +104,8 @@ public class Usuario implements Serializable {
             em.persist(object);
             em.getTransaction().commit();
         } catch (Exception e) {
-            // e.printStackTrace();
-            System.out.println("com.tsg.co.model.Usuario.persist()" + "Ferney ");
+            e.printStackTrace();
+         //   System.out.println("com.tsg.co.model.Usuario.persist()" + "Ferney ");
 
             em.getTransaction().rollback();
         } 

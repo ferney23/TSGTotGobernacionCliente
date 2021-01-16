@@ -42,11 +42,6 @@ public class App extends Application {
             @Override
 
             public void handle(WindowEvent event) {
-                System.out.println(".handle()");
-                //inicio.getEnf().close();
-
-                
-                //inicio.getManager().close();
                 inicio.getEnf().close();
                 Platform.exit();
                 System.exit(0);

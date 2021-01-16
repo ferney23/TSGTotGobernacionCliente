@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="363.0" prefWidth="500.0" style="-fx-background-image:url(img/Login.png)" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.InicioSesionFXMLController">
@@ -16,34 +17,6 @@
         <URL value="@/styles/iniciosesionfxml.css" />
     </stylesheets>
    <children>
-      <GridPane layoutX="64.0" layoutY="74.0" prefHeight="147.0" prefWidth="372.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <PasswordField fx:id="txtContraseña" prefHeight="31.0" prefWidth="163.0" promptText="ingrese su contraseña" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <font>
-                  <Font size="16.0" />
-               </font></PasswordField>
-            <TextField fx:id="txtUsuarioEstudiante" prefHeight="35.0" prefWidth="163.0" promptText="Ingrese su usuario" style="-fx-background-color: white;" GridPane.columnIndex="1">
-               <font>
-                  <Font size="16.0" />
-               </font></TextField>
-            <Label prefHeight="29.0" prefWidth="116.0" text="Usuario">
-               <font>
-                  <Font size="16.0" />
-               </font></Label>
-            <Label prefHeight="26.0" prefWidth="87.0" text="Contraseña" GridPane.rowIndex="1">
-               <font>
-                  <Font size="16.0" />
-               </font></Label>
-         </children>
-      </GridPane>
       <AnchorPane layoutX="2.0" layoutY="263.0" prefHeight="107.0" prefWidth="500.0">
          <children>
             <JFXButton fx:id="btnIniciarSesion" layoutX="282.0" onMouseClicked="#ObtenerUsuario" prefHeight="39.0" prefWidth="150.0" text="Iniciar Sesion " />
@@ -51,5 +24,41 @@
          </children>
       </AnchorPane>
       <Label fx:id="labelinfoConexion" layoutX="21.0" layoutY="20.0" prefHeight="26.0" prefWidth="150.0" text="Conectado a un Kiosco" />
+      <StackPane fx:id="stackPaneInicio" layoutX="67.0" layoutY="72.0" prefHeight="149.0" prefWidth="370.0">
+         <children>
+            <GridPane fx:id="gridPrincipal" prefHeight="149.0" prefWidth="345.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <PasswordField fx:id="txtContraseña" prefHeight="31.0" prefWidth="163.0" promptText="ingrese su contraseña" style="-fx-background-color: white;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </PasswordField>
+                  <TextField fx:id="txtUsuarioEstudiante" prefHeight="35.0" prefWidth="163.0" promptText="Ingrese su usuario" style="-fx-background-color: white;" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <Label prefHeight="29.0" prefWidth="116.0" text="Usuario">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="26.0" prefWidth="87.0" text="Contraseña" GridPane.rowIndex="1">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </GridPane>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>

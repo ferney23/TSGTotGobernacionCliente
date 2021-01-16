@@ -7,6 +7,8 @@ package com.tsg.co.controller;
 
 import static com.ibm.icu.impl.PluralRulesLoader.loader;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.tsg.co.Sincronizacion.Inicio;
@@ -21,6 +23,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,13 +31,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.persistence.EntityManager;
@@ -69,6 +76,11 @@ public class InicioSesionFXMLController implements Initializable {
     @FXML
     private Label labelinfoConexion;
     private boolean conectado;
+
+    @FXML
+    private GridPane gridPrincipal;
+    @FXML
+    private StackPane stackPaneInicio;
 
     /**
      * Initializes the controller class.
@@ -147,22 +159,42 @@ public class InicioSesionFXMLController implements Initializable {
 
     }
 
+    public JFXDialog jdialogoLogin(String content, String title) {
+        // String title = "Inicio de Sesion";
+        // String content = "Usuario incorrecto";
+        JFXDialogLayout jFXDialogLayout = new JFXDialogLayout();
+        jFXDialogLayout.setHeading(new Text(title));
+        jFXDialogLayout.setBody(new Text(content));
+        JFXButton close = new JFXButton("close");
+        close.setButtonType(JFXButton.ButtonType.RAISED);
+        jFXDialogLayout.setActions(close);
+
+        JFXDialog jFXDialog = new JFXDialog(stackPaneInicio, jFXDialogLayout, JFXDialog.DialogTransition.BOTTOM);
+        jFXDialog.setMaxSize(50, 100);
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                jFXDialog.close();
+            }
+        });
+        jFXDialog.show();
+        return jFXDialog;
+
+    }
+
     @FXML
     private void ObtenerUsuario(MouseEvent event) {
 
         EntityManager manager = enf.createEntityManager();
         try {
-
             Usuario usuariosExistentes = null;
-
             try {
                 usuariosExistentes = (Usuario) manager.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.password =:contraseña ").setParameter("usuario", txtUsuarioEstudiante.getText()).setParameter("contraseña", txtContraseña.getText()).getSingleResult();
             } catch (Exception e) {
-
             }
             if (usuariosExistentes == null) {
-                txtUsuarioEstudiante.setText("Usuario Incorrecto ");
-                txtContraseña.setText("Usuario Incorrecto  ");
+                jdialogoLogin("Datos Incorrectos", "Inicio de Sesion");
+
             } else {
                 this.estudiante = usuariosExistentes.getEstudiante();
                 if (estudiante != null) {
@@ -185,10 +217,10 @@ public class InicioSesionFXMLController implements Initializable {
                     stagePantallaPrincipal.setResizable(false);
                     stagePantallaPrincipal.show();
                     this.stageInicioSesion.close();
-
                 } else {
-                    txtUsuarioEstudiante.setText("Usuario no sincronizado  ");
-                    txtContraseña.setText("Datos Incorrectos  ");
+                    jdialogoLogin("Usuario no sincronizado ", "Inicio de Sesion");
+                    // txtUsuarioEstudiante.setText("Usuario no sincronizado  ");
+                    //   txtContraseña.setText("Datos Incorrectos  ");
                 }
             }
 
@@ -203,27 +235,25 @@ public class InicioSesionFXMLController implements Initializable {
     private void registrarEstudiante(MouseEvent event) {
         EntityManager manager = enf.createEntityManager();
         Usuario usuariosExistentes = null;
-
         if ((txtUsuarioEstudiante.getText().length() > 0) && (txtUsuarioEstudiante.getText().length() <= 30)) {
             try {
                 usuariosExistentes = (Usuario) manager.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.password =:contraseña ").setParameter("usuario", txtUsuarioEstudiante.getText()).setParameter("contraseña", txtContraseña.getText()).getSingleResult();
             } catch (Exception e) {
 
             }
-
             String nombre = txtUsuarioEstudiante.getText();
             String contraseña = txtContraseña.getText();
             if (usuariosExistentes == null) {
                 Usuario usuarioRegistrar = new Usuario(nombre, contraseña);
                 usuarioRegistrar.persist(usuarioRegistrar, manager);
-                txtUsuarioEstudiante.setText("Usuario creado: " + nombre);
-            } else {
-                txtUsuarioEstudiante.setText("Este usuario ya esta registrado");
-            }
+                // txtUsuarioEstudiante.setText("Usuario creado: " + nombre);
+                jdialogoLogin("Usuario creado: " + nombre, "Registro");
 
+            } else {
+                jdialogoLogin("Este usuario ya esta registrado", "Registro");
+                // txtUsuarioEstudiante.setText("Este usuario ya esta registrado");
+            }
         }
         manager.close();
-
     }
-
 }

@@ -3,7 +3,6 @@ com\tsg\co\model\Tareas_.class
 com\tsg\co\test\TestHiloSincronizacion.class
 com\tsg\co\controller\InicioFXMLController.class
 com\tsg\co\model\MaterialEstudio_.class
-com\tsg\co\Main\App$1.class
 com\tsg\co\model\AchivosTot_.class
 com\tsg\co\model\InfoGrado_.class
 com\tsg\co\controller\MaterialEstudioFXMLController$1.class
@@ -36,7 +35,6 @@ com\tsg\co\controller\PantallaInicio.class
 com\tsg\co\model\Clases_.class
 com\tsg\co\model\Clases.class
 com\tsg\co\Sincronizacion\Inicio$4.class
-com\tsg\co\Persistencia\Test.class
 com\tsg\co\model\Materias_.class
 com\tsg\co\model\Estudiante.class
 com\tsg\co\controller\MaterialEstudioFXMLController.class
@@ -46,7 +44,6 @@ com\tsg\co\model\Version.class
 com\tsg\co\model\Profesor.class
 com\tsg\co\Sincronizacion\Inicio$7.class
 com\tsg\co\model\Entregas.class
-com\tsg\co\Main\App.class
 com\tsg\co\controller\InicioFXMLController$2.class
 com\tsg\co\Persistencia\ManejoDatos.class
 com\tsg\co\controller\InicioFXMLController$1.class
