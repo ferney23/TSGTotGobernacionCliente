@@ -5,6 +5,13 @@
 .mainFxmlClass {
 
 }
+#labelMaterias{
+    -fx-text-fill: white; 
+    -fx-font-size: 30pt;
+}
+#labelNombres{
+    -fx-font-size: 20pt;
+}
 
 .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track{
@@ -63,8 +70,8 @@
 }
 
 #labelIcono{
-    
-  -fx-background-image:url(../img/contract.png);
+
+    -fx-background-image:url(../img/contract.png);
     -fx-background-repeat: no-repeat;
     -fx-background-size: 60px;
     -fx-background-position: 100%;
@@ -77,18 +84,27 @@
  */
 
 .table-view .column-header-background .label{
-     -fx-text-fill: white;
-     -fx-alignment: LEFT;
-     -fx-font-size: 15pt ;
-     
+    -fx-text-fill: white;
+    -fx-alignment: LEFT;
+    -fx-font-size: 15pt ;
+
 }
+
+.table-view .cell{ 
+-fx-wrap-text: true;  /*estableces que el texto dentro del label de la celda pueda ser divido en partes*/
+-fx-cell-size: 100px ;
+-fx-font-size: 30pt;
+/* fijas la altura de la celda. Prueba con varios valores para que veas el efecto*/
+ /* Estableces el ancho del label dentro de la celda.*/
+
+ }
 
 .table-view .column-header,
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {   
-   -fx-background-color: #F05A24;
+    -fx-background-color: #F05A24;
     -fx-stroke: transparent;
-    -fx-size:50;
+    -fx-size:50px;
     -fx-alignment: CENTER ;    
     -fx-border-radius: 20px;
     -fx-border-width: 2 0 2 0;
@@ -98,25 +114,18 @@
 }
 
 .table-row-cell:filled:hover {
-
-    -fx-size:50;
     -fx-alignment: LEFT;
     -fx-border-color: white;
-    -fx-border-width: 2 2 2 2;
     -fx-font-family: 'Delicious';
-    -fx-text-alignment: center;
-    
+    -fx-text-alignment: justify;
+
 
 
 }
 
 .table-view:row-selection {
     -fx-background-color: transparent;
-  
-    -fx-fixed-cell-size: 50;
     -fx-alignment: LEFT;
-  
-    -fx-border-width: 2 2 2 2;
     -fx-text-alignment: center;
 
 }
@@ -125,14 +134,15 @@
     -fx-text-fill: black; /* 5 */ 
     -fx-font-size: 15.0;
     -fx-alignment: left ;
-    -fx-border-width: 2 2 2 2;
     
-     -fx-padding: 10 ;
 }
+
+
 .table-row-cell:selected {
     -fx-background-color: white;
     -fx-background-insets: 0;
     -fx-background-radius: 1;
+    
 }
 
 #btnPantallaInicio,#btnCerrarSesion { 

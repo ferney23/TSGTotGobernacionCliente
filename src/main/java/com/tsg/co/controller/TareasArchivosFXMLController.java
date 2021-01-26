@@ -5,6 +5,9 @@ package com.tsg.co.controller;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import com.tsg.co.model.AchivosTot;
 import com.tsg.co.model.CustomImage;
 import com.tsg.co.model.Entregas;
@@ -31,6 +34,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -45,6 +50,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.persistence.EntityManager;
@@ -58,7 +65,7 @@ import javax.persistence.Persistence;
  */
 public class TareasArchivosFXMLController implements Initializable {
 
-  //  private EntityManager manager;
+    //  private EntityManager manager;
     private EntityManagerFactory enf;
     private String codigotarea;
     @FXML
@@ -85,7 +92,7 @@ public class TareasArchivosFXMLController implements Initializable {
     private Estudiante estudiante;
     private Tareas tarea;
     @FXML
-    private TableColumn<?, ?> optionstable;
+    private TableColumn<CustomImage, String> optionstable = new TableColumn<>();
     @FXML
     private TableColumn<?, ?> options;
     @FXML
@@ -101,6 +108,8 @@ public class TareasArchivosFXMLController implements Initializable {
     private Scene scenePrincipal;
     private Scene sceneInicioSesion;
     private Stage stageInicioSesion;
+    @FXML
+    private StackPane stackPaneConfirmarTarea;
 
     /**
      * Initializes the controller class.
@@ -131,6 +140,7 @@ public class TareasArchivosFXMLController implements Initializable {
     public void setTarea(Tareas tarea) {
         this.tarea = tarea;
         nombretarea.setText(tarea.getNombreTarea());
+        materianombre.setText(tarea.getMateria().getTitulo());
         mostrarArchivo();
     }
 
@@ -140,7 +150,7 @@ public class TareasArchivosFXMLController implements Initializable {
 
     public void setMateria(Materias materia) {
         this.materia = materia;
-        materianombre.setText(materia.getTitulo());
+        
     }
 
     public void setCodigotarea(String codigotarea) {
@@ -188,9 +198,6 @@ public class TareasArchivosFXMLController implements Initializable {
         this.enf = enf;
     }
 
-
-    
-
     @FXML
     private void cargararchivo(MouseEvent event) throws IOException {
         Button b = (Button) event.getSource();
@@ -198,75 +205,131 @@ public class TareasArchivosFXMLController implements Initializable {
             FileChooser fileChooser = new FileChooser();
             Stage stage = (Stage) anchorpane.getScene().getWindow();
             File file = fileChooser.showOpenDialog(stage);
-            if (file != null) {
-                CustomImage itemlist = new CustomImage();
-                itemlist.setNombreTarea(file.getName());
-                itemlist.setRuta(file.getPath());
+            jdialogoLogin("Desea guardar el archivo ? " + file.getName(), "Archivo ", file);
 
-                File Directorio = new File("Data/" + "Tareas/" + this.tarea.getNombreTarea() + "/");
-                if (Directorio.exists()) {
-                    if (Directorio.isDirectory()) {
-                        System.out.println("Es una carpeta");
-                    }
-                } else {
-                    if (Directorio.mkdirs()) {
-                        System.out.println("Directorio creado");
-                    } else {
-                        System.out.println("Error al crear directorio");
-                    }
-                }
-
-                //int i= sql.getIdSubidaTarea(id);
-                //String Codigo = "9"+id+""+i+""+est.getIdEst()+""+materiaid+positcion;
-                // Long l = Long.parseLong(Codigo);
-                //boolean save = sql.saveRuteBlob(dest.toString(),i,id,l);
-                System.out.println(this.tarea.getSubida());
-
-                Path dest = Paths.get("Data/" + "Tareas/" + this.tarea.getNombreTarea() + "/" + file.getName());
-                Files.copy(file.toPath(), dest,
-                        StandardCopyOption.REPLACE_EXISTING);
-
-                String archivoTotcodigo = "";
-                Entregas entregaArchivos = guardarEntregas();
-                archivoTotcodigo = entregaArchivos.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
-
-                System.err.println(archivoTotcodigo);
-                Long idArchivoTot = Long.parseLong(archivoTotcodigo);
-                guardarArchivo(idArchivoTot, archivoTotcodigo, dest.toString(), entregaArchivos);
-                
-                //AchivosTot achivosNuevo = new AchivosTot(1L, idArchivoTot, archivoTotcodigo, dest.toString(), this.tarea.getSubida(), entregaArchivos);
-               // achivosNuevo.persist(achivosNuevo);
-                tableArchivo1.getItems().add(itemlist);
-                imagentype1.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
-                nombrematerial.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("nombreTarea"));
-
-            }
         }
     }
 
+    public void guardarTareaArchivo(File file) throws IOException {
+
+        if (file != null) {
+            CustomImage itemlist = new CustomImage();
+            itemlist.setNombreTarea(file.getName());
+            itemlist.setRuta(file.getPath());
+            File Directorio = new File("Data/" + "Tareas/" + this.tarea.getNombreTarea() + "/");
+            if (Directorio.exists()) {
+                if (Directorio.isDirectory()) {
+                    System.out.println("Es una carpeta");
+                }
+            } else {
+                if (Directorio.mkdirs()) {
+                    System.out.println("Directorio creado");
+                } else {
+                    System.out.println("Error al crear directorio");
+                }
+            }
+
+            System.out.println(this.tarea.getSubida());
+
+            Path dest = Paths.get("Data/" + "Tareas/" + this.tarea.getNombreTarea() + "/" + file.getName());
+            Files.copy(file.toPath(), dest, StandardCopyOption.REPLACE_EXISTING);
+
+            String archivoTotcodigo = "";
+            Entregas entregaArchivos = guardarEntregas();
+            archivoTotcodigo = entregaArchivos.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
+            Long idArchivoTot = Long.parseLong(archivoTotcodigo);
+            guardarArchivo(idArchivoTot, archivoTotcodigo, dest.toString(), entregaArchivos);
+
+            tableArchivo1.getItems().add(itemlist);
+            imagentype1.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
+            nombrematerial.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("nombreTarea"));
+
+        }
+
+    }
+
     public void guardarArchivo(Long idArchivoTot, String archivoTotcodigo, String destino, Entregas entregaArchivos) {
-         EntityManager manager = enf.createEntityManager();
-        
+        EntityManager manager = enf.createEntityManager();
+
         Long idArchivo = null;
         try {
             idArchivo = (long) manager.createQuery("Select MAX(ID) FROM AchivosTot").getSingleResult();
+            if (idArchivo >= 1) {
+                Long idGuardarArchivo = idArchivo + 1L;
+                AchivosTot achivosNuevo = new AchivosTot(idGuardarArchivo, idArchivoTot, archivoTotcodigo, destino, this.tarea.getSubida(), entregaArchivos);
+                achivosNuevo.persist(achivosNuevo, manager);
+                idArchivo = (long) manager.createQuery("Select MAX(ID) FROM AchivosTot").getSingleResult();
+                System.err.println("Ferney");
+            }
+
         } catch (Exception e) {
-        }
-        if (idArchivo == null) {
             AchivosTot achivosNuevo = new AchivosTot(1L, idArchivoTot, archivoTotcodigo, destino, this.tarea.getSubida(), entregaArchivos);
             achivosNuevo.persist(achivosNuevo, manager);
             idArchivo = (long) manager.createQuery("Select MAX(ID) FROM AchivosTot").getSingleResult();
-            //  archivoTotcodigo = nuevaEntrega.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
 
-        } else if (idArchivo >= 1) {
-            Long idGuardarArchivo = idArchivo + 1L;
-            AchivosTot achivosNuevo = new AchivosTot(idGuardarArchivo, idArchivoTot, archivoTotcodigo, destino, this.tarea.getSubida(), entregaArchivos);
-            achivosNuevo.persist(achivosNuevo, manager);
-            idArchivo = (long) manager.createQuery("Select MAX(ID) FROM AchivosTot").getSingleResult();
-            System.err.println("Ferney");
         }
+
         manager.close();
-        
+
+    }
+
+    public JFXDialog jdialogoLogin(String content, String title, File file) {
+        // String title = "Inicio de Sesion";
+        // String content = "Usuario incorrecto";
+        JFXDialogLayout jFXDialogLayout = new JFXDialogLayout();
+        jFXDialogLayout.setHeading(new Text(title));
+        jFXDialogLayout.setBody(new Text(content));
+        JFXButton aceptar = new JFXButton("Aceptar");
+        aceptar.setButtonType(JFXButton.ButtonType.RAISED);
+        //jFXDialogLayout.setActions(aceptar);
+
+        JFXButton cancelar = new JFXButton("Cancelar");
+        aceptar.setButtonType(JFXButton.ButtonType.RAISED);
+        jFXDialogLayout.setActions(cancelar, aceptar);
+
+        JFXDialog jFXDialog = new JFXDialog(stackPaneConfirmarTarea, jFXDialogLayout, JFXDialog.DialogTransition.BOTTOM);
+        jFXDialog.setMaxSize(50, 100);
+        aceptar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    guardarTareaArchivo(file);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(TareasArchivosFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                jFXDialog.close();
+
+                JFXDialogLayout jFXDialogLayoutAceptar = new JFXDialogLayout();
+                jFXDialogLayoutAceptar.setHeading(new Text(title));
+                jFXDialogLayoutAceptar.setBody(new Text(" Se guardo el archivo exitosamente"));
+                JFXButton btnCerrar = new JFXButton("Aceptar");
+                btnCerrar.setButtonType(JFXButton.ButtonType.RAISED);
+
+                jFXDialogLayoutAceptar.setActions(btnCerrar);
+
+                JFXDialog jFXDialogAceptar = new JFXDialog(stackPaneConfirmarTarea, jFXDialogLayoutAceptar, JFXDialog.DialogTransition.BOTTOM);
+                jFXDialogAceptar.setMaxSize(50, 100);
+                btnCerrar.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        jFXDialogAceptar.close();
+                    }
+                });
+
+                jFXDialogAceptar.show();
+
+            }
+        });
+
+        cancelar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                jFXDialog.close(); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        jFXDialog.show();
+        return jFXDialog;
 
     }
 
@@ -276,23 +339,21 @@ public class TareasArchivosFXMLController implements Initializable {
         Long idEntrega = null;
         try {
             idEntrega = (long) manager.createQuery("Select MAX(ID) FROM Entregas").getSingleResult();
+            if (idEntrega >= 1) {
+                Long idGuardarEntrega = idEntrega + 1L;
+                nuevaEntrega = new Entregas(idGuardarEntrega, 0L, this.estudiante, this.tarea.getSubida(), this.tarea, this.tarea.getRegistroTarea());
+                nuevaEntrega.persist(nuevaEntrega, manager);
+                //      archivoTotcodigo = nuevaEntrega.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
+                idEntrega = (long) manager.createQuery("Select MAX(ID) FROM Entregas").getSingleResult();
+                System.err.println("Ferney");
+            }
         } catch (Exception e) {
-        }
-        if (idEntrega == null) {
-            // Long idGuardarEntrega = idEntrega + 1L;
+            System.out.println(e.getCause());
             nuevaEntrega = new Entregas(1L, 0L, this.estudiante, this.tarea.getSubida(), this.tarea, this.tarea.getRegistroTarea());
             nuevaEntrega.persist(nuevaEntrega, manager);
             idEntrega = (long) manager.createQuery("Select MAX(ID) FROM Entregas").getSingleResult();
-            //  archivoTotcodigo = nuevaEntrega.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
-
-        } else if (idEntrega >= 1) {
-            Long idGuardarEntrega = idEntrega + 1L;
-            nuevaEntrega = new Entregas(idGuardarEntrega, 0L, this.estudiante, this.tarea.getSubida(), this.tarea, this.tarea.getRegistroTarea());
-            nuevaEntrega.persist(nuevaEntrega,  manager);
-            //      archivoTotcodigo = nuevaEntrega.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
-            idEntrega = (long) manager.createQuery("Select MAX(ID) FROM Entregas").getSingleResult();
-            System.err.println("Ferney");
         }
+
         manager.close();
         return nuevaEntrega;
 
@@ -312,28 +373,56 @@ public class TareasArchivosFXMLController implements Initializable {
         ObservableList<AchivosTot> observableListaArchivos = FXCollections.observableArrayList(achivosTots);
         List<CustomImage> obj = new ArrayList<>();
         for (AchivosTot arch : observableListaArchivos) {
-            //TableColumn<CustomImage, Image> imagecolumss  =  new TableColumn<>();
+
             CustomImage itemlist = new CustomImage();
             String[] arch1 = arch.getRuta().split("\\\\");
             itemlist.setNombreTarea(arch1[arch1.length - 1]);
             itemlist.setRuta(arch.getRuta());
             //validacion SI ESTA ENTREGADA  if(tar.)
             CustomImage item_1 = null;
+            if (arch.getEntrega() == null) {
 
-            item_1 = new CustomImage(new ImageView(new Image("img/trueyes.png")));
-            item_1.getImage().setFitHeight(25);
-            item_1.getImage().setFitWidth(25);
-            //tar.setImage(item_1);
+                item_1 = new CustomImage(new ImageView(new Image("img/trueyes.png")));
+                item_1.getImage().setFitHeight(25);
+                item_1.getImage().setFitWidth(25);
+                //tar.setImage(item_1);
 
-            itemlist.setCodigo(arch.getCodigo());
-            itemlist.setImage(item_1.getImage());
+                itemlist.setCodigo(arch.getCodigo());
+                itemlist.setEstadoTarea("ARCHIVO TAREA");
+                itemlist.setImage(item_1.getImage());
 
-            //imagecolum.setCellValueFactory((Callback<TableColumn.CellDataFeatures<CustomImage, Image>, ObservableValue<Image>>) imagecolumss);
-            obj.add(itemlist);
+                obj.add(itemlist);
+            } else if (arch.getEntrega().getUpp() == 1L) {
+
+                item_1 = new CustomImage(new ImageView(new Image("img/trueyes.png")));
+                item_1.getImage().setFitHeight(25);
+                item_1.getImage().setFitWidth(25);
+                itemlist.setCodigo(arch.getCodigo());
+                itemlist.setEstadoTarea("ENTREGADO");
+                itemlist.setImage(item_1.getImage());
+
+                obj.add(itemlist);
+               
+            } else if (arch.getEntrega().getUpp() == 0L) {
+               item_1 = new CustomImage(new ImageView(new Image("img/trueyes.png")));
+                item_1.getImage().setFitHeight(25);
+                item_1.getImage().setFitWidth(25);
+                //tar.setImage(item_1);
+                itemlist.setCodigo(arch.getCodigo());
+                itemlist.setEstadoTarea("SIN ENTREGAR ");
+                itemlist.setImage(item_1.getImage());
+
+                obj.add(itemlist);
+               
+            }
+
+            //TableColumn<CustomImage, Image> imagecolumss  =  new TableColumn<>();
         }
         ObservableList<CustomImage> archivos = FXCollections.observableArrayList(obj);
         tableArchivo.setItems(archivos);
         //lbtnArchivo.setCellValueFactory(new PropertyValueFactory<AchivosTot, Long>("idAchivosTot"));
+        // optionstable.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
+        optionstable.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("estadoTarea"));
         imagetype.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
         nombrematerial1.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("nombreTarea"));
         //labelMaterias.setText(materias.getTitulo().toUpperCase());
@@ -385,10 +474,11 @@ public class TareasArchivosFXMLController implements Initializable {
         TableViewController tableViewController = loader.<TableViewController>getController();
 
         tableViewController.setEnf(enf);
-       // tableViewController.setManager(manager);
+        // tableViewController.setManager(manager);
         tableViewController.setEstudiante(estudiante);
         tableViewController.llenarEstudiante();
         tableViewController.listarMaterias();
+        tableViewController.seleccionarTareas(this.tarea.getMateria());
         // tableViewController.setMaterias(materia);
         //   tableViewController.listarTareas(materia);
         System.out.println(materia);

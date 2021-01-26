@@ -34,6 +34,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  *
@@ -46,15 +47,30 @@ public class Test {
 
     public static void main(String[] args) {
 
-        //    enf = Persistence.createEntityManagerFactory("tsg");
-        //   manageres = enf.createEntityManager();
+        enf = Persistence.createEntityManagerFactory("tsg");
+        manageres = enf.createEntityManager();
         Month ahora = LocalDateTime.now().getMonth();
-        
-        System.out.println(ahora);
-      //  System.out.println(ahora);
-        
+        // List<AchivosTot> achivosTots1 = manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.subida.entregas.upp= :id").setParameter("id",1L).getResultList();
+        List<AchivosTot> achivosTots1 = manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.subida.tareas.id= :id").setParameter("id", 1183L).getResultList();
 
-//       AchivosTot achivosTot = (AchivosTot) manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", 4L).setParameter("idSubidaKiosco", 4L).getSingleResult();
+        System.out.println(achivosTots1);
+        for (AchivosTot achivosTot : achivosTots1) {
+
+            if (achivosTot.getEntrega() == null) {
+                System.out.println("TAREA");
+            } else if (achivosTot.getEntrega().getUpp() == 1L) {
+                System.out.println("ENVIADO");
+            } else if (achivosTot.getEntrega().getUpp() == 0L) {
+                System.out.println("NO ENVIADO");
+            }
+
+        }
+
+        //  System.out.println(ahora);
+      
+            Query query = manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", 4L).setParameter("idSubidaKiosco", 4L);
+            
+        AchivosTot achivosTot = (AchivosTot) manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", 4L).setParameter("idSubidaKiosco", 4L).getSingleResult();
         //  System.out.println(achivosTot.getRuta());
         // Estudiante estudiante = (Estudiante) manageres.createQuery("SELECT ma FROM Estudiante ma WHERE ma.idEstudiante= :id").setParameter("id", 209L).getSingleResult();
         //  Usuario usuariosExistentes = (Usuario) manageres.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.contraseña =:contraseña ").setParameter("usuario", "estudiante.uno").setParameter("contraseña", "tsg123").getSingleResult();

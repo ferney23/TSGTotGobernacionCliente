@@ -11,6 +11,7 @@ public class CustomImage {
     private ImageView image;
     private String nombreTarea; 
     private String ruta;
+    private String estadoTarea;
     
     public CustomImage(ImageView img) {
         this.image = img;
@@ -50,5 +51,14 @@ public class CustomImage {
     public ImageView getImage() {
         return image;
     }
+
+    public String getEstadoTarea() {
+        return estadoTarea;
+    }
+
+    public void setEstadoTarea(String estadoTarea) {
+        this.estadoTarea = estadoTarea;
+    }
+    
     
 }

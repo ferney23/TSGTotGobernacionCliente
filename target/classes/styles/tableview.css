@@ -3,10 +3,6 @@
  * Empty Stylesheet file.
  */
 
-
-
-
-
 #panelLateral{
     -fx-background-color: rgba(241, 241, 241, 0.2);
 }
@@ -28,7 +24,6 @@
 }
 
 #panelInfoGrado{
-       
     -fx-background-color: transparent;
     -fx-background-image:url(img/Header.jpg);
     -fx-background-radius: 0;
@@ -45,7 +40,6 @@
      -fx-font-size: 30pt;
 }
 #institucionName{
-    
     -fx-font-size: 20pt;
 }
 #ubicacionInstitucion{
@@ -153,7 +147,7 @@
     -fx-border-color: rgba(200, 200, 200, 1.0);
     -fx-border-width: 2 2 2 2;
     -fx-border-color: white;
-     -fx-padding: 10 ;
+    -fx-padding: 10 ;
 }
 
 

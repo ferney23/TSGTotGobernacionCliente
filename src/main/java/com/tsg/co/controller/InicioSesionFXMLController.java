@@ -43,6 +43,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -81,6 +82,8 @@ public class InicioSesionFXMLController implements Initializable {
     private GridPane gridPrincipal;
     @FXML
     private StackPane stackPaneInicio;
+    @FXML
+    private JFXButton btnSincronizar;
 
     /**
      * Initializes the controller class.
@@ -184,24 +187,25 @@ public class InicioSesionFXMLController implements Initializable {
 
     @FXML
     private void ObtenerUsuario(MouseEvent event) {
-
         EntityManager manager = enf.createEntityManager();
+        Usuario usuariosExistentes = null;
         try {
-            Usuario usuariosExistentes = null;
-            try {
-                usuariosExistentes = (Usuario) manager.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.password =:contraseña ").setParameter("usuario", txtUsuarioEstudiante.getText()).setParameter("contraseña", txtContraseña.getText()).getSingleResult();
-            } catch (Exception e) {
-            }
-            if (usuariosExistentes == null) {
-                jdialogoLogin("Datos Incorrectos", "Inicio de Sesion");
-
+            usuariosExistentes = (Usuario) manager.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario").setParameter("usuario", txtUsuarioEstudiante.getText()).getSingleResult();
+            if (!usuariosExistentes.getPassword().equals(txtContraseña.getText())) {
+                jdialogoLogin("Contraseña Incorrecta", "Inicio de Sesion");
             } else {
                 this.estudiante = usuariosExistentes.getEstudiante();
                 if (estudiante != null) {
                     stagePantallaPrincipal = new Stage();
                     stagePantallaPrincipal.getIcons().add(new Image("img/TOT-Icon.png"));
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TableView.fxml"));
-                    this.scenePantallaPrincipal = new Scene((Pane) loader.load());
+                    try {
+                        this.scenePantallaPrincipal = new Scene((Pane) loader.load());
+                       
+                    } catch (IOException ex) {
+                        Logger.getLogger(InicioSesionFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                 //   scenePantallaPrincipal.setFill(new javafx.scene.paint.Color(250, 250, 250, 0.8));
                     stagePantallaPrincipal.setScene(this.scenePantallaPrincipal);
                     tableViewController = loader.<TableViewController>getController();
                     this.tableViewController.setEnf(enf);
@@ -213,20 +217,20 @@ public class InicioSesionFXMLController implements Initializable {
                     tableViewController.setScenePrincipal(scenePantallaPrincipal);
                     tableViewController.setStageInicioSesion(stageInicioSesion);
                     tableViewController.setSceneInicioSesion(sceneInicioSesion);
+                   // stagePantallaPrincipal.initStyle(StageStyle.TRANSPARENT);
                     stagePantallaPrincipal.setTitle("TOT Learning System - Client");
                     stagePantallaPrincipal.setResizable(false);
                     stagePantallaPrincipal.show();
                     this.stageInicioSesion.close();
                 } else {
-                    jdialogoLogin("Usuario no sincronizado ", "Inicio de Sesion");
-                    // txtUsuarioEstudiante.setText("Usuario no sincronizado  ");
-                    //   txtContraseña.setText("Datos Incorrectos  ");
+                    jdialogoLogin("Usuario no sincronizado : " + txtUsuarioEstudiante.getText(), "Inicio de Sesion");
                 }
             }
 
-        } catch (IOException ex) {
-            Logger.getLogger(InicioSesionFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            jdialogoLogin("Usuario Incorrecto", "Inicio de Sesion");
         }
+
         manager.close();
 
     }
@@ -236,24 +240,24 @@ public class InicioSesionFXMLController implements Initializable {
         EntityManager manager = enf.createEntityManager();
         Usuario usuariosExistentes = null;
         if ((txtUsuarioEstudiante.getText().length() > 0) && (txtUsuarioEstudiante.getText().length() <= 30)) {
-            try {
-                usuariosExistentes = (Usuario) manager.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.password =:contraseña ").setParameter("usuario", txtUsuarioEstudiante.getText()).setParameter("contraseña", txtContraseña.getText()).getSingleResult();
-            } catch (Exception e) {
-
-            }
             String nombre = txtUsuarioEstudiante.getText();
             String contraseña = txtContraseña.getText();
-            if (usuariosExistentes == null) {
+            try {
+                usuariosExistentes = (Usuario) manager.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario ").setParameter("usuario", txtUsuarioEstudiante.getText()).getSingleResult();
+                jdialogoLogin("Este usuario ya esta registrado :  " + usuariosExistentes.getUsername(), "Registro");
+            } catch (Exception e) {
                 Usuario usuarioRegistrar = new Usuario(nombre, contraseña);
                 usuarioRegistrar.persist(usuarioRegistrar, manager);
-                // txtUsuarioEstudiante.setText("Usuario creado: " + nombre);
-                jdialogoLogin("Usuario creado: " + nombre, "Registro");
-
-            } else {
-                jdialogoLogin("Este usuario ya esta registrado", "Registro");
-                // txtUsuarioEstudiante.setText("Este usuario ya esta registrado");
+                jdialogoLogin("Usuario creado: " + nombre + contraseña, "Registro");
             }
         }
         manager.close();
+    }
+
+    @FXML
+    private void Sincronizar(MouseEvent event) {
+        Inicio inicio = new Inicio();
+        inicio.run();
+
     }
 }

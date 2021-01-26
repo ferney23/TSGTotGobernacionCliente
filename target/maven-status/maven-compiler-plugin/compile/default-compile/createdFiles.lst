@@ -5,12 +5,15 @@ com\tsg\co\controller\InicioFXMLController.class
 com\tsg\co\model\MaterialEstudio_.class
 com\tsg\co\model\AchivosTot_.class
 com\tsg\co\model\InfoGrado_.class
+com\tsg\co\controller\TareasArchivosFXMLController$1.class
 com\tsg\co\controller\MaterialEstudioFXMLController$1.class
 com\tsg\co\controller\TareasArchivosFXMLController.class
 com\tsg\co\model\Tareas.class
 com\tsg\co\test\TestKiosco.class
 com\tsg\co\model\Entregas_.class
+com\tsg\co\model\Kiosko_.class
 com\tsg\co\controller\TableViewController.class
+com\tsg\co\controller\TareasArchivosFXMLController$1$1.class
 com\tsg\co\controller\App.class
 com\tsg\co\Sincronizacion\Inicio$3.class
 com\tsg\co\vista\ViewMaterialEstudio.class
@@ -18,8 +21,11 @@ com\tsg\co\controller\PreloaderInitalProgress$1.class
 com\tsg\co\controller\Pruebas.class
 com\tsg\co\model\Usuario.class
 com\tsg\co\model\Subida.class
+com\tsg\co\controller\Utlis$1.class
+com\tsg\co\controller\ClasesMaterialController$2.class
 com\tsg\co\ConexionKiosco\Verificacion.class
 com\tsg\co\model\CustomImage.class
+com\tsg\co\controller\InicioSesionFXMLController$1.class
 com\tsg\co\model\Estudiante_.class
 com\tsg\co\controller\App$1.class
 com\tsg\co\controller\PreloaderInitalProgress.class
@@ -42,6 +48,7 @@ com\tsg\co\Sincronizacion\Inicio$1.class
 com\tsg\co\model\Subida_.class
 com\tsg\co\model\Version.class
 com\tsg\co\model\Profesor.class
+com\tsg\co\controller\TareasArchivosFXMLController$2.class
 com\tsg\co\Sincronizacion\Inicio$7.class
 com\tsg\co\model\Entregas.class
 com\tsg\co\controller\InicioFXMLController$2.class

@@ -53,6 +53,7 @@ import javax.net.ssl.X509TrustManager;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -72,9 +73,8 @@ import org.apache.hc.core5.http.HttpResponse;
  */
 public class Inicio implements Runnable {
 
-    
-    private EntityManagerFactory enf =Persistence.createEntityManagerFactory("tsg");
-  //  private EntityManager manager = enf.createEntityManager(); 
+    private EntityManagerFactory enf = Persistence.createEntityManagerFactory("tsg");
+    //  private EntityManager manager = enf.createEntityManager(); 
     private ObtenerDatos obtenerDatos;
     private ManejoDatos manejoDatos;
     private Verificacion verificacion;
@@ -95,7 +95,7 @@ public class Inicio implements Runnable {
         this.manejoDatos = new ManejoDatos();
         this.obtenerDatos.setEnf(enf);
         this.manejoDatos.setEnf(enf);
-        
+
     }
 
     public boolean isConectado() {
@@ -106,7 +106,6 @@ public class Inicio implements Runnable {
         this.conectado = conectado;
     }
 
-
     public EntityManagerFactory getEnf() {
         return enf;
     }
@@ -115,9 +114,6 @@ public class Inicio implements Runnable {
         this.enf = enf;
     }
 
-   
-     
-    
     @Override
     public void run() {
         //  manager = enf.createEntityManager();
@@ -139,9 +135,10 @@ public class Inicio implements Runnable {
             while (!saber) {
                 for (int i = 0; i < kioskos.size(); i++) {
                     conectado = verificacion.Verificar(kioskos.get(i).getIP(), Integer.parseInt(kioskos.get(i).getPORT()));
+                    JOptionPane.showMessageDialog(null, "Iniciando  la sincronizacion");
+
                     if (conectado == true) {
                         String ip = kioskos.get(i).getIP() + ":" + kioskos.get(i).getPORT();
-
                         try {
 
                             String version = "http://" + ip + "/api/Versiones";
@@ -229,10 +226,17 @@ public class Inicio implements Runnable {
                         } catch (Exception ex) {
                             Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
                         }
+
+                        //  JOptionPane
+                        JOptionPane.showMessageDialog(null, "Sincronizacion Completa ");
+                        System.out.println("Se termino la sincronizacion");
+
                     } else {
+                        JOptionPane.showMessageDialog(null, "No se pudo realizar la sincronizacion \n No esta conectado al kiosco");
 
                     }
                 }
+
                 saber = true;
             }
 

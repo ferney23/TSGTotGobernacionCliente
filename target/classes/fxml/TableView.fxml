@@ -29,7 +29,7 @@
                         <Pane fx:id="panelInfoBotones" prefHeight="140.0" prefWidth="174.0" BorderPane.alignment="CENTER">
                             <children>
                                 <Button fx:id="btnActualizar" layoutX="20.0" layoutY="14.0" onMouseClicked="#sincronizar" prefHeight="25.0" prefWidth="130.0" stylesheets="@../styles/tableview.css" text="ACTUALIZAR" />
-                                <Button fx:id="btnRecargar" layoutX="20.0" layoutY="65.0" prefHeight="25.0" prefWidth="130.0" stylesheets="@../styles/tableview.css" text="RECARGAR" />
+                                <Button fx:id="btnRecargar" layoutX="20.0" layoutY="65.0" onMouseClicked="#eventoCerrarSesion" prefHeight="25.0" prefWidth="130.0" stylesheets="@../styles/tableview.css" text="Cerrar Sesion" />
                                 <Label fx:id="labelTareasPendientes" layoutX="22.0" layoutY="108.0" prefHeight="20.0" prefWidth="130.0" text="Tareas Pendientes: ">
                                     <font>
                                         <Font size="10.0" />

@@ -41,6 +41,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
@@ -61,11 +62,7 @@ public class TableViewController implements Initializable {
     private Estudiante estudiante;
     private List<Tareas> tareaselec = new ArrayList<Tareas>();
 
-    @FXML
-    private Label progress;
     public static Label label;
-    @FXML
-    private ProgressBar progressBar;
     public static ProgressBar statProgressBar;
     @FXML
     private Button btnActualizar;
@@ -245,8 +242,9 @@ public class TableViewController implements Initializable {
         System.out.println(this.materias.getTitulo());
 
         List<Tareas> tareas = em.createQuery("SELECT ma FROM Tareas ma WHERE ma.materia.idMateria= :id and ma.estudiante.idEstudiante= :idEstudiante ").setParameter("id", this.materias.getIdMateria()).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
-       // em.close();
+        // em.close();
 
+        
         ObservableList<Tareas> observableListTareas = FXCollections.observableArrayList(tareas);
         int pendientes = 0;
         tareaselec.clear();
@@ -289,6 +287,65 @@ public class TableViewController implements Initializable {
 
     }
 
+    
+    @FXML
+    public void seleccionarTareas(Materias materias) {
+
+        //EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
+        EntityManager em = enf.createEntityManager();
+
+        tablatareass.getItems().clear();
+        this.materias = materias;
+        System.out.println(this.materias.getTitulo());
+
+        List<Tareas> tareas = em.createQuery("SELECT ma FROM Tareas ma WHERE ma.materia.idMateria= :id and ma.estudiante.idEstudiante= :idEstudiante ").setParameter("id", this.materias.getIdMateria()).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
+        // em.close();
+
+       
+        
+        ObservableList<Tareas> observableListTareas = FXCollections.observableArrayList(tareas);
+        int pendientes = 0;
+        tareaselec.clear();
+        tareaselec.addAll(observableListTareas);
+
+        for (Tareas tar : observableListTareas) {
+
+            //TableColumn<CustomImage, Image> imagecolumss  =  new TableColumn<>();
+            CustomImage itemlist = new CustomImage();
+            itemlist.setNombreTarea(tar.getNombreTarea());
+            //validacion SI ESTA ENTREGADA  if(tar.)
+            CustomImage item_1 = null;
+            if (tar.getSubida().getEntregas() != null && tar.getSubida().getEntregas().size() != 0) {
+                item_1 = new CustomImage(new ImageView(new Image("img/trueyes.png")));
+                item_1.getImage().setFitHeight(25);
+                item_1.getImage().setFitWidth(25);
+                //tar.setImage(item_1);
+
+            } else {
+                item_1 = new CustomImage(new ImageView(new Image("img/dangerNo.png")));
+                item_1.getImage().setFitHeight(30);
+                item_1.getImage().setFitWidth(40);
+                // tar.setImage(item_1);
+                pendientes++;
+            }
+            itemlist.setCodigo(tar.getCodigo());
+            itemlist.setImage(item_1.getImage());
+
+            //imagecolum.setCellValueFactory((Callback<TableColumn.CellDataFeatures<CustomImage, Image>, ObservableValue<Image>>) imagecolumss);
+            tablatareass.getItems().add(itemlist);
+        }
+        labelContadortareas.setText("" + pendientes);
+        //columnEstadoTareas.setCellValueFactory(new PropertyValueFactory<Tareas, Long>("id"));
+        //imagecolum.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("image"));
+        imageColumn.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
+        columnTareasPendientes.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("nombreTarea"));
+        labelMaterias.setText(materias.getTitulo().toUpperCase());
+
+        em.close();
+
+    }
+    
+    
     @FXML
     private void actionClases(ActionEvent event) {
 
@@ -300,6 +357,7 @@ public class TableViewController implements Initializable {
                 //Stage stage = new Stage(StageStyle.DECORATED);
 
                 this.scenePrincipal.setRoot((Pane) loader.load());
+            //    this.scenePrincipal.setFill(Color.TRANSPARENT);
                 this.stagePantallaPrincipal.setScene(this.scenePrincipal);
                 clasesMaterialController = loader.<ClasesMaterialController>getController();
                 clasesMaterialController.setEnf(enf);
@@ -315,6 +373,7 @@ public class TableViewController implements Initializable {
                 this.stagePantallaPrincipal.getIcons().add(new Image("/img/TOT-Icon.png"));
                 this.stagePantallaPrincipal.setTitle("TOT Learning System - Tarea");
                 this.stagePantallaPrincipal.setResizable(false);
+              //  this.stagePantallaPrincipal.initStyle(StageStyle.TRANSPARENT);
                 this.stagePantallaPrincipal.show();
 
                 // this.stagePantallaPrincipal.close();
@@ -395,6 +454,32 @@ public class TableViewController implements Initializable {
         // inicio.setEnf(enf);
         // inicio.setManager(manager);
         listarMaterias();
+
+    }
+
+    @FXML
+    private void eventoCerrarSesion(MouseEvent event) {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/InicioSesionFXML.fxml"));
+
+        try {
+            this.sceneInicioSesion.setRoot((Pane) loader.load());
+        } catch (IOException ex) {
+            Logger.getLogger(TableViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        this.stageInicioSesion.setScene(this.sceneInicioSesion);
+        InicioSesionFXMLController inicioFXMLController = loader.<InicioSesionFXMLController>getController();
+        inicioFXMLController.setStageInicioSesion(this.stageInicioSesion);
+        inicioFXMLController.setSceneInicioSesion(sceneInicioSesion);
+        inicioFXMLController.setEnf(enf);
+        //  inicioFXMLController.setManager(manager);
+
+        this.stageInicioSesion.setTitle("TOT Learning System - Client");
+        this.stageInicioSesion.setResizable(false);
+        this.stagePantallaPrincipal.close();
+        this.estudiante = null;
+        this.stageInicioSesion.show();
 
     }
 

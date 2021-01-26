@@ -252,7 +252,6 @@ public class ClasesMaterialController implements Initializable {
             viewMaterialEstudio.setClase(observableListEstudio.getClase().getNombre());
             viewMaterialEstudio.setDescripcion(observableListEstudio.getDescripcion());
             viewMaterialEstudio.setBtnArchivoAdjunto(buttonVerMas);
-
             buttonVerMas.setOnAction(new EventHandler<ActionEvent>() {
 
                 @Override
@@ -291,8 +290,11 @@ public class ClasesMaterialController implements Initializable {
             tableViewController.setEstudiante(estudiante);
             tableViewController.llenarEstudiante();
             tableViewController.listarMaterias();
+            tableViewController.seleccionarTareas(materias);
             tableViewController.setSceneInicioSesion(sceneInicioSesion);
             tableViewController.setStageInicioSesion(stageInicioSesion);
+            
+            
 
         } catch (IOException ex) {
             Logger.getLogger(ClasesMaterialController.class.getName()).log(Level.SEVERE, null, ex);
@@ -304,25 +306,7 @@ public class ClasesMaterialController implements Initializable {
     private void eventCerrarSesion(MouseEvent event) {
 
         //  this.stageInicioSesion.getIcons().add(new Image("img/TOT-Icon.png"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/InicioSesionFXML.fxml"));
-        try {
-            this.sceneInicioSesion.setRoot((Pane) loader.load());
-        } catch (IOException ex) {
-            Logger.getLogger(ClasesMaterialController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.stageInicioSesion.setScene(this.sceneInicioSesion);
-        InicioSesionFXMLController inicioFXMLController = loader.<InicioSesionFXMLController>getController();
-        inicioFXMLController.setStageInicioSesion(this.stageInicioSesion);
-        inicioFXMLController.setSceneInicioSesion(sceneInicioSesion);
-        inicioFXMLController.setEnf(enf);
-      //  inicioFXMLController.setManager(manager);
-
-        this.stageInicioSesion.setTitle("TOT Learning System - Client");
-        this.stageInicioSesion.setResizable(false);
-        this.stagePrincipal.close();
-        this.estudiante = null;
-        this.stageInicioSesion.show();
-
+      
     }
 
     public void viewArchivos(String ruta) {
