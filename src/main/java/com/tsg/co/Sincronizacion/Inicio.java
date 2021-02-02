@@ -135,7 +135,7 @@ public class Inicio implements Runnable {
             while (!saber) {
                 for (int i = 0; i < kioskos.size(); i++) {
                     conectado = verificacion.Verificar(kioskos.get(i).getIP(), Integer.parseInt(kioskos.get(i).getPORT()));
-                    JOptionPane.showMessageDialog(null, "Iniciando  la sincronizacion");
+                    //JOptionPane.showMessageDialog(null, "Iniciando  la sincronizacion");
 
                     if (conectado == true) {
                         String ip = kioskos.get(i).getIP() + ":" + kioskos.get(i).getPORT();
@@ -228,11 +228,11 @@ public class Inicio implements Runnable {
                         }
 
                         //  JOptionPane
-                        JOptionPane.showMessageDialog(null, "Sincronizacion Completa ");
+                     //   JOptionPane.showMessageDialog(null, "Sincronizacion Completa ");
                         System.out.println("Se termino la sincronizacion");
 
                     } else {
-                        JOptionPane.showMessageDialog(null, "No se pudo realizar la sincronizacion \n No esta conectado al kiosco");
+                      //  JOptionPane.showMessageDialog(null, "No se pudo realizar la sincronizacion \n No esta conectado al kiosco");
 
                     }
                 }

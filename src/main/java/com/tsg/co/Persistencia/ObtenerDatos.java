@@ -513,7 +513,7 @@ public class ObtenerDatos {
             }
 
             try {
-                materiaTarea = (Materias) manager.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id ").setParameter("id", jsonTareas.getLong("materiaId")).getSingleResult();
+                materiaTarea = (Materias) manager.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id ").setParameter("id", jsonTareas.getJSONObject("materia").getLong("id")).getSingleResult();
                 System.out.println("materias tareas");
             } catch (Exception e) {
 

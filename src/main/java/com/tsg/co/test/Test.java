@@ -35,6 +35,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import org.json.JSONObject;
 
 /**
  *
@@ -45,8 +46,8 @@ public class Test {
     private static EntityManager manageres;
     private static EntityManagerFactory enf;
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) {           
+        
         enf = Persistence.createEntityManagerFactory("tsg");
         manageres = enf.createEntityManager();
         Month ahora = LocalDateTime.now().getMonth();
