@@ -12,12 +12,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="394.0" prefWidth="584.0" style="-fx-background-image:url(img/Login.png)" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.InicioSesionFXMLController">
+<AnchorPane id="AnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="390.0" prefWidth="650.0" style="-fx-background-image:url(img/Login.png)" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.InicioSesionFXMLController">
     <stylesheets>
         <URL value="@/styles/iniciosesionfxml.css" />
     </stylesheets>
    <children>
-      <AnchorPane layoutX="2.0" layoutY="263.0" prefHeight="107.0" prefWidth="575.0">
+      <AnchorPane layoutX="2.0" layoutY="283.0" prefHeight="106.0" prefWidth="575.0">
          <children>
             <JFXButton fx:id="btnIniciarSesion" layoutX="214.0" layoutY="7.0" onMouseClicked="#ObtenerUsuario" prefHeight="39.0" prefWidth="150.0" text="Iniciar Sesion " />
             <JFXButton fx:id="btnRegistrarEstudiante" layoutX="14.0" layoutY="7.0" onMouseClicked="#registrarEstudiante" prefHeight="39.0" prefWidth="150.0" text="Registrarse" />

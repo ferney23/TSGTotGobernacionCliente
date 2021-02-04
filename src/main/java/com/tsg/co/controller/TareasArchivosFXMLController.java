@@ -71,7 +71,7 @@ public class TareasArchivosFXMLController implements Initializable {
     @FXML
     private TableView<CustomImage> tableArchivo = new TableView<CustomImage>();
     @FXML
-    private TableView<CustomImage> tableArchivo1 = new TableView<CustomImage>();
+    private TableView<CustomImage> tableEntregas = new TableView<CustomImage>();
     @FXML
     private TableColumn<CustomImage, Image> imagetype = new TableColumn<>();
     @FXML
@@ -94,8 +94,6 @@ public class TareasArchivosFXMLController implements Initializable {
     @FXML
     private TableColumn<CustomImage, String> optionstable = new TableColumn<>();
     @FXML
-    private TableColumn<?, ?> options;
-    @FXML
     private Pane dibujo;
     @FXML
     private Button dibujoitem;
@@ -110,6 +108,8 @@ public class TareasArchivosFXMLController implements Initializable {
     private Stage stageInicioSesion;
     @FXML
     private StackPane stackPaneConfirmarTarea;
+    @FXML
+    private TableColumn<CustomImage, String> estadoEntrega;
 
     /**
      * Initializes the controller class.
@@ -142,6 +142,7 @@ public class TareasArchivosFXMLController implements Initializable {
         nombretarea.setText(tarea.getNombreTarea());
         materianombre.setText(tarea.getMateria().getTitulo());
         mostrarArchivo();
+      
     }
 
     public Materias getMateria() {
@@ -150,7 +151,7 @@ public class TareasArchivosFXMLController implements Initializable {
 
     public void setMateria(Materias materia) {
         this.materia = materia;
-        
+
     }
 
     public void setCodigotarea(String codigotarea) {
@@ -240,10 +241,9 @@ public class TareasArchivosFXMLController implements Initializable {
             Long idArchivoTot = Long.parseLong(archivoTotcodigo);
             guardarArchivo(idArchivoTot, archivoTotcodigo, dest.toString(), entregaArchivos);
 
-            tableArchivo1.getItems().add(itemlist);
-            imagentype1.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
-            nombrematerial.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("nombreTarea"));
-
+              tableEntregas.getItems().add(itemlist);
+              imagentype1.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
+              nombrematerial.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("nombreTarea"));
         }
 
     }
@@ -392,18 +392,22 @@ public class TareasArchivosFXMLController implements Initializable {
                 itemlist.setImage(item_1.getImage());
 
                 obj.add(itemlist);
+
             } else if (arch.getEntrega().getUpp() == 1L) {
-
-                item_1 = new CustomImage(new ImageView(new Image("img/trueyes.png")));
-                item_1.getImage().setFitHeight(25);
-                item_1.getImage().setFitWidth(25);
-                itemlist.setCodigo(arch.getCodigo());
-                itemlist.setEstadoTarea("ENTREGADO");
-                itemlist.setImage(item_1.getImage());
-
-                obj.add(itemlist);
-               
+                
+                item_1 = new CustomImage(new ImageView(new
+                 Image("img/trueyes.png")));
+                 item_1.getImage().setFitHeight(25);
+                 item_1.getImage().setFitWidth(25);
+                 itemlist.setCodigo(arch.getCodigo());
+                 itemlist.setEstadoTarea("ENTREGADO");
+                  itemlist.setImage(item_1.getImage());
+                 
+                 obj.add(itemlist);
+                 
+                 
             } else if (arch.getEntrega().getUpp() == 0L) {
+                
                item_1 = new CustomImage(new ImageView(new Image("img/trueyes.png")));
                 item_1.getImage().setFitHeight(25);
                 item_1.getImage().setFitWidth(25);
@@ -429,9 +433,11 @@ public class TareasArchivosFXMLController implements Initializable {
         manager.close();
     }
 
+  
+
     @FXML
     private void mouseSelArchivo(MouseEvent event) {
-
+            System.out.println("com.tsg.co.controller.TareasArchivosFXMLController.mouseSelArchivo()");
         try {
             tableArchivo.getSelectionModel().getSelectedItem();
             String ruta = tableArchivo.getSelectionModel().getSelectedItem().getRuta();
@@ -450,14 +456,19 @@ public class TareasArchivosFXMLController implements Initializable {
     @FXML
     private void mouseArchivoNuevo(MouseEvent event) {
 
-        System.err.println(tableArchivo1.getSelectionModel().getSelectedItem().getRuta() + "Ferney");
-        String ruta = tableArchivo1.getSelectionModel().getSelectedItem().getRuta();
-        File f = new File(ruta);
-        try {
-            Desktop.getDesktop().open(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //   System.err.println(tableArchivo1.getSelectionModel().getSelectedItem().getRuta() + "Ferney");
+        
+            System.err.println("Hola");
+            CustomImage customImage= tableEntregas.getSelectionModel().getSelectedItem();
+            String ruta = customImage.getRuta();
+            File f = new File(ruta);
+            try {
+                Desktop.getDesktop().open(f);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        
+
     }
 
     @FXML

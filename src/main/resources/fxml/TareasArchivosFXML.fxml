@@ -15,18 +15,18 @@
             <URL value="@/styles/archivosfxml.css" />
         </stylesheets>
        <children>
-                <TableView fx:id="tableArchivo" layoutX="78.0" layoutY="150.0" onMouseClicked="#mouseSelArchivo" prefHeight="472.0" prefWidth="411.0" style="-fx-border-color: white; -fx-border-radius: 20px;">
+                <TableView fx:id="tableArchivo" layoutX="78.0" layoutY="150.0" onMouseClicked="#mouseSelArchivo" prefHeight="345.0" prefWidth="411.0" style="-fx-border-color: white; -fx-border-radius: 20px;">
                   <columns>
                     <TableColumn fx:id="imagetype" prefWidth="45.0" />
                     <TableColumn fx:id="nombrematerial1" prefWidth="215.0" text="MATERIAL TAREA" />
                     <TableColumn fx:id="optionstable" prefWidth="146.0" resizable="false" style="-fx-border-radius: 20px;" text="ESTADO" />
                   </columns>
                 </TableView>
-            <TableView fx:id="tableArchivo1" layoutX="618.0" layoutY="150.0" onMouseClicked="#mouseArchivoNuevo" prefHeight="468.0" prefWidth="320.0">
+            <TableView fx:id="tableEntregas" layoutX="531.0" layoutY="157.0" onMouseClicked="#mouseArchivoNuevo" prefHeight="336.0" prefWidth="411.0">
                <columns>
                   <TableColumn fx:id="imagentype1" prefWidth="43.0" />
                   <TableColumn fx:id="nombrematerial" prefWidth="215.0" text="ENTREGAS " />
-            <TableColumn fx:id="options" prefWidth="63.0" text="..." />
+            <TableColumn fx:id="estadoEntrega" prefWidth="101.0" text="ESTADO" />
                </columns>
             </TableView>
             <Pane id="panelInfoGrado" layoutY="1.0" prefHeight="140.0" prefWidth="990.0" style="-fx-background-image:url(img/Header.jpg)">

@@ -44,7 +44,7 @@ public class PantallaInicio extends Application {
         stage.getIcons().add(new Image("img/TOT-Icon.png"));
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/InicioFXML.fxml"));
         Scene scene = new Scene(root);
-        stage.setTitle("TOT Learning System - Client");
+        stage.setTitle("KOT Learning System - Client");
         stage.setResizable(false);
         stage.setScene(scene);
         
