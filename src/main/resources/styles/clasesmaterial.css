@@ -5,6 +5,8 @@
 .mainFxmlClass {
 
 }
+
+
 #labelMaterias{
     -fx-text-fill: white; 
     -fx-font-size: 30pt;
@@ -69,6 +71,7 @@
     -fx-background-color: #CA6B54;
 }
 
+
 #labelIcono{
 
     -fx-background-image:url(../img/contract.png);
@@ -77,72 +80,87 @@
     -fx-background-position: 100%;
 }
 
-
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+        -fx-border-radius: 18px;
+    -fx-border-width: 2 0 2 0;
+     -fx-border-color: #fd8c69;/*rgba(200, 200, 200, 1.0);*/
+    -fx-text-alignment: center;
+    -fx-border-radius: 10 0 0 0;
+    -fx-background-radius: 10 0 0 0;
+}
 
 /*
  * css nombre de la columna
  */
-
-.table-view .column-header-background .label{
-    -fx-text-fill: white;
-    -fx-alignment: LEFT;
-    -fx-font-size: 15pt ;
-
-}
-
-.table-view .cell{ 
--fx-wrap-text: true;  /*estableces que el texto dentro del label de la celda pueda ser divido en partes*/
--fx-cell-size: 100px ;
--fx-font-size: 30pt;
-/* fijas la altura de la celda. Prueba con varios valores para que veas el efecto*/
- /* Estableces el ancho del label dentro de la celda.*/
-
- }
-
 .table-view .column-header,
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {   
-    -fx-background-color: #F05A24;
-    -fx-stroke: transparent;
-    -fx-size:50px;
+    -fx-background-color: #f15a24;  /*#fd8c69;*/
+    /*-fx-stroke: transparent;*/
+    -fx-size:50;
     -fx-alignment: CENTER ;    
-    -fx-border-radius: 20px;
-    -fx-border-width: 2 0 2 0;
-    -fx-border-color: #F05A24;
-    -fx-text-alignment: center;
-    -fx-text-fill: #F05A24;
+
 }
 
 .table-row-cell:filled:hover {
-    -fx-alignment: LEFT;
-    -fx-border-color: white;
-    -fx-font-family: 'Delicious';
-    -fx-text-alignment: justify;
 
+    -fx-size:50;
+    -fx-alignment: LEFT;
+    -fx-border-color: #fd8c69;
+    -fx-border-width: 0 0 0 0;
+    -fx-font-family: 'Delicious';
+    -fx-text-alignment: center;
+      -fx-border-radius: 10 10 0 0;
+  -fx-background-radius: 10 10 0 0;
 
 
 }
-
 .table-view:row-selection {
     -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-fixed-cell-size: 50;
     -fx-alignment: LEFT;
+   -fx-border-color: #fd8c69;/*rgba(200, 200, 200, 1.0);*/
+    -fx-border-width: 0 0 0 0;
     -fx-text-alignment: center;
-
+  -fx-border-radius: 10 10 0 0;
+  -fx-background-radius: 10 10 0 0;
 }
 
 .table-view .table-column{
     -fx-text-fill: black; /* 5 */ 
     -fx-font-size: 15.0;
     -fx-alignment: left ;
-    
+    -fx-border-color: #f15a24; ;/*rgba(200, 200, 200, 1.0);*/
+    -fx-border-width: 0 0 0 0;
+    /*-fx-border-color: white;*/
+    /*-fx-padding: 10 ;*/
+      -fx-border-radius: 10 10 0 0;
+      -fx-background-radius: 10 10 0 0;
 }
 
 
+/* Spaltenköpfe
+    Struktur column-header-background -> column-header */
+
+#btnPerfil{
+    -fx-background-color:transparent; 
+    -fx-background-image:url(../img/PerfilUsuario.png);
+    -fx-background-radius: 60;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 110px;
+    -fx-background-position: 100%;
+    -fx-effect: none;
+}
+
+
+
 .table-row-cell:selected {
-    -fx-background-color: white;
+    -fx-background-color: #F1940A;
     -fx-background-insets: 0;
     -fx-background-radius: 1;
-    
 }
 
 #btnPantallaInicio,#btnCerrarSesion { 
