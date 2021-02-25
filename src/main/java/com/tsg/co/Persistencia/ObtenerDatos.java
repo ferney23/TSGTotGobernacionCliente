@@ -134,6 +134,7 @@ public class ObtenerDatos {
 
     public Estudiante actualizarEstudiante(JSONObject dispositivokiosco, Usuario usuario) {
         //int Estudiante = dispositivokiosco.getJSONObject("estudiante").getInt("id");
+
         JSONObject estudiantekiosco = dispositivokiosco;
 
         Estudiante estudianteMac = null;
@@ -373,13 +374,13 @@ public class ObtenerDatos {
         Subida subidasExistente = null;
         Subida subidaAux = null;
         try {
-            subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id and ma.estudiante.idEstudiante=:idEstudiante").setParameter("id", blob.getJSONObject("file").getLong("descargaId")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
+            subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id and ma.estudiante.idEstudiante=:idEstudiante").setParameter("id", blob.getJSONObject("file").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
 
         } catch (Exception e) {
         }
 
         if (subidasExistente == null) {
-            subidaAux = guardarSubida(blob.getJSONObject("file").getLong("descargaId"), blob.getString("fechaDescarga"), estudiante);
+            subidaAux = guardarSubida(blob.getJSONObject("file").getLong("id"), blob.getString("fechaDescarga"), estudiante);
         } else {
             subidaAux = subidasExistente;
         }
@@ -401,7 +402,7 @@ public class ObtenerDatos {
             subidaTarea = new Subida(1L, idSubidaKisosco, fecha, "2020", estudiante);
 
             //Subida subidaTarea = new Subida(blob.getJSONObject("file").getLong("descargaId"), blob.getString("fechaDescarga"), "2020", estudiante);
-            subidaTarea.persist(subidaTarea, manager);;
+            subidaTarea.persist(subidaTarea, manager);
             idSubida = (long) manager.createQuery("Select MAX(ID) FROM Subida").getSingleResult();
             //  archivoTotcodigo = nuevaEntrega.getId() + "" + this.estudiante.getIdEstudiante() + "" + this.tarea.getSubida().getIdSubida();
 
@@ -522,7 +523,8 @@ public class ObtenerDatos {
             if (existe == null) {
                 Subida subidasExistente = null;
                 try {
-                    subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id  and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", jsonTareas.getJSONObject("subida").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
+                 
+                    subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id  and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", jsonTareas.getJSONObject("file").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
 
                 } catch (Exception e) {
                 }
@@ -535,7 +537,7 @@ public class ObtenerDatos {
                     System.err.println("Tareas nueva" + "subida existente ");
                 } else {
 
-                    Subida subidaAux = guardarSubida(jsonTareas.getJSONObject("file").getLong("descargaId"), jsonTareas.getString("fechaDescarga"), estudiante);
+                    Subida subidaAux = guardarSubida(jsonTareas.getJSONObject("file").getLong("id"), jsonTareas.getString("fechaDescarga"), estudiante);
 
                     Tareas tareasguardar = new Tareas(registroTarea, jsonTareas.getLong("tareaId"), registroTarea, jsonTareas.getString("nombreActividad"), String.valueOf(jsonTareas.getLong("idArchivoD2L")), materiaTarea, subidaAux, estudiante);
                     tareasguardar.persist(tareasguardar, manager);

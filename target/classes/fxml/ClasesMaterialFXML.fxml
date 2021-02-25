@@ -14,12 +14,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.ClasesMaterialController">
+<AnchorPane style="-fx-background-image:url(img/Classroom.jpg)" id="AnchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.ClasesMaterialController">
     <stylesheets>
         <URL value="@/styles/clasesmaterial.css" />
     </stylesheets>
     <children>
-        <BorderPane fx:id="l" layoutX="14.0" prefHeight="582.0" prefWidth="1000.0">
+        <BorderPane fx:id="l" layoutX="14.0" prefHeight="582.0" prefWidth="1000.0" style="-fx-border-radius: 20px;">
             <top>
                 <Pane prefHeight="140.0" prefWidth="1006.0" style="-fx-background-image:url(img/Header.jpg)" BorderPane.alignment="CENTER">
                     <children>
@@ -67,7 +67,7 @@
                      <children>
                         <Pane fx:id="paneltitulo" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                                          <Label fx:id="panelTableClases" alignment="CENTER" layoutX="102.0" layoutY="-5.0" prefHeight="43.0" prefWidth="400.0" style="-fx-text-fill: black; -fx-background-image: url(img/Header.jpg);" text="Clases y Material de Estudio" textAlignment="CENTER" textOverrun="CLIP">
+                                          <Label fx:id="panelTableClases" alignment="CENTER" layoutX="102.0" layoutY="-5.0" prefHeight="43.0" prefWidth="400.0" style="-fx-text-fill: black;" text="Clases y Material de Estudio" textAlignment="CENTER" textOverrun="CLIP">
                                               <font>
                                                   <Font size="25.0" />
                                               </font>
@@ -90,17 +90,19 @@
                         <RowConstraints maxHeight="325.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-border-radius: 20px;">
                            <children>
-                              <TableView fx:id="tableMaterialEstudio" prefHeight="312.0" prefWidth="471.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20px;">
+                              <TableView fx:id="tableMaterialEstudio" prefHeight="312.0" prefWidth="471.0" 
+                                         style="-fx-background-color: white; -fx-border-radius: 20px;" 
+                                           stylesheets="@../styles/clasesmaterial.css">
                                  <columns>
-                                    <TableColumn fx:id="cellClase" prefWidth="162.0" text="Nombre" />
-                                    <TableColumn fx:id="cellTema" minWidth="0.0" prefWidth="118.0" text="Tema" />
-                                    <TableColumn fx:id="cellMaterialEstudio" maxWidth="300.0" prefWidth="190.0" text="Material Estudio" />
+                                    <TableColumn fx:id="cellClase" prefWidth="162.0" text="Nombre"/>
+                                    <TableColumn fx:id="cellTema" minWidth="0.0" prefWidth="118.0" text="Tema"/>
+                                    <TableColumn fx:id="cellMaterialEstudio" maxWidth="300.0" prefWidth="190.0" text="Material Estudio"/>
                                  </columns>
-                                 <padding>
+                                 <!--padding>
                                     <Insets bottom="2.0" top="2.0" />
-                                 </padding>
+                                 </padding-->
                               </TableView>
                            </children>
                         </Pane>

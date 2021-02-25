@@ -35,7 +35,7 @@ public class App extends Application {
         inicioSesionFXMLController.setConectado(this.inicio.isConectado());
          this.inicioSesionFXMLController.setEnf(this.inicio.getEnf());
         //this.inicioSesionFXMLController.setManager(this.inicio.getManager());
-        this.stageInicioSesion.setTitle("TOT Learning System - Client");
+        this.stageInicioSesion.setTitle("KOT Learning System - Client");
         this.stageInicioSesion.setResizable(false);
         this.stageInicioSesion.show();
         this.stageInicioSesion.setOnCloseRequest(new EventHandler<WindowEvent>() {
