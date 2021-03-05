@@ -5,54 +5,55 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed0119d7-0404-46b4-a858-6d52007fd17b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Data/Tareas/Tarea ingles/Requisitos.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_classmate_1_5_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_h2database_h2_1_4_200.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_jfoenix_jfoenix_8_0_10.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_mashape_unirest_unirest_java_1_4_9.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_istack_istack_commons_runtime_3_0_11.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_codec_commons_codec_1_13.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__commons_logging_commons_logging_1_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__dom4j_dom4j_1_6_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_activation_javax_activation_api_1_2_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_persistence_javax_persistence_api_2_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_persistence_persistence_api_1_0_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_abego_treelayout_org_abego_treelayout_core_1_0_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_antlr_antlr4_4_8_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_antlr_antlr4_runtime_4_8_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_lang3_3_7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_core5_httpcore5_h2_5_0_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_nio_4_4_4.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpmime_4_5_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_dom4j_dom4j_2_1_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jaxb_jaxb_runtime_2_3_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_jaxb_txw2_2_3_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_hibernate_common_hibernate_commons_annotations_5_1_0_Final.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_hibernate_hibernate_core_4_3_1_Final.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_hibernate_hibernate_jpamodelgen_4_3_1_Final.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_javassist_javassist_3_18_1_GA.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_logging_jboss_logging_3_3_2_Final.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_logging_jboss_logging_annotations_1_2_0_Beta1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_spec_javax_transaction_jboss_transaction_api_1_2_spec_1_1_1_Final.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_kordamp_bootstrapfx_bootstrapfx_core_0_2_4.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_base_win_13.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_controls_13.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_fxml_13.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_graphics_13.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_25.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TOTCliente.iml" beforeDir="false" afterPath="$PROJECT_DIR$/TOTCliente.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/.netbeans_automatic_build" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/ConexionKiosco/Verificacion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Persistencia/ManejoDatos.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Persistencia/ObtenerDatos.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Persistencia/Test.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Sincronizacion/Inicio$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Sincronizacion/Inicio$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Sincronizacion/Inicio$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Sincronizacion/Inicio$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Sincronizacion/Inicio$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Sincronizacion/Inicio$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Sincronizacion/Inicio$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Sincronizacion/Inicio.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/Sincronizacion/TestInicio.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/App.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/ClasesMaterialController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/InicioFXMLController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/InicioFXMLController$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/InicioFXMLController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/InicioSesionFXMLController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/PantallaInicio.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/PreloaderInitalProgress$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/PreloaderInitalProgress.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/Pruebas.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/TableViewController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/controller/TareasArchivosFXMLController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/AchivosTot.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/Clases.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/CustomImage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/Entregas.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/Estudiante.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/InfoGrado.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/MaterialEstudio.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/Materias.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/Profesor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/Subida.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/Tareas.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/Usuario.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/model/Version.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/test/Test.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/test/TestConexion$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/test/TestHiloSincronizacion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/co/test/TestKiosco.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/tsg/model/Kiosko.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/.netbeans_automatic_build" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Tareas/segunda Tarea/el artde la guerra.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Tareas/segunda Tarea/el artde la guerra.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TOTCliente.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tsg/co/Persistencia/ObtenerDatos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tsg/co/Persistencia/ObtenerDatos.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tsg/co/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tsg/co/test/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/basetot.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/basetot.mv.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/basetot.trace.db" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/basetot.trace.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/basetot.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/basetot.mv.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fxml/TareasArchivosFXML.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/fxml/TareasArchivosFXML.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/img/contract.png" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/img/contract.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/styles/clasesmaterial.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/styles/clasesmaterial.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,9 +70,11 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/tsg/co/model/Clases.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/tsg/co/Persistencia/ObtenerDatos.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/target/generated-sources/annotations/com/tsg/co/model/Usuario_.java" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/tsg/co/model/Tareas.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/tsg/co/model/Clases.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/tsg/co/test/Test.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
@@ -90,7 +93,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="preferences.JavaFX" />
   </component>
   <component name="RunManager">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -105,19 +108,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -138,10 +128,16 @@
       <updated>1609941725650</updated>
       <workItem from="1609941729681" duration="373000" />
       <workItem from="1609942576262" duration="719000" />
+      <workItem from="1614311122429" duration="813000" />
+      <workItem from="1614345192988" duration="1900000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

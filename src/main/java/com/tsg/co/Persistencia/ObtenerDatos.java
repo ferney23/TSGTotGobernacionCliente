@@ -5,7 +5,7 @@
  */
 package com.tsg.co.Persistencia;
 
-import static com.ibm.icu.text.PluralRules.Operand.n;
+
 import com.tsg.co.Sincronizacion.Inicio;
 import com.tsg.co.model.AchivosTot;
 import com.tsg.co.model.Clases;

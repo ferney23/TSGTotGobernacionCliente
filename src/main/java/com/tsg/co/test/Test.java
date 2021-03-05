@@ -50,9 +50,8 @@ public class Test {
         
         enf = Persistence.createEntityManagerFactory("tsg");
         manageres = enf.createEntityManager();
-        Month ahora = LocalDateTime.now().getMonth();
         // List<AchivosTot> achivosTots1 = manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.subida.entregas.upp= :id").setParameter("id",1L).getResultList();
-        List<AchivosTot> achivosTots1 = manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.subida.tareas.id= :id").setParameter("id", 1183L).getResultList();
+        List<AchivosTot> achivosTots1 = manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.subida.tareas.id=:id").setParameter("id", 1183L).getResultList();
 
         System.out.println(achivosTots1);
         for (AchivosTot achivosTot : achivosTots1) {
