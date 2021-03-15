@@ -213,12 +213,14 @@ public class InicioSesionFXMLController implements Initializable {
                     tableViewController.setEstudiante(estudiante);
                     tableViewController.llenarEstudiante();
                     tableViewController.listarMaterias();
+                   // tableViewController.resumenTareasPendintes();
                     tableViewController.setStagePantallaPrincipal(stagePantallaPrincipal);
                     tableViewController.setScenePrincipal(scenePantallaPrincipal);
                     tableViewController.setStageInicioSesion(stageInicioSesion);
                     tableViewController.setSceneInicioSesion(sceneInicioSesion);
+                    tableViewController.resumenTareasPendintes();
                    // stagePantallaPrincipal.initStyle(StageStyle.TRANSPARENT);
-                    stagePantallaPrincipal.setTitle("TOT Learning System - Client");
+                    stagePantallaPrincipal.setTitle("KOT Learning System - Client");
                     stagePantallaPrincipal.setResizable(false);
                     stagePantallaPrincipal.show();
                     this.stageInicioSesion.close();

@@ -213,7 +213,7 @@ public class Inicio implements Runnable {
 
                                         if (!materialEstudioEndPointUrl.equals("")) {
                                             JSONArray jsonArrayMaterialEstudio = new JSONArray(materialEstudioEndPointUrl);
-                                            this.obtenerDatos.actualizarMaterialEstudio(jsonArrayMaterialEstudio);
+                                            this.obtenerDatos.actualizarMaterialEstudio(jsonArrayMaterialEstudio,ip,jsonResp.getString("token"));
                                         }
 
                                         // 
@@ -291,7 +291,7 @@ public class Inicio implements Runnable {
             System.out.println(conn.getResponseCode());
             if (conn.getResponseCode() == 200) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream())));
+                        (conn.getInputStream()) ,"utf-8"));
 
                 String output;
 
@@ -352,7 +352,7 @@ public class Inicio implements Runnable {
 
             if (conn.getResponseCode() == 200) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream())));
+                        (conn.getInputStream()),"utf-8"));
 
                 String output;
 
@@ -418,7 +418,7 @@ public class Inicio implements Runnable {
 
             if (conn.getResponseCode() == 200) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream())));
+                          (conn.getInputStream()) ,"utf-8"));
 
                 String output;
 
@@ -465,6 +465,7 @@ public class Inicio implements Runnable {
      *
      * @param urlTopost
      * @param json
+     * @param token
      * @return
      * @throws Exception
      */
@@ -581,7 +582,7 @@ public class Inicio implements Runnable {
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream())));
+                          (conn.getInputStream()) ,"utf-8"));
                 String output;
 
                 while ((output = br.readLine()) != null) {

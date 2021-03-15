@@ -232,6 +232,57 @@ public class TableViewController implements Initializable {
     }
 
     @FXML
+    public void resumenTareasPendintes() {
+        //EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
+        EntityManager em = enf.createEntityManager();
+
+        tablatareass.getItems().clear();
+        //this.materias = jlistMaterias.getSelectionModel().getSelectedItem();
+        // System.out.println(this.materias.getTitulo());
+
+        List<Tareas> tareas = em.createQuery("SELECT ma FROM Tareas ma WHERE  ma.estudiante.idEstudiante= :idEstudiante ").setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
+        // em.close();
+
+        ObservableList<Tareas> observableListTareas = FXCollections.observableArrayList(tareas);
+        int pendientes = 0;
+        tareaselec.clear();
+        tareaselec.addAll(observableListTareas);
+
+        for (Tareas tar : observableListTareas) {
+
+            //TableColumn<CustomImage, Image> imagecolumss  =  new TableColumn<>();
+            CustomImage itemlist = new CustomImage();
+            itemlist.setNombreTarea(tar.getNombreTarea() + " MATERIA :"+tar.getMateria().getTitulo());
+            //validacion SI ESTA ENTREGADA  if(tar.)
+            CustomImage item_1 = null;
+            if (tar.getSubida().getEntregas() != null && tar.getSubida().getEntregas().size() != 0) {
+            } else {
+                item_1 = new CustomImage(new ImageView(new Image("img/dangerNo.png")));
+                item_1.getImage().setFitHeight(30);
+                item_1.getImage().setFitWidth(40);
+                // tar.setImage(item_1);
+                pendientes++;
+
+                itemlist.setCodigo(tar.getCodigo());
+                itemlist.setImage(item_1.getImage());
+
+                //imagecolum.setCellValueFactory((Callback<TableColumn.CellDataFeatures<CustomImage, Image>, ObservableValue<Image>>) imagecolumss);
+                tablatareass.getItems().add(itemlist);
+            }
+
+        }
+        labelContadortareas.setText("" + pendientes);
+        //columnEstadoTareas.setCellValueFactory(new PropertyValueFactory<Tareas, Long>("id"));
+        //imagecolum.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("image"));
+        imageColumn.setCellValueFactory(new PropertyValueFactory<CustomImage, Image>("image"));
+        columnTareasPendientes.setCellValueFactory(new PropertyValueFactory<CustomImage, String>("nombreTarea"));
+        // labelMaterias.setText(materias.getTitulo().toUpperCase());
+
+        em.close();
+
+    }
+
+    @FXML
     private void seleccionarTareas(MouseEvent event) {
 
         //EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
@@ -244,7 +295,6 @@ public class TableViewController implements Initializable {
         List<Tareas> tareas = em.createQuery("SELECT ma FROM Tareas ma WHERE ma.materia.idMateria= :id and ma.estudiante.idEstudiante= :idEstudiante ").setParameter("id", this.materias.getIdMateria()).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
         // em.close();
 
-        
         ObservableList<Tareas> observableListTareas = FXCollections.observableArrayList(tareas);
         int pendientes = 0;
         tareaselec.clear();
@@ -287,7 +337,6 @@ public class TableViewController implements Initializable {
 
     }
 
-    
     @FXML
     public void seleccionarTareas(Materias materias) {
 
@@ -301,8 +350,6 @@ public class TableViewController implements Initializable {
         List<Tareas> tareas = em.createQuery("SELECT ma FROM Tareas ma WHERE ma.materia.idMateria= :id and ma.estudiante.idEstudiante= :idEstudiante ").setParameter("id", this.materias.getIdMateria()).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
         // em.close();
 
-       
-        
         ObservableList<Tareas> observableListTareas = FXCollections.observableArrayList(tareas);
         int pendientes = 0;
         tareaselec.clear();
@@ -344,8 +391,7 @@ public class TableViewController implements Initializable {
         em.close();
 
     }
-    
-    
+
     @FXML
     private void actionClases(ActionEvent event) {
 
@@ -357,7 +403,7 @@ public class TableViewController implements Initializable {
                 //Stage stage = new Stage(StageStyle.DECORATED);
 
                 this.scenePrincipal.setRoot((Pane) loader.load());
-            //    this.scenePrincipal.setFill(Color.TRANSPARENT);
+                //    this.scenePrincipal.setFill(Color.TRANSPARENT);
                 this.stagePantallaPrincipal.setScene(this.scenePrincipal);
                 clasesMaterialController = loader.<ClasesMaterialController>getController();
                 clasesMaterialController.setEnf(enf);
@@ -373,7 +419,7 @@ public class TableViewController implements Initializable {
                 this.stagePantallaPrincipal.getIcons().add(new Image("/img/TOT-Icon.png"));
                 this.stagePantallaPrincipal.setTitle("TOT Learning System - Tarea");
                 this.stagePantallaPrincipal.setResizable(false);
-              //  this.stagePantallaPrincipal.initStyle(StageStyle.TRANSPARENT);
+                //  this.stagePantallaPrincipal.initStyle(StageStyle.TRANSPARENT);
                 this.stagePantallaPrincipal.show();
 
                 // this.stagePantallaPrincipal.close();

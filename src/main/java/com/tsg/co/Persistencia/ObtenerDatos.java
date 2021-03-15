@@ -5,7 +5,6 @@
  */
 package com.tsg.co.Persistencia;
 
-
 import com.tsg.co.Sincronizacion.Inicio;
 import com.tsg.co.model.AchivosTot;
 import com.tsg.co.model.Clases;
@@ -19,12 +18,17 @@ import com.tsg.co.model.Tareas;
 import com.tsg.co.model.Usuario;
 import com.tsg.co.model.Version;
 import com.tsg.co.model.Kiosko;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import static java.net.URLEncoder.encode;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -121,6 +125,7 @@ public class ObtenerDatos {
         }
 
         if (existeKiosco == null) {
+            //  Kiosko nuevoKisko = new Kiosko(1L, "6104", "192.168.0.120");   
             Kiosko nuevoKisko = new Kiosko(1L, "6104", "localhost");
             nuevoKisko.persist(nuevoKisko, manager);
             auxKiosco = nuevoKisko;
@@ -301,13 +306,19 @@ public class ObtenerDatos {
 
     }
 
-    public void actualizarMaterialEstudio(JSONArray jsonArrayMaterialEstudio) throws SQLException, MalformedURLException, IOException {
+    public void actualizarMaterialEstudio(JSONArray jsonArrayMaterialEstudio,String ip,String token) throws SQLException, MalformedURLException, IOException, URISyntaxException {
         EntityManager manager = enf.createEntityManager();
+        
+        System.out.println("direccion " + ip );
+        
+        System.out.println(token);
         for (int j = 0; j < jsonArrayMaterialEstudio.length(); j++) {
             JSONObject objMaterialEstudio = (JSONObject) jsonArrayMaterialEstudio.get(j);
             System.out.println(objMaterialEstudio.getLong("id"));
             Clases nuevaClase = manager.find(Clases.class, objMaterialEstudio.getLong("claseId"));
-
+            System.out.println("direccion " + ip );
+        
+            System.out.println(token);
             MaterialEstudio existe = null;
 
             try {
@@ -338,14 +349,25 @@ public class ObtenerDatos {
                     }
 
                     if (si != 0) {
-
                         String[] Archivo = objMaterialEstudio.getString("url").split("/");
                         Path dest = Paths.get("Data/" + objMaterialEstudio.getInt("idD2L") + "BLOB/" + Archivo[Archivo.length - 1]);
-                        URL website = new URL(reemplazar(objMaterialEstudio.getString("url") + encode("", "UTF-8"), " ", "%20"));
-
-                        try (InputStream in = website.openStream()) {
+                        String url = objMaterialEstudio.getString("url");
+                        System.out.println(objMaterialEstudio.getString("url"));
+                        URL websiteSinUtf8 = new URL(objMaterialEstudio.getString("url"));
+                        URI uri = new URI(websiteSinUtf8.getProtocol(), websiteSinUtf8.getUserInfo(), websiteSinUtf8.getHost(), websiteSinUtf8.getPort(), websiteSinUtf8.getPath(), websiteSinUtf8.getQuery(), websiteSinUtf8.getRef());
+                        String utf = uri.toASCIIString();
+                        URL website = new URL(utf);
+                        try (InputStream in = website.openStream();
+                                BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
                             Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
                         }
+                        try {
+                            System.out.println(respuesta(token, ip,objMaterialEstudio.getLong("id")));
+                        } catch (Exception ex) {
+                            Logger.getLogger(ObtenerDatos.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                       
                         MaterialEstudio materialEstudioGuardar = new MaterialEstudio(objMaterialEstudio.getLong("id"),
                                 objMaterialEstudio.getString("tema"),
                                 objMaterialEstudio.getString("descripcion"),
@@ -378,7 +400,7 @@ public class ObtenerDatos {
 
         } catch (Exception e) {
         }
-            ///Hola
+        ///Hola
         if (subidasExistente == null) {
             subidaAux = guardarSubida(blob.getJSONObject("file").getLong("id"), blob.getString("fechaDescarga"), estudiante);
         } else {
@@ -420,7 +442,7 @@ public class ObtenerDatos {
         return subidaTarea;
     }
 
-    public void updateBlobTareas(JSONObject blob, String ip, Estudiante estudiante) throws MalformedURLException, IOException {
+    public void updateBlobTareas(JSONObject blob, String ip, Estudiante estudiante) throws MalformedURLException, IOException, URISyntaxException {
         Subida subidaTarea = actualizarSubidas(blob, estudiante);
         EntityManager manager = enf.createEntityManager();
         AchivosTot achivosTot = null;
@@ -457,11 +479,15 @@ public class ObtenerDatos {
                     } else {
                         String[] Archivo = blob.getJSONObject("file").getString("url").split("/");
                         Path dest = Paths.get("Data/" + estudiante.getNombres() + "/" + blob.getInt("tareaId") + "BLOB/" + Archivo[Archivo.length - 1]);
-                        URL website = new URL(reemplazar(blob.getJSONObject("file").getString("url") + encode("", "UTF-8"), " ", "%20"));
-                        try (InputStream in = website.openStream()) {
+                        URL websiteSinUtf8 = new URL((blob.getJSONObject("file").getString("url")));
+                        URI uri = new URI(websiteSinUtf8.getProtocol(), websiteSinUtf8.getUserInfo(), websiteSinUtf8.getHost(), websiteSinUtf8.getPort(), websiteSinUtf8.getPath(), websiteSinUtf8.getQuery(), websiteSinUtf8.getRef());
+                        String utf = uri.toASCIIString();
+                        URL website = new URL(utf);
+                        try (InputStream in = website.openStream();
+                                BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
                             Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
                         }
-
+                   
                         guardarArchivo(blob.getJSONObject("file").getLong("id"), String.valueOf(blob.getJSONObject("file").getLong("id")), dest.toString(), subidaTarea);
 
                     }
@@ -523,7 +549,7 @@ public class ObtenerDatos {
             if (existe == null) {
                 Subida subidasExistente = null;
                 try {
-                 
+
                     subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id  and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", jsonTareas.getJSONObject("file").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
 
                 } catch (Exception e) {
@@ -611,6 +637,19 @@ public class ObtenerDatos {
         manager.close();
         return estudiantesGuardados;
 
+    }
+    
+    public String respuesta(String token ,String ip, Long id) {
+        String respuesta ="http://"+ip+"/api/MaterialEstudioRegistros/RegistrarMiMaterialDescargado";
+        System.out.println(id);
+        JSONObject objectCrearRegistro = new JSONObject();
+        objectCrearRegistro.put("MaterialEstudioId", id);
+        try {
+          String registro=  this.inicio.peticionHttpPost(respuesta, objectCrearRegistro, token);
+        } catch (Exception ex) {
+            Logger.getLogger(ObtenerDatos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return token + ip + id;
     }
 
 }

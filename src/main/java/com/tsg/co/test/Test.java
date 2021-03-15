@@ -43,10 +43,14 @@ import org.json.JSONObject;
  */
 public class Test {
 
+   
+    
+    
     private static EntityManager manageres;
     private static EntityManagerFactory enf;
 
-    public static void main(String[] args) {           
+    public static void main(String[] args) {     
+        
         
         enf = Persistence.createEntityManagerFactory("tsg");
         manageres = enf.createEntityManager();
