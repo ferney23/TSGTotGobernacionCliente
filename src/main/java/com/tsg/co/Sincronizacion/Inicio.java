@@ -215,7 +215,18 @@ public class Inicio implements Runnable {
                                             JSONArray jsonArrayMaterialEstudio = new JSONArray(materialEstudioEndPointUrl);
                                             this.obtenerDatos.actualizarMaterialEstudio(jsonArrayMaterialEstudio,ip,jsonResp.getString("token"));
                                         }
-
+                                         
+                                       String endpointMensajes = "http://" + ip + "/api/mensajes/misMensajesPendientesPorDescargar";
+                                       String mensajesEndPointUrl = this.peticionHttpGetArray(endpointMensajes, jsonResp.getString("token"));
+                                       System.out.println(mensajesEndPointUrl);
+                                       if(!mensajesEndPointUrl.equals("")){
+                                             JSONArray jsonArraymensajes = new JSONArray(mensajesEndPointUrl);
+                                            this.obtenerDatos.actualizarMensajesKiosco(jsonArraymensajes,ip,jsonResp.getString("token"),estudianteCliente);
+                                            this.obtenerDatos.actualizarFileMensajesKiosco(jsonArraymensajes,ip,jsonResp.getString("token"),estudianteCliente);
+                                            
+                
+                                       }
+                                       
                                         // 
                                         obtenerDatos.postArchivos(ip, jsonResp.getString("token"), this.estudianteCliente);
                                     }

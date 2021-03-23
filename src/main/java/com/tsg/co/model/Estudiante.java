@@ -27,7 +27,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Persistence;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import static org.hibernate.engine.internal.Cascade.cascade;
+
 
 /**
  *
@@ -58,6 +58,11 @@ public class Estudiante implements Serializable {
 
     @OneToMany(mappedBy = "estudiante")
     private Set<Tareas> tareas = new HashSet<>();
+    
+    @OneToMany(mappedBy = "estudiante")
+    private Set<MensajeKiosco> mensajeKioscos  = new HashSet<>();
+    
+    
     @JoinTable(
             name = "rel_estudiante_materias",
             joinColumns = @JoinColumn(name = "FK_ESTUDIANTE", nullable = false),
@@ -174,6 +179,14 @@ public class Estudiante implements Serializable {
 
     public void setSubidas(Set<Subida> subidas) {
         this.subidas = subidas;
+    }
+
+    public Set<MensajeKiosco> getMensajeKioscos() {
+        return mensajeKioscos;
+    }
+
+    public void setMensajeKioscos(Set<MensajeKiosco> mensajeKioscos) {
+        this.mensajeKioscos = mensajeKioscos;
     }
     
     

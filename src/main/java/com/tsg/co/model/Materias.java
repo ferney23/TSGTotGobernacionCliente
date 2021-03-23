@@ -72,6 +72,9 @@ public class Materias implements Serializable {
     private Set<Tareas> tareas = new HashSet<>();
 
     @OneToMany(mappedBy = "materia")
+    private Set<MensajeKiosco> mensajeKioscos = new HashSet<>();
+    
+    @OneToMany(mappedBy = "materia")
     private Set<Clases> clases = new HashSet<>();
 
     @ManyToOne(optional = true)
@@ -184,6 +187,17 @@ public class Materias implements Serializable {
     public void setEstudiantes(Set<Estudiante> estudiantes) {
         this.estudiantes = estudiantes;
     }
+
+    public Set<MensajeKiosco> getMensajeKioscos() {
+        return mensajeKioscos;
+    }
+
+    public void setMensajeKioscos(Set<MensajeKiosco> mensajeKioscos) {
+        this.mensajeKioscos = mensajeKioscos;
+    }
+    
+    
+    
 
     public void persist(Object object , EntityManager em) {
        // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");

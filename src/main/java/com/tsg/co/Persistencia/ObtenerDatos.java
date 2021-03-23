@@ -7,6 +7,7 @@ package com.tsg.co.Persistencia;
 
 import com.tsg.co.Sincronizacion.Inicio;
 import com.tsg.co.model.AchivosTot;
+import com.tsg.co.model.ArchivoMensajeKiosco;
 import com.tsg.co.model.Clases;
 import com.tsg.co.model.Entregas;
 import com.tsg.co.model.Estudiante;
@@ -18,6 +19,7 @@ import com.tsg.co.model.Tareas;
 import com.tsg.co.model.Usuario;
 import com.tsg.co.model.Version;
 import com.tsg.co.model.Kiosko;
+import com.tsg.co.model.MensajeKiosco;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -306,18 +308,18 @@ public class ObtenerDatos {
 
     }
 
-    public void actualizarMaterialEstudio(JSONArray jsonArrayMaterialEstudio,String ip,String token) throws SQLException, MalformedURLException, IOException, URISyntaxException {
+    public void actualizarMaterialEstudio(JSONArray jsonArrayMaterialEstudio, String ip, String token) throws SQLException, MalformedURLException, IOException, URISyntaxException {
         EntityManager manager = enf.createEntityManager();
-        
-        System.out.println("direccion " + ip );
-        
+
+        System.out.println("direccion " + ip);
+
         System.out.println(token);
         for (int j = 0; j < jsonArrayMaterialEstudio.length(); j++) {
             JSONObject objMaterialEstudio = (JSONObject) jsonArrayMaterialEstudio.get(j);
             System.out.println(objMaterialEstudio.getLong("id"));
             Clases nuevaClase = manager.find(Clases.class, objMaterialEstudio.getLong("claseId"));
-            System.out.println("direccion " + ip );
-        
+            System.out.println("direccion " + ip);
+
             System.out.println(token);
             MaterialEstudio existe = null;
 
@@ -362,12 +364,11 @@ public class ObtenerDatos {
                             Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
                         }
                         try {
-                            System.out.println(respuesta(token, ip,objMaterialEstudio.getLong("id")));
+                            //        System.out.println(respuesta(token, ip, objMaterialEstudio.getLong("id")));
                         } catch (Exception ex) {
                             Logger.getLogger(ObtenerDatos.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        
-                       
+
                         MaterialEstudio materialEstudioGuardar = new MaterialEstudio(objMaterialEstudio.getLong("id"),
                                 objMaterialEstudio.getString("tema"),
                                 objMaterialEstudio.getString("descripcion"),
@@ -487,7 +488,7 @@ public class ObtenerDatos {
                                 BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
                             Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
                         }
-                   
+
                         guardarArchivo(blob.getJSONObject("file").getLong("id"), String.valueOf(blob.getJSONObject("file").getLong("id")), dest.toString(), subidaTarea);
 
                     }
@@ -589,6 +590,109 @@ public class ObtenerDatos {
 
     }
 
+    public MensajeKiosco actualizarMensajesKiosco(JSONArray jsonArrayMensajes, String ip, String token, Estudiante estudiante) {
+        EntityManager manager = enf.createEntityManager();
+
+        for (int j = 0; j < jsonArrayMensajes.length(); j++) {
+            JSONObject objMensajes = (JSONObject) jsonArrayMensajes.get(j);
+            Materias materiasMensaje = null;
+            try {
+                materiasMensaje = (Materias) manager.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id ").setParameter("id", objMensajes.getJSONObject("mensaje").getLong("materiaId")).getSingleResult();
+                System.out.println("materias tareas");
+            } catch (Exception e) {
+
+            }
+
+            if (estudiante != null) {
+                MensajeKiosco existe = null;
+                try {
+                    existe = (MensajeKiosco) manager.createQuery("SELECT ma FROM MensajeKiosco ma WHERE ma.idMensajeKiosco=:id and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", objMensajes.getJSONObject("mensaje").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
+                    System.out.println(existe + " existo");
+                } catch (Exception e) {
+                    System.out.println("Estoy dentro del catch");
+                    MensajeKiosco mensajeKiosco = new MensajeKiosco(objMensajes.getJSONObject("mensaje").getLong("id"),
+                            objMensajes.getJSONObject("mensaje").getString("mensajes"),
+                            objMensajes.getJSONObject("mensaje").getString("idD2L"),
+                            objMensajes.getJSONObject("mensaje").getString("fechaDescarga"),
+                            materiasMensaje,
+                            estudiante);
+                    mensajeKiosco.persist(mensajeKiosco, manager);
+                }
+
+            }
+
+        }
+
+        manager.close();
+
+        return null;
+    }
+
+    public ArchivoMensajeKiosco actualizarFileMensajesKiosco(JSONArray jsonArrayMensajes, String ip, String token, Estudiante estudiante) throws MalformedURLException, URISyntaxException, IOException {
+        EntityManager manager = enf.createEntityManager();
+
+        for (int j = 0; j < jsonArrayMensajes.length(); j++) {
+            JSONObject objMensajes = (JSONObject) jsonArrayMensajes.get(j);
+            MensajeKiosco mensajeKiosco = (MensajeKiosco) manager.createQuery("SELECT ma FROM MensajeKiosco ma WHERE ma.idMensajeKiosco=:id and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", objMensajes.getJSONObject("mensaje").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
+            System.out.println(mensajeKiosco + " existo");
+
+            if (mensajeKiosco != null) {
+                ArchivoMensajeKiosco archivoMensajeKiosco = null;
+
+                try {
+
+                    archivoMensajeKiosco = (ArchivoMensajeKiosco) manager.createQuery("SELECT ma FROM ArchivoMensajeKiosco ma WHERE ma.fileMensajeId =:id and ma.mensajeKiosco.id=: idMensajeKiosco").setParameter("id", objMensajes.getLong("fileMensajeId")).setParameter("idMensajeKiosco", mensajeKiosco.getId()).getSingleResult();
+                } catch (Exception e) {
+
+                    int ext = 0;
+
+                    if (ext == 0) {
+                        File Direccion = new File("Data/" + estudiante.getNombres() + "/" + objMensajes.getLong("fileMensajeId") + "BLOB");
+                        int si = 1;
+                        if (Direccion.exists()) {
+                            if (Direccion.isDirectory()) {
+                                System.out.println("Es una carpeta");
+                            }
+                        } else {
+                            if (Direccion.mkdirs()) {
+                                System.out.println("Directorio creado");
+                            } else {
+                                si = 0;
+                                System.out.println("Error al crear directorio");
+                            }
+                        }
+
+                        if (si != 0) {
+
+                            if (objMensajes.getString("url").equals("http://" + ip + "/media")) {
+
+                            } else {
+                                String[] Archivo = objMensajes.getString("url").split("/");
+                                Path dest = Paths.get("Data/" + estudiante.getNombres() + "/" + objMensajes.getInt("fileMensajeId") + "BLOB/" + Archivo[Archivo.length - 1]);
+                                URL websiteSinUtf8 = new URL(objMensajes.getString("url"));
+                                URI uri = new URI(websiteSinUtf8.getProtocol(), websiteSinUtf8.getUserInfo(), websiteSinUtf8.getHost(), websiteSinUtf8.getPort(), websiteSinUtf8.getPath(), websiteSinUtf8.getQuery(), websiteSinUtf8.getRef());
+                                String utf = uri.toASCIIString();
+                                URL website = new URL(utf);
+                                try (InputStream in = website.openStream();
+                                        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+                                    Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
+                                    archivoMensajeKiosco = new ArchivoMensajeKiosco(objMensajes.getLong("fileMensajeId"), objMensajes.getString("nombre"), objMensajes.getString("fechaDescarga"), objMensajes.getString("idD2L"), dest.toString(), mensajeKiosco);
+                                    archivoMensajeKiosco.persist(archivoMensajeKiosco, manager);
+
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+        return null;
+    }
+
     public void postArchivos(String ip, String token, Estudiante estudiante) throws Exception {
         String endPointPostArchivo = "http://" + ip + "/api/entregas/entregarMiTarea";
         EntityManager manager = enf.createEntityManager();
@@ -638,14 +742,27 @@ public class ObtenerDatos {
         return estudiantesGuardados;
 
     }
-    
-    public String respuesta(String token ,String ip, Long id) {
-        String respuesta ="http://"+ip+"/api/MaterialEstudioRegistros/RegistrarMiMaterialDescargado";
+
+    public String respuesta(String token, String ip, Long id) {
+        String respuesta = "http://" + ip + "/api/MaterialEstudioRegistros/RegistrarMiMaterialDescargado";
         System.out.println(id);
         JSONObject objectCrearRegistro = new JSONObject();
         objectCrearRegistro.put("MaterialEstudioId", id);
         try {
-          String registro=  this.inicio.peticionHttpPost(respuesta, objectCrearRegistro, token);
+            String registro = this.inicio.peticionHttpPost(respuesta, objectCrearRegistro, token);
+        } catch (Exception ex) {
+            Logger.getLogger(ObtenerDatos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return token + ip + id;
+    }
+
+    public String respuestaMensajes(String token, String ip, Long id) {
+        String respuesta = "http://" + ip + "/api/mensajes/RegistrarMiMensajeDescargado";
+        System.out.println(id);
+        JSONObject objectCrearRegistro = new JSONObject();
+        objectCrearRegistro.put("fileMensajeId", id);
+        try {
+            String registro = this.inicio.peticionHttpPost(respuesta, objectCrearRegistro, token);
         } catch (Exception ex) {
             Logger.getLogger(ObtenerDatos.class.getName()).log(Level.SEVERE, null, ex);
         }

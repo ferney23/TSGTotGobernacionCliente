@@ -73,7 +73,7 @@
                     <left>
                         <AnchorPane fx:id="panelNotificaciones" prefHeight="113.0" prefWidth="80.0" BorderPane.alignment="CENTER">
                             <children>
-                            <Button fx:id="btnNotificaciones" alignment="CENTER" layoutX="14.0" layoutY="8.0" prefHeight="50.0" prefWidth="50.0" />
+                            <Button fx:id="btnNotificaciones" alignment="CENTER" layoutX="14.0" layoutY="8.0" onMouseClicked="#verMensajes" prefHeight="50.0" prefWidth="50.0" />
                             <Button fx:id="btnListado" alignment="CENTER" layoutX="14.0" layoutY="70.0" prefHeight="50.0" prefWidth="50.0" />
                             </children>
 

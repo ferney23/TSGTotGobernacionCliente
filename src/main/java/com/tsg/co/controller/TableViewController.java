@@ -112,8 +112,6 @@ public class TableViewController implements Initializable {
     @FXML
     private Button btnNotificaciones;
     @FXML
-    private Button btnListado;
-    @FXML
     private Pane panelPerfilEstudiante;
     @FXML
     private Label labelEvaluacionesPendientes;
@@ -123,11 +121,14 @@ public class TableViewController implements Initializable {
     private Image imagenGrado;
 
     private ClasesMaterialController clasesMaterialController;
+    private MensajesFxmlController mensajesFxmlController;
 
     private Stage stagePantallaPrincipal;
     private Scene scenePrincipal;
     private Scene sceneInicioSesion;
     private Stage stageInicioSesion;
+    @FXML
+    private Button btnListado;
 
     /**
      * Initializes the controller class.
@@ -148,6 +149,14 @@ public class TableViewController implements Initializable {
 
     public void setClasesMaterialController(ClasesMaterialController clasesMaterialController) {
         this.clasesMaterialController = clasesMaterialController;
+    }
+
+    public MensajesFxmlController getMensajesFxmlController() {
+        return mensajesFxmlController;
+    }
+
+    public void setMensajesFxmlController(MensajesFxmlController mensajesFxmlController) {
+        this.mensajesFxmlController = mensajesFxmlController;
     }
 
     public Estudiante getEstudiante() {
@@ -231,7 +240,6 @@ public class TableViewController implements Initializable {
 
     }
 
-    @FXML
     public void resumenTareasPendintes() {
         //EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
         EntityManager em = enf.createEntityManager();
@@ -252,7 +260,7 @@ public class TableViewController implements Initializable {
 
             //TableColumn<CustomImage, Image> imagecolumss  =  new TableColumn<>();
             CustomImage itemlist = new CustomImage();
-            itemlist.setNombreTarea(tar.getNombreTarea() + " MATERIA :"+tar.getMateria().getTitulo());
+            itemlist.setNombreTarea(tar.getNombreTarea() + " MATERIA :" + tar.getMateria().getTitulo());
             //validacion SI ESTA ENTREGADA  if(tar.)
             CustomImage item_1 = null;
             if (tar.getSubida().getEntregas() != null && tar.getSubida().getEntregas().size() != 0) {
@@ -337,7 +345,6 @@ public class TableViewController implements Initializable {
 
     }
 
-    @FXML
     public void seleccionarTareas(Materias materias) {
 
         //EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
@@ -507,7 +514,6 @@ public class TableViewController implements Initializable {
     private void eventoCerrarSesion(MouseEvent event) {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/InicioSesionFXML.fxml"));
-
         try {
             this.sceneInicioSesion.setRoot((Pane) loader.load());
         } catch (IOException ex) {
@@ -521,7 +527,7 @@ public class TableViewController implements Initializable {
         inicioFXMLController.setEnf(enf);
         //  inicioFXMLController.setManager(manager);
 
-        this.stageInicioSesion.setTitle("TOT Learning System - Client");
+        this.stageInicioSesion.setTitle("KOT Learning System - Client");
         this.stageInicioSesion.setResizable(false);
         this.stagePantallaPrincipal.close();
         this.estudiante = null;
@@ -529,4 +535,37 @@ public class TableViewController implements Initializable {
 
     }
 
+    @FXML
+    private void verMensajes(MouseEvent event) {
+        System.out.println("com.tsg.co.controller.TableViewController.verMensajes()");
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MensajesFXML.fxml"));
+            //Stage stage = new Stage(StageStyle.DECORATED);
+
+            this.scenePrincipal.setRoot((Pane) loader.load());
+            //    this.scenePrincipal.setFill(Color.TRANSPARENT);
+            this.stagePantallaPrincipal.setScene(this.scenePrincipal);
+            mensajesFxmlController = loader.<MensajesFxmlController>getController();
+            mensajesFxmlController.setEnf(enf);
+            mensajesFxmlController.setEstudiante(estudiante);
+            mensajesFxmlController.viewMensajes();
+            mensajesFxmlController.setScenePrincipal(scenePrincipal);
+            mensajesFxmlController.setStageInicioSesion(stageInicioSesion);
+            mensajesFxmlController.setSceneInicioSesion(sceneInicioSesion);
+            mensajesFxmlController.setStagePrincipal(stagePantallaPrincipal);
+            
+            
+            this.stagePantallaPrincipal.getIcons().add(new Image("/img/TOT-Icon.png"));
+            this.stagePantallaPrincipal.setTitle("KOT Learning System - Tarea");
+            this.stagePantallaPrincipal.setResizable(false);
+            //  this.stagePantallaPrincipal.initStyle(StageStyle.TRANSPARENT);
+            this.stagePantallaPrincipal.show();
+
+            // this.stagePantallaPrincipal.close();
+        } catch (IOException e) {
+
+        }
+
+    }
 }

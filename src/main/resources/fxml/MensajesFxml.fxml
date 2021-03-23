@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane id="AnchorPane" fx:id="anchorPrincipal" prefHeight="600.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tsg.co.controller.MensajesFxmlController">
+    <stylesheets>
+        <URL value="@/styles/mensajesfxml.css" />
+    </stylesheets>
+   <children>
+      <BorderPane layoutX="9.0" layoutY="19.0" prefHeight="600.0" prefWidth="1000.0">
+         <top>
+            <Pane prefHeight="132.0" prefWidth="1000.0" style="-fx-background-color: blue;" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="volverInicio" layoutX="450.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#pantallaPrincipal" prefHeight="25.0" prefWidth="110.0" text="Volver Inicio" />
+               </children>
+            </Pane>
+         </top>
+         <left>
+            <GridPane prefHeight="467.0" prefWidth="992.0" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="331.0" minWidth="10.0" prefWidth="72.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="451.0" minWidth="10.0" prefWidth="429.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="514.0" minWidth="10.0" prefWidth="330.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="514.0" minWidth="0.0" prefWidth="77.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="89.0" minHeight="10.0" prefHeight="17.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="251.0" minHeight="10.0" prefHeight="227.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="57.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <TableView fx:id="tableMensaje" layoutY="29.0" onMouseClicked="#mensajesSeleccionar" prefHeight="195.0" prefWidth="409.0">
+                           <columns>
+                              <TableColumn fx:id="columnNombre" prefWidth="105.0" text="Nombre" />
+                              <TableColumn fx:id="columnMaterias" prefWidth="158.0" text="Materia" />
+                              <TableColumn fx:id="columnAdjuntos" prefWidth="137.0" text="Adjuntos" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <children>
+                        <TableView layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="307.0">
+                          <columns>
+                            <TableColumn prefWidth="75.0" text="C1" />
+                            <TableColumn prefWidth="145.0" text="C2" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </Pane>
+               </children>
+            </GridPane>
+         </left>
+      </BorderPane>
+   </children>
+</AnchorPane>
