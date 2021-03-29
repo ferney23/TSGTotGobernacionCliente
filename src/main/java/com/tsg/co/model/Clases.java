@@ -36,17 +36,17 @@ public class Clases implements Serializable{
     //@GeneratedValue
     private Long idClases;
     
-    @Column(name = "tema", nullable = true, length = 50)
+    @Column(name = "tema", nullable = true, length = 150)
     private String tema;
     
-    @Column(name = "nombre", nullable = true, length = 50)
+    @Column(name = "nombre", nullable = true, length = 150)
     private String nombre;
     
-    @Column(name = "fechaInicio", nullable = true, length = 50)
+    @Column(name = "fechaInicio", nullable = true, length = 150)
     private String fechaInicio;
     
     
-    @Column(name = "codigoClase", nullable = true, length = 50)
+    @Column(name = "codigoClase", nullable = true, length = 150)
     private String codigoClase;
 
     @ManyToOne(optional = true)

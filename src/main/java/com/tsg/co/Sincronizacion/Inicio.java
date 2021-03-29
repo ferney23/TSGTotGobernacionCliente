@@ -213,22 +213,23 @@ public class Inicio implements Runnable {
 
                                         if (!materialEstudioEndPointUrl.equals("")) {
                                             JSONArray jsonArrayMaterialEstudio = new JSONArray(materialEstudioEndPointUrl);
-                                            this.obtenerDatos.actualizarMaterialEstudio(jsonArrayMaterialEstudio,ip,jsonResp.getString("token"));
+                                            this.obtenerDatos.actualizarMaterialEstudio(jsonArrayMaterialEstudio, ip, jsonResp.getString("token"));
                                         }
-                                         
-                                       String endpointMensajes = "http://" + ip + "/api/mensajes/misMensajesPendientesPorDescargar";
-                                       String mensajesEndPointUrl = this.peticionHttpGetArray(endpointMensajes, jsonResp.getString("token"));
-                                       System.out.println(mensajesEndPointUrl);
-                                       if(!mensajesEndPointUrl.equals("")){
-                                             JSONArray jsonArraymensajes = new JSONArray(mensajesEndPointUrl);
-                                            this.obtenerDatos.actualizarMensajesKiosco(jsonArraymensajes,ip,jsonResp.getString("token"),estudianteCliente);
-                                            this.obtenerDatos.actualizarFileMensajesKiosco(jsonArraymensajes,ip,jsonResp.getString("token"),estudianteCliente);
-                                            
-                
-                                       }
-                                       
+
+                                        String endpointMensajes = "http://" + ip + "/api/mensajes/misMensajesPendientesPorDescargar";
+                                        String mensajesEndPointUrl = this.peticionHttpGetArray(endpointMensajes, jsonResp.getString("token"));
+                                        System.out.println(mensajesEndPointUrl);
+                                        if (!mensajesEndPointUrl.equals("")) {
+                                            JSONArray jsonArraymensajes = new JSONArray(mensajesEndPointUrl);
+                                            this.obtenerDatos.actualizarMensajesKiosco(jsonArraymensajes, ip, jsonResp.getString("token"), estudianteCliente);
+                                            this.obtenerDatos.actualizarFileMensajesKiosco(jsonArraymensajes, ip, jsonResp.getString("token"), estudianteCliente);
+
+                                        }
                                         // 
                                         obtenerDatos.postArchivos(ip, jsonResp.getString("token"), this.estudianteCliente);
+                                     obtenerDatos.postRespuestaMensaje(ip, jsonResp.getString("token"), this.estudianteCliente);
+                                    
+                                    
                                     }
                                 }
 
@@ -239,11 +240,11 @@ public class Inicio implements Runnable {
                         }
 
                         //  JOptionPane
-                     //   JOptionPane.showMessageDialog(null, "Sincronizacion Completa ");
+                        //   JOptionPane.showMessageDialog(null, "Sincronizacion Completa ");
                         System.out.println("Se termino la sincronizacion");
 
                     } else {
-                      //  JOptionPane.showMessageDialog(null, "No se pudo realizar la sincronizacion \n No esta conectado al kiosco");
+                        //  JOptionPane.showMessageDialog(null, "No se pudo realizar la sincronizacion \n No esta conectado al kiosco");
 
                     }
                 }
@@ -302,7 +303,7 @@ public class Inicio implements Runnable {
             System.out.println(conn.getResponseCode());
             if (conn.getResponseCode() == 200) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream()) ,"utf-8"));
+                        (conn.getInputStream()), "utf-8"));
 
                 String output;
 
@@ -363,7 +364,7 @@ public class Inicio implements Runnable {
 
             if (conn.getResponseCode() == 200) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(
-                        (conn.getInputStream()),"utf-8"));
+                        (conn.getInputStream()), "utf-8"));
 
                 String output;
 
@@ -429,7 +430,7 @@ public class Inicio implements Runnable {
 
             if (conn.getResponseCode() == 200) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(
-                          (conn.getInputStream()) ,"utf-8"));
+                        (conn.getInputStream()), "utf-8"));
 
                 String output;
 
@@ -593,7 +594,7 @@ public class Inicio implements Runnable {
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(
-                          (conn.getInputStream()) ,"utf-8"));
+                        (conn.getInputStream()), "utf-8"));
                 String output;
 
                 while ((output = br.readLine()) != null) {
@@ -720,8 +721,8 @@ public class Inicio implements Runnable {
         HttpResponse httpresponse = httpClient.execute(httppost);
 
         System.out.println(httpresponse.getCode());
-
         return si;
+
     }
 
     public Long getTareaRegistro() {
@@ -752,7 +753,7 @@ public class Inicio implements Runnable {
         String crearRegistro = "http://" + ip + "/api/tarearegistro/RegistrarMiTareaDescargada";
         JSONObject objectCrearRegistro = new JSONObject();
         objectCrearRegistro.put("tareaId", tareaid);
-        // objectCrearRegistro.put("materiaId", materiaid);
+        objectCrearRegistro.put("mac", "mac");
         // objectCrearRegistro.put("estudianteId", estudianteId);
         //System.out.println(inicio.peticionHttpPost(urlEntrega, obEntregas));
         String respuesta = peticionHttpPost(crearRegistro, objectCrearRegistro, token);

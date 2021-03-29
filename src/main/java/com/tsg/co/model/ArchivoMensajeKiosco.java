@@ -20,30 +20,33 @@ import javax.persistence.Table;
  * @author Ferney
  */
 @Entity
-@Table
-public class ArchivoMensajeKiosco implements Serializable  {
-    
+@Table(name = "ArchivoMensajeKiosco")
+public class ArchivoMensajeKiosco implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    private Long fileMensajeId; 
-    
+
+    private Long idArchivoKiosco;
+
+    private Long fileMensajeId;
+
     private String nombre;
-    
+
     private String fechaDescarga;
-    
+
     private String idD2L;
-    
+
     private String url;
-    
+
     @ManyToOne(optional = true)
-    private  MensajeKiosco mensajeKiosco;
+    private MensajeKiosco mensajeKiosco;
 
     public ArchivoMensajeKiosco() {
     }
 
-    public ArchivoMensajeKiosco(Long fileMensajeId, String nombre, String fechaDescarga, String idD2L, String url, MensajeKiosco mensajeKiosco) {
+    public ArchivoMensajeKiosco(Long idArchivoKiosco, Long fileMensajeId, String nombre, String fechaDescarga, String idD2L, String url, MensajeKiosco mensajeKiosco) {
+        this.idArchivoKiosco = idArchivoKiosco;
         this.fileMensajeId = fileMensajeId;
         this.nombre = nombre;
         this.fechaDescarga = fechaDescarga;
@@ -60,9 +63,14 @@ public class ArchivoMensajeKiosco implements Serializable  {
         this.id = id;
     }
 
-    
-    
-    
+    public Long getIdArchivoKiosco() {
+        return idArchivoKiosco;
+    }
+
+    public void setIdArchivoKiosco(Long idArchivoKiosco) {
+        this.idArchivoKiosco = idArchivoKiosco;
+    }
+
     public Long getFileMensajeId() {
         return fileMensajeId;
     }
@@ -111,19 +119,9 @@ public class ArchivoMensajeKiosco implements Serializable  {
         this.mensajeKiosco = mensajeKiosco;
     }
 
-    @Override
-    public String toString() {
-        return "ArchivoMensajeKiosco{" + "fileMensajeId=" + fileMensajeId + ", nombre=" + nombre + ", fechaDescarga=" + fechaDescarga + ", idD2L=" + idD2L + '}';
-    }
-    
-    
-    
-    
-    
-    
-    public void persist(Object object , EntityManager em) {
-       // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
-      //  em = emf.createEntityManager();
+    public void persist(Object object, EntityManager em) {
+        // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
+        //  em = emf.createEntityManager();
         em.getTransaction().begin();
         try {
             em.persist(object);
@@ -131,6 +129,6 @@ public class ArchivoMensajeKiosco implements Serializable  {
         } catch (Exception e) {
             e.printStackTrace();
             em.getTransaction().rollback();
-        } 
+        }
     }
 }

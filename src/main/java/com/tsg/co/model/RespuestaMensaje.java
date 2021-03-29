@@ -7,6 +7,7 @@ package com.tsg.co.model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -16,18 +17,27 @@ import javax.persistence.Table;
  * @author Ferney
  */
 @Entity
-@Table
+@Table(name="RespuestaMensaje")
 public class RespuestaMensaje implements Serializable{
+
     @Id
     private Long id;
-    
+
     private long estado;
-    
+
     private String body;
-    
+
     @ManyToOne(optional = true)
     private MensajeKiosco mensajeKiosco;
 
+    public RespuestaMensaje() {
+    
+    
+    }
+
+    
+    
+    
     public RespuestaMensaje(Long id, long estado, String body, MensajeKiosco mensajeKiosco) {
         this.id = id;
         this.estado = estado;
@@ -66,8 +76,21 @@ public class RespuestaMensaje implements Serializable{
     public void setMensajeKiosco(MensajeKiosco mensajeKiosco) {
         this.mensajeKiosco = mensajeKiosco;
     }
-    
-    
-    
-    
+
+    @Override
+    public String toString() {
+        return "RespuestaMensaje{" + "id=" + id + ", estado=" + estado + ", body=" + body + ", mensajeKiosco=" + mensajeKiosco + '}';
+    }
+  public void persist(Object object , EntityManager em) {
+       // EntityManagerFactory emf = Persistence.createEntityManagerFactory("tsg");
+      //  em = emf.createEntityManager();
+        em.getTransaction().begin();
+        try {
+            em.persist(object);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            em.getTransaction().rollback();
+        } 
+    }
 }

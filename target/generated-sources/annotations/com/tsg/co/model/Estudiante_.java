@@ -10,6 +10,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class Estudiante_ {
 
 	public static volatile SingularAttribute<Estudiante, String> apellidos;
+	public static volatile SetAttribute<Estudiante, MensajeKiosco> mensajeKioscos;
 	public static volatile SetAttribute<Estudiante, Materias> materiases;
 	public static volatile SetAttribute<Estudiante, Subida> subidas;
 	public static volatile SetAttribute<Estudiante, Entregas> entregas;

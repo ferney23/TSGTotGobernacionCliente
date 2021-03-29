@@ -20,12 +20,14 @@ import com.tsg.co.model.Usuario;
 import com.tsg.co.model.Version;
 import com.tsg.co.model.Kiosko;
 import com.tsg.co.model.MensajeKiosco;
+import com.tsg.co.model.RespuestaMensaje;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -387,23 +389,21 @@ public class ObtenerDatos {
         manager.close();
     }
 
-    public static String reemplazar(String cadena, String busqueda, String reemplazo) {
-        return cadena.replaceAll(busqueda, reemplazo);
-    }
-
     public Subida actualizarSubidas(JSONObject blob, Estudiante estudiante) {
 
         EntityManager manager = enf.createEntityManager();
         Subida subidasExistente = null;
         Subida subidaAux = null;
         try {
-            subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id and ma.estudiante.idEstudiante=:idEstudiante").setParameter("id", blob.getJSONObject("file").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
+            subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id and ma.estudiante.idEstudiante=:idEstudiante").setParameter("id", blob.getLong("tareaId")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
 
         } catch (Exception e) {
         }
         ///Hola
         if (subidasExistente == null) {
-            subidaAux = guardarSubida(blob.getJSONObject("file").getLong("id"), blob.getString("fechaDescarga"), estudiante);
+
+            //Subida subidaAux = guardarSubida(jsonTareas.getLong("tareaId"), jsonTareas.getString("fechaDescarga"), estudiante);
+            subidaAux = guardarSubida(blob.getLong("tareaId"), blob.getString("fechaDescarga"), estudiante);
         } else {
             subidaAux = subidasExistente;
         }
@@ -443,59 +443,66 @@ public class ObtenerDatos {
         return subidaTarea;
     }
 
-    public void updateBlobTareas(JSONObject blob, String ip, Estudiante estudiante) throws MalformedURLException, IOException, URISyntaxException {
-        Subida subidaTarea = actualizarSubidas(blob, estudiante);
+    public void updateBlobTareas(JSONObject blobArchivosLista, String ip, Estudiante estudiante) throws MalformedURLException, IOException, URISyntaxException {
+        Subida subidaTarea = actualizarSubidas(blobArchivosLista, estudiante);
         EntityManager manager = enf.createEntityManager();
-        AchivosTot achivosTot = null;
-        try {
-            achivosTot = (AchivosTot) manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", blob.getLong("id")).setParameter("idSubidaKiosco", blob.getJSONObject("file").getLong("descargaId")).getSingleResult();
 
-        } catch (Exception e) {
-        }
+        JSONArray blobArchivosArray = blobArchivosLista.getJSONArray("file");
 
-        if (achivosTot == null) {
+        for (int j = 0; j < blobArchivosArray.length(); j++) {
+            JSONObject objectblob = (JSONObject) blobArchivosArray.get(j);
+            AchivosTot achivosTot = null;
+            try {
+                achivosTot = (AchivosTot) manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", objectblob.getLong("id")).setParameter("idSubidaKiosco", objectblob.getLong("descargaId")).getSingleResult();
 
-            int ext = 0;
-
-            if (ext == 0) {
-                File Direccion = new File("Data/" + estudiante.getNombres() + "/" + blob.getInt("tareaId") + "BLOB");
-                int si = 1;
-                if (Direccion.exists()) {
-                    if (Direccion.isDirectory()) {
-                        System.out.println("Es una carpeta");
-                    }
-                } else {
-                    if (Direccion.mkdirs()) {
-                        System.out.println("Directorio creado");
-                    } else {
-                        si = 0;
-                        System.out.println("Error al crear directorio");
-                    }
-                }
-
-                if (si != 0) {
-
-                    if (blob.getJSONObject("file").getString("url").equals("http://" + ip + "/media")) {
-
-                    } else {
-                        String[] Archivo = blob.getJSONObject("file").getString("url").split("/");
-                        Path dest = Paths.get("Data/" + estudiante.getNombres() + "/" + blob.getInt("tareaId") + "BLOB/" + Archivo[Archivo.length - 1]);
-                        URL websiteSinUtf8 = new URL((blob.getJSONObject("file").getString("url")));
-                        URI uri = new URI(websiteSinUtf8.getProtocol(), websiteSinUtf8.getUserInfo(), websiteSinUtf8.getHost(), websiteSinUtf8.getPort(), websiteSinUtf8.getPath(), websiteSinUtf8.getQuery(), websiteSinUtf8.getRef());
-                        String utf = uri.toASCIIString();
-                        URL website = new URL(utf);
-                        try (InputStream in = website.openStream();
-                                BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-                            Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
-                        }
-
-                        guardarArchivo(blob.getJSONObject("file").getLong("id"), String.valueOf(blob.getJSONObject("file").getLong("id")), dest.toString(), subidaTarea);
-
-                    }
-                }
+            } catch (Exception e) {
             }
 
+            if (achivosTot == null) {
+
+                int ext = 0;
+
+                if (ext == 0) {
+                    File Direccion = new File("Data/" + estudiante.getNombres() + "/" + objectblob.getInt("id") + "BLOB");
+                    int si = 1;
+                    if (Direccion.exists()) {
+                        if (Direccion.isDirectory()) {
+                            System.out.println("Es una carpeta");
+                        }
+                    } else {
+                        if (Direccion.mkdirs()) {
+                            System.out.println("Directorio creado");
+                        } else {
+                            si = 0;
+                            System.out.println("Error al crear directorio");
+                        }
+                    }
+
+                    if (si != 0) {
+
+                        if (objectblob.getString("url").equals("http://" + ip + "/media")) {
+
+                        } else {
+                            String[] Archivo = objectblob.getString("url").split("/");
+                            Path dest = Paths.get("Data/" + estudiante.getNombres() + "/" + objectblob.getInt("id") + "BLOB/" + Archivo[Archivo.length - 1]);
+                            URL websiteSinUtf8 = new URL((objectblob.getString("url")));
+                            URI uri = new URI(websiteSinUtf8.getProtocol(), websiteSinUtf8.getUserInfo(), websiteSinUtf8.getHost(), websiteSinUtf8.getPort(), websiteSinUtf8.getPath(), websiteSinUtf8.getQuery(), websiteSinUtf8.getRef());
+                            String utf = uri.toASCIIString();
+                            URL website = new URL(utf);
+                            try (InputStream in = website.openStream();
+                                    BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+                                Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
+                            }
+
+                            guardarArchivo(objectblob.getLong("id"), String.valueOf(objectblob.getLong("id")), dest.toString(), subidaTarea);
+
+                        }
+                    }
+                }
+
+            }
         }
+
         manager.close();
     }
 
@@ -551,7 +558,7 @@ public class ObtenerDatos {
                 Subida subidasExistente = null;
                 try {
 
-                    subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id  and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", jsonTareas.getJSONObject("file").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
+                    subidasExistente = (Subida) manager.createQuery("SELECT ma FROM Subida ma WHERE ma.subidaKisoco= :id  and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", jsonTareas.getLong("tareaId")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
 
                 } catch (Exception e) {
                 }
@@ -564,9 +571,9 @@ public class ObtenerDatos {
                     System.err.println("Tareas nueva" + "subida existente ");
                 } else {
 
-                    Subida subidaAux = guardarSubida(jsonTareas.getJSONObject("file").getLong("id"), jsonTareas.getString("fechaDescarga"), estudiante);
+                    Subida subidaAux = guardarSubida(jsonTareas.getLong("tareaId"), jsonTareas.getString("fechaDescarga"), estudiante);
 
-                    Tareas tareasguardar = new Tareas(registroTarea, jsonTareas.getLong("tareaId"), registroTarea, jsonTareas.getString("nombreActividad"), String.valueOf(jsonTareas.getLong("idArchivoD2L")), materiaTarea, subidaAux, estudiante);
+                    Tareas tareasguardar = new Tareas(registroTarea, jsonTareas.getLong("tareaId"), registroTarea, jsonTareas.getString("nombre"), String.valueOf(jsonTareas.getLong("idD2L")), materiaTarea, subidaAux, estudiante);
                     tareasguardar.persist(tareasguardar, manager);
                     auxTareas = tareasguardar;
                     System.err.println("Tareas nueva" + "subida nueva ");
@@ -590,14 +597,14 @@ public class ObtenerDatos {
 
     }
 
-    public MensajeKiosco actualizarMensajesKiosco(JSONArray jsonArrayMensajes, String ip, String token, Estudiante estudiante) {
+    public void actualizarMensajesKiosco(JSONArray jsonArrayMensajes, String ip, String token, Estudiante estudiante) throws Exception {
         EntityManager manager = enf.createEntityManager();
 
         for (int j = 0; j < jsonArrayMensajes.length(); j++) {
             JSONObject objMensajes = (JSONObject) jsonArrayMensajes.get(j);
             Materias materiasMensaje = null;
             try {
-                materiasMensaje = (Materias) manager.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id ").setParameter("id", objMensajes.getJSONObject("mensaje").getLong("materiaId")).getSingleResult();
+                materiasMensaje = (Materias) manager.createQuery("SELECT ma FROM Materias ma WHERE ma.idMateria= :id ").setParameter("id", objMensajes.getJSONObject("materia").getLong("id")).getSingleResult();
                 System.out.println("materias tareas");
             } catch (Exception e) {
 
@@ -606,14 +613,21 @@ public class ObtenerDatos {
             if (estudiante != null) {
                 MensajeKiosco existe = null;
                 try {
-                    existe = (MensajeKiosco) manager.createQuery("SELECT ma FROM MensajeKiosco ma WHERE ma.idMensajeKiosco=:id and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", objMensajes.getJSONObject("mensaje").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
+                    existe = (MensajeKiosco) manager.createQuery("SELECT ma FROM MensajeKiosco ma WHERE ma.idMensajeKiosco=:id and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", objMensajes.getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
                     System.out.println(existe + " existo");
                 } catch (Exception e) {
                     System.out.println("Estoy dentro del catch");
-                    MensajeKiosco mensajeKiosco = new MensajeKiosco(objMensajes.getJSONObject("mensaje").getLong("id"),
-                            objMensajes.getJSONObject("mensaje").getString("mensajes"),
-                            objMensajes.getJSONObject("mensaje").getString("idD2L"),
-                            objMensajes.getJSONObject("mensaje").getString("fechaDescarga"),
+
+                    String registroMensaje = this.respuestaMensajes(token, ip, objMensajes.getLong("id"));
+                   
+                    System.err.println(registroMensaje + " registro mensajes ");
+                    
+                    JSONObject jSONObjectMensajesRegistro = new JSONObject(registroMensaje);
+
+                    MensajeKiosco mensajeKiosco = new MensajeKiosco(jSONObjectMensajesRegistro.getLong("id"), objMensajes.getLong("id"),
+                            objMensajes.getString("mensajes"),
+                            objMensajes.getString("idD2L"),
+                            objMensajes.getString("fechaDescarga"),
                             materiasMensaje,
                             estudiante);
                     mensajeKiosco.persist(mensajeKiosco, manager);
@@ -625,7 +639,7 @@ public class ObtenerDatos {
 
         manager.close();
 
-        return null;
+        // return null;
     }
 
     public ArchivoMensajeKiosco actualizarFileMensajesKiosco(JSONArray jsonArrayMensajes, String ip, String token, Estudiante estudiante) throws MalformedURLException, URISyntaxException, IOException {
@@ -633,64 +647,78 @@ public class ObtenerDatos {
 
         for (int j = 0; j < jsonArrayMensajes.length(); j++) {
             JSONObject objMensajes = (JSONObject) jsonArrayMensajes.get(j);
-            MensajeKiosco mensajeKiosco = (MensajeKiosco) manager.createQuery("SELECT ma FROM MensajeKiosco ma WHERE ma.idMensajeKiosco=:id and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", objMensajes.getJSONObject("mensaje").getLong("id")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
-            System.out.println(mensajeKiosco + " existo");
+            if (!objMensajes.getJSONArray("filesMensajes").toString().equals("[]")) {
 
-            if (mensajeKiosco != null) {
-                ArchivoMensajeKiosco archivoMensajeKiosco = null;
+                JSONArray jSONArrayListasArchivosMensajes = objMensajes.getJSONArray("filesMensajes");
+                for (int i = 0; i < jSONArrayListasArchivosMensajes.length(); i++) {
+                    JSONObject objMensajesArchivos = (JSONObject) jSONArrayListasArchivosMensajes.get(i);
 
-                try {
+                    MensajeKiosco mensajeKiosco = (MensajeKiosco) manager.createQuery("SELECT ma FROM MensajeKiosco ma WHERE ma.idMensajeKiosco=:id and ma.estudiante.idEstudiante= : idEstudiante").setParameter("id", objMensajesArchivos.getLong("mensajeId")).setParameter("idEstudiante", estudiante.getIdEstudiante()).getSingleResult();
 
-                    archivoMensajeKiosco = (ArchivoMensajeKiosco) manager.createQuery("SELECT ma FROM ArchivoMensajeKiosco ma WHERE ma.fileMensajeId =:id and ma.mensajeKiosco.id=: idMensajeKiosco").setParameter("id", objMensajes.getLong("fileMensajeId")).setParameter("idMensajeKiosco", mensajeKiosco.getId()).getSingleResult();
-                } catch (Exception e) {
+                    if (mensajeKiosco != null) {
+                        ArchivoMensajeKiosco archivoMensajeKiosco = null;
 
-                    int ext = 0;
+                        try {
+                            System.out.println(objMensajesArchivos.getLong("mensajeId") + "file mensaje id");
+                            System.out.println(mensajeKiosco.getId() + "mensaje");
 
-                    if (ext == 0) {
-                        File Direccion = new File("Data/" + estudiante.getNombres() + "/" + objMensajes.getLong("fileMensajeId") + "BLOB");
-                        int si = 1;
-                        if (Direccion.exists()) {
-                            if (Direccion.isDirectory()) {
-                                System.out.println("Es una carpeta");
-                            }
-                        } else {
-                            if (Direccion.mkdirs()) {
-                                System.out.println("Directorio creado");
-                            } else {
-                                si = 0;
-                                System.out.println("Error al crear directorio");
-                            }
-                        }
+                            archivoMensajeKiosco = (ArchivoMensajeKiosco) manager.createQuery("SELECT ma FROM ArchivoMensajeKiosco ma WHERE ma.idArchivoKiosco =:id and ma.mensajeKiosco.id=:idMensajeKiosco").setParameter("id", objMensajesArchivos.getLong("id")).setParameter("idMensajeKiosco", mensajeKiosco.getId()).getSingleResult();
 
-                        if (si != 0) {
+                        } catch (Exception e) {
 
-                            if (objMensajes.getString("url").equals("http://" + ip + "/media")) {
+                            int ext = 0;
 
-                            } else {
-                                String[] Archivo = objMensajes.getString("url").split("/");
-                                Path dest = Paths.get("Data/" + estudiante.getNombres() + "/" + objMensajes.getInt("fileMensajeId") + "BLOB/" + Archivo[Archivo.length - 1]);
-                                URL websiteSinUtf8 = new URL(objMensajes.getString("url"));
-                                URI uri = new URI(websiteSinUtf8.getProtocol(), websiteSinUtf8.getUserInfo(), websiteSinUtf8.getHost(), websiteSinUtf8.getPort(), websiteSinUtf8.getPath(), websiteSinUtf8.getQuery(), websiteSinUtf8.getRef());
-                                String utf = uri.toASCIIString();
-                                URL website = new URL(utf);
-                                try (InputStream in = website.openStream();
-                                        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-                                    Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
-                                    archivoMensajeKiosco = new ArchivoMensajeKiosco(objMensajes.getLong("fileMensajeId"), objMensajes.getString("nombre"), objMensajes.getString("fechaDescarga"), objMensajes.getString("idD2L"), dest.toString(), mensajeKiosco);
-                                    archivoMensajeKiosco.persist(archivoMensajeKiosco, manager);
-
+                            if (ext == 0) {
+                                File Direccion = new File("Data/" + estudiante.getNombres() + "/" + objMensajesArchivos.getLong("id") + "BLOB");
+                                int si = 1;
+                                if (Direccion.exists()) {
+                                    if (Direccion.isDirectory()) {
+                                        System.out.println("Es una carpeta");
+                                    }
+                                } else {
+                                    if (Direccion.mkdirs()) {
+                                        System.out.println("Directorio creado");
+                                    } else {
+                                        si = 0;
+                                        System.out.println("Error al crear directorio");
+                                    }
                                 }
 
-                            }
-                        }
-                    }
+                                if (si != 0) {
 
+                                    if (objMensajesArchivos.getString("url").equals("http://" + ip + "/media")) {
+
+                                    } else {
+                                        String[] Archivo = objMensajesArchivos.getString("url").split("/");
+                                        Path dest = Paths.get("Data/" + estudiante.getNombres() + "/" + objMensajesArchivos.getInt("mensajeId") + "BLOB/" + Archivo[Archivo.length - 1]);
+                                        URL websiteSinUtf8 = new URL(objMensajesArchivos.getString("url"));
+                                        URI uri = new URI(websiteSinUtf8.getProtocol(), websiteSinUtf8.getUserInfo(), websiteSinUtf8.getHost(), websiteSinUtf8.getPort(), websiteSinUtf8.getPath(), websiteSinUtf8.getQuery(), websiteSinUtf8.getRef());
+                                        String utf = uri.toASCIIString();
+                                        URL website = new URL(utf);
+                                        try (InputStream in = website.openStream();
+                                                BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+                                            Files.copy(in, dest, StandardCopyOption.REPLACE_EXISTING);
+
+                                        }
+
+                                        archivoMensajeKiosco = new ArchivoMensajeKiosco(objMensajesArchivos.getLong("id"), objMensajesArchivos.getLong("mensajeId"), objMensajesArchivos.getString("nombre"), objMensajesArchivos.getString("fechaDescarga"), objMensajesArchivos.getString("idD2L"), dest.toString(), mensajeKiosco);
+                                        archivoMensajeKiosco.persist(archivoMensajeKiosco, manager);
+
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
                 }
 
             }
 
         }
+        manager.close();
         return null;
+
     }
 
     public void postArchivos(String ip, String token, Estudiante estudiante) throws Exception {
@@ -698,9 +726,7 @@ public class ObtenerDatos {
         EntityManager manager = enf.createEntityManager();
         List<AchivosTot> entregas = manager.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.entrega.upp = :id and ma.entrega.estudiante.idEstudiante=:idEstudiante").setParameter("id", 0L).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
         System.out.println(entregas);
-
         for (AchivosTot entrega : entregas) {
-
             JSONObject obArchivos = new JSONObject();
             obArchivos.put("File", entrega.getRuta());
             obArchivos.put("TareaRegistroId", entrega.getEntrega().getRtEntrega());
@@ -711,6 +737,30 @@ public class ObtenerDatos {
             System.err.println("Se envio el archivo");
             manager.getTransaction().begin();
             entrega.getEntrega().setUpp(1L);
+            manager.getTransaction().commit();
+
+        }
+        manager.close();
+    }
+
+    public void postRespuestaMensaje(String ip, String token, Estudiante estudiante) throws Exception {
+        String endPointResponderMensaje = "http://" + ip + "/api/mensajes/responderMensaje";
+        EntityManager manager = enf.createEntityManager();
+        // List<RespuestaMensaje> respuestaMensajes = manager.createQuery("SELECT ma FROM RespuestaMensaje ma WHERE ma.estado = :id and ma.entrega.estudiante.idEstudiante=:idEstudiante").setParameter("id", 0L).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
+        List<RespuestaMensaje> respuestaMensajes = manager.createQuery("SELECT ma FROM RespuestaMensaje ma WHERE ma.estado = :id and ma.mensajeKiosco.estudiante.idEstudiante =:idEstudiante").setParameter("id", 0L).setParameter("idEstudiante", estudiante.getIdEstudiante()).getResultList();
+
+        System.out.println(respuestaMensajes);
+        for (RespuestaMensaje respuestaMensaje : respuestaMensajes) {
+            JSONObject obArchivosMensaje = new JSONObject();
+
+            obArchivosMensaje.put("mensajeRegistroId", respuestaMensaje.getMensajeKiosco().getRegistroMensajeKiosco());
+            obArchivosMensaje.put("respuesta", respuestaMensaje.getBody());
+            String registro = this.inicio.peticionHttpPost(endPointResponderMensaje, obArchivosMensaje, token);
+
+            System.out.println("Se envio el archivo");
+            manager.getTransaction().begin();
+            respuestaMensaje.setEstado(1L);
+            //entrega.getEntrega().setUpp(1L);
             manager.getTransaction().commit();
 
         }
@@ -756,17 +806,20 @@ public class ObtenerDatos {
         return token + ip + id;
     }
 
-    public String respuestaMensajes(String token, String ip, Long id) {
+    public String respuestaMensajes(String token, String ip, Long id) throws SocketException, Exception {
         String respuesta = "http://" + ip + "/api/mensajes/RegistrarMiMensajeDescargado";
         System.out.println(id);
         JSONObject objectCrearRegistro = new JSONObject();
-        objectCrearRegistro.put("fileMensajeId", id);
+        objectCrearRegistro.put("mensajeId", id);
+        objectCrearRegistro.put("mac", Inicio.getMacAddress());
+
+        String registro = "";
         try {
-            String registro = this.inicio.peticionHttpPost(respuesta, objectCrearRegistro, token);
+            registro = this.inicio.peticionHttpPost(respuesta, objectCrearRegistro, token);
         } catch (Exception ex) {
             Logger.getLogger(ObtenerDatos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return token + ip + id;
+        return registro;
     }
 
 }

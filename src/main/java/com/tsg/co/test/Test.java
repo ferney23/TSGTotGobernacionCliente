@@ -7,6 +7,7 @@ package com.tsg.co.test;
 
 import com.tsg.co.Persistencia.ObtenerDatos;
 import com.tsg.co.model.AchivosTot;
+import com.tsg.co.model.ArchivoMensajeKiosco;
 import com.tsg.co.model.Clases;
 import com.tsg.co.model.Entregas;
 import com.tsg.co.model.Estudiante;
@@ -19,6 +20,7 @@ import com.tsg.co.model.Tareas;
 import com.tsg.co.model.Usuario;
 import com.tsg.co.model.Kiosko;
 import com.tsg.co.model.Profesor;
+import com.tsg.co.model.RespuestaMensaje;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,19 +45,27 @@ import org.json.JSONObject;
  */
 public class Test {
 
-   
-    
-    
     private static EntityManager manageres;
     private static EntityManagerFactory enf;
 
-    public static void main(String[] args) {     
-        
-        
+    public static void main(String[] args) {
+
         enf = Persistence.createEntityManagerFactory("tsg");
         manageres = enf.createEntityManager();
         // List<AchivosTot> achivosTots1 = manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.subida.entregas.upp= :id").setParameter("id",1L).getResultList();
         List<AchivosTot> achivosTots1 = manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.subida.tareas.id=:id").setParameter("id", 1183L).getResultList();
+
+        ArchivoMensajeKiosco archivoMensajeKiosco = (ArchivoMensajeKiosco) manageres.createQuery("SELECT ma FROM ArchivoMensajeKiosco ma WHERE ma.fileMensajeId =:id and ma.mensajeKiosco.id=:idMensajeKiosco").setParameter("id", 3L).setParameter("idMensajeKiosco", 4L).getSingleResult();
+
+        // ArchivoMensajeKiosco archivoMensajeKiosco = (ArchivoMensajeKiosco) manageres.createQuery("SELECT ma FROM ArchivoMensajeKiosco ma WHERE ma.fileMensajeId =:id and ma.mensajeKiosco.id =: idMensajeKiosco").setParameter("id", 1).setParameter("idMensajeKiosco",1).getSingleResult();
+        // System.out.println(archivoMensajeKiosco.getId());
+        List<RespuestaMensaje> respuestaMensajes = manageres.createQuery("SELECT ma FROM RespuestaMensaje ma WHERE ma.estado = :id and ma.mensajeKiosco.estudiante.idEstudiante =:idEstudiante").setParameter("id", 0L).setParameter("idEstudiante", 2L).getResultList();
+
+        for (RespuestaMensaje respuestaMensaje : respuestaMensajes) {
+            System.out.println(respuestaMensaje.getBody());
+            System.out.println(respuestaMensaje.getMensajeKiosco().getRegistroMensajeKiosco());
+            
+        }
 
         System.out.println(achivosTots1);
         for (AchivosTot achivosTot : achivosTots1) {
@@ -71,10 +81,9 @@ public class Test {
         }
 
         //  System.out.println(ahora);
-      
-            Query query = manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", 4L).setParameter("idSubidaKiosco", 4L);
-            
-        AchivosTot achivosTot = (AchivosTot) manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", 4L).setParameter("idSubidaKiosco", 4L).getSingleResult();
+        Query query = manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", 4L).setParameter("idSubidaKiosco", 4L);
+
+//        AchivosTot achivosTot = (AchivosTot) manageres.createQuery("SELECT ma FROM AchivosTot ma WHERE ma.archivoKiosco= :id AND ma.subida.subidaKisoco=: idSubidaKiosco").setParameter("id", 4L).setParameter("idSubidaKiosco", 4L).getSingleResult();
         //  System.out.println(achivosTot.getRuta());
         // Estudiante estudiante = (Estudiante) manageres.createQuery("SELECT ma FROM Estudiante ma WHERE ma.idEstudiante= :id").setParameter("id", 209L).getSingleResult();
         //  Usuario usuariosExistentes = (Usuario) manageres.createQuery("SELECT ma FROM  Usuario ma WHERE ma.username =:usuario and ma.contraseña =:contraseña ").setParameter("usuario", "estudiante.uno").setParameter("contraseña", "tsg123").getSingleResult();

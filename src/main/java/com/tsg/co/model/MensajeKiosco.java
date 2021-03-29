@@ -36,6 +36,9 @@ public class MensajeKiosco implements Serializable {
     
     private String idD2l;
     private String fechaDescarga;
+    
+    private Long registroMensajeKiosco;
+    
    
     @ManyToOne(optional = true)
     private Materias materia;
@@ -54,7 +57,9 @@ public class MensajeKiosco implements Serializable {
    
     }
 
-    public MensajeKiosco(Long idMensajeKiosco, String nombre,String idD2l, String fechaDescarga, Materias materia, Estudiante estudiante) {
+    public MensajeKiosco(Long registroMensajeKiosco,Long idMensajeKiosco, String nombre,String idD2l, String fechaDescarga, Materias materia, Estudiante estudiante) {
+        
+        this.registroMensajeKiosco = registroMensajeKiosco;
         this.idMensajeKiosco = idMensajeKiosco;
         this.nombre = nombre;
         this.idD2l = idD2l;
@@ -80,6 +85,22 @@ public class MensajeKiosco implements Serializable {
 
     public void setIdMensajeKiosco(Long idMensajeKiosco) {
         this.idMensajeKiosco = idMensajeKiosco;
+    }
+
+    public Long getRegistroMensajeKiosco() {
+        return registroMensajeKiosco;
+    }
+
+    public void setRegistroMensajeKiosco(Long registroMensajeKiosco) {
+        this.registroMensajeKiosco = registroMensajeKiosco;
+    }
+
+    public Set<RespuestaMensaje> getRespuestaMensajes() {
+        return respuestaMensajes;
+    }
+
+    public void setRespuestaMensajes(Set<RespuestaMensaje> respuestaMensajes) {
+        this.respuestaMensajes = respuestaMensajes;
     }
 
     

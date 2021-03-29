@@ -11,6 +11,7 @@ public abstract class Materias_ {
 
 	public static volatile SingularAttribute<Materias, String> descripcion;
 	public static volatile SingularAttribute<Materias, String> codigo;
+	public static volatile SetAttribute<Materias, MensajeKiosco> mensajeKioscos;
 	public static volatile SingularAttribute<Materias, String> subtitulo;
 	public static volatile SingularAttribute<Materias, Long> idMateria;
 	public static volatile SetAttribute<Materias, Clases> clases;

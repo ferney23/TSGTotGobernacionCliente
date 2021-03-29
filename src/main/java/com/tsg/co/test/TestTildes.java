@@ -5,7 +5,7 @@
  */
 package com.tsg.co.test;
 
-import static com.tsg.co.Persistencia.ObtenerDatos.reemplazar;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
