@@ -226,7 +226,7 @@ public class Inicio implements Runnable {
 
                                         }
                                         // 
-                                        obtenerDatos.postArchivos(ip, jsonResp.getString("token"), this.estudianteCliente);
+                                     obtenerDatos.postArchivos(ip, jsonResp.getString("token"), this.estudianteCliente);
                                      obtenerDatos.postRespuestaMensaje(ip, jsonResp.getString("token"), this.estudianteCliente);
                                     
                                     
@@ -550,6 +550,79 @@ public class Inicio implements Runnable {
         return bien;
     }
 
+      public String peticionHttpPostRespuestaMensaje(String urlTopost, JSONObject json, String token) throws Exception {
+        String bien = "";
+        String bearer = "Bearer ";
+
+        TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+
+// Install the all-trusting trust manager
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (GeneralSecurityException e) {
+        }
+
+        try {
+
+            URL url = new URL(urlTopost);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.addRequestProperty("Authorization", bearer + token);
+            String input = json.toString();
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            String output;
+            //System.out.println("Output from Server .... \n");
+            while ((output = br.readLine()) != null) {
+                bien = bien.concat(output);
+            }
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+        return bien;
+    }
+
+    
+    
+    
+    
     public String peticionHttpPostIniciarSesion(String urlTopost, JSONObject json) throws Exception {
         String bien = "";
 

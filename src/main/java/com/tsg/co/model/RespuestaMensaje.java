@@ -8,6 +8,8 @@ package com.tsg.co.model;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,6 +23,7 @@ import javax.persistence.Table;
 public class RespuestaMensaje implements Serializable{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private long estado;
@@ -34,12 +37,8 @@ public class RespuestaMensaje implements Serializable{
     
     
     }
-
     
-    
-    
-    public RespuestaMensaje(Long id, long estado, String body, MensajeKiosco mensajeKiosco) {
-        this.id = id;
+    public RespuestaMensaje( long estado, String body, MensajeKiosco mensajeKiosco) {
         this.estado = estado;
         this.body = body;
         this.mensajeKiosco = mensajeKiosco;

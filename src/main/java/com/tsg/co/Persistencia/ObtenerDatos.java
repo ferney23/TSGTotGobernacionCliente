@@ -669,7 +669,10 @@ public class ObtenerDatos {
                             int ext = 0;
 
                             if (ext == 0) {
-                                File Direccion = new File("Data/" + estudiante.getNombres() + "/" + objMensajesArchivos.getLong("id") + "BLOB");
+                                 File Direccion = new File("Mensajes/" + estudiante.getNombres() + "/" + mensajeKiosco.getMateria().getTitulo() +"MENSAJE");
+                    
+                                
+                                //File Direccion = new File("Data/" + estudiante.getNombres() + "/" + objMensajesArchivos.getLong("id") + "BLOB");
                                 int si = 1;
                                 if (Direccion.exists()) {
                                     if (Direccion.isDirectory()) {
@@ -689,8 +692,12 @@ public class ObtenerDatos {
                                     if (objMensajesArchivos.getString("url").equals("http://" + ip + "/media")) {
 
                                     } else {
+                                        
+                                        
                                         String[] Archivo = objMensajesArchivos.getString("url").split("/");
-                                        Path dest = Paths.get("Data/" + estudiante.getNombres() + "/" + objMensajesArchivos.getInt("mensajeId") + "BLOB/" + Archivo[Archivo.length - 1]);
+                                          // File Direccion = new File("Mensajes/" + estudiante.getNombres() + "/" + mensajeKiosco.getMateria().getTitulo() +"MENSAJE");
+                    
+                                        Path dest = Paths.get("Mensajes/" + estudiante.getNombres() + "/" + mensajeKiosco.getMateria().getTitulo() +"MENSAJE/" + Archivo[Archivo.length - 1]);
                                         URL websiteSinUtf8 = new URL(objMensajesArchivos.getString("url"));
                                         URI uri = new URI(websiteSinUtf8.getProtocol(), websiteSinUtf8.getUserInfo(), websiteSinUtf8.getHost(), websiteSinUtf8.getPort(), websiteSinUtf8.getPath(), websiteSinUtf8.getQuery(), websiteSinUtf8.getRef());
                                         String utf = uri.toASCIIString();
@@ -755,7 +762,7 @@ public class ObtenerDatos {
 
             obArchivosMensaje.put("mensajeRegistroId", respuestaMensaje.getMensajeKiosco().getRegistroMensajeKiosco());
             obArchivosMensaje.put("respuesta", respuestaMensaje.getBody());
-            String registro = this.inicio.peticionHttpPost(endPointResponderMensaje, obArchivosMensaje, token);
+            String registro = this.inicio.peticionHttpPostRespuestaMensaje(endPointResponderMensaje, obArchivosMensaje, token);
 
             System.out.println("Se envio el archivo");
             manager.getTransaction().begin();
